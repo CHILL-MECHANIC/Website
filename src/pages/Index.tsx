@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import ServiceCard from "@/components/ServiceCard";
 import ServiceSelectionModal from "@/components/ServiceSelectionModal";
 import { useCart } from "@/contexts/CartContext";

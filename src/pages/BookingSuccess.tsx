@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Calendar, Clock, MapPin, Phone } from "lucide-react";
@@ -123,6 +124,8 @@ export default function BookingSuccess() {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

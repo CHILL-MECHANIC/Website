@@ -14,7 +14,161 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      booking_items: {
+        Row: {
+          booking_id: string
+          created_at: string
+          id: string
+          price: number
+          quantity: number
+          service_description: string[] | null
+          service_name: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          id?: string
+          price: number
+          quantity?: number
+          service_description?: string[] | null
+          service_name: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          id?: string
+          price?: number
+          quantity?: number
+          service_description?: string[] | null
+          service_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_items_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string
+          created_at: string
+          final_amount: number
+          id: string
+          payment_status: string
+          service_tax: number
+          special_instructions: string | null
+          status: string
+          total_amount: number
+          travel_charges: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_date: string
+          booking_time: string
+          created_at?: string
+          final_amount: number
+          id?: string
+          payment_status?: string
+          service_tax?: number
+          special_instructions?: string | null
+          status?: string
+          total_amount: number
+          travel_charges?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string
+          created_at?: string
+          final_amount?: number
+          id?: string
+          payment_status?: string
+          service_tax?: number
+          special_instructions?: string | null
+          status?: string
+          total_amount?: number
+          travel_charges?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          pincode: string | null
+          state: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string
+          description: string[] | null
+          id: string
+          name: string
+          price: number
+          service_type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string[] | null
+          id?: string
+          name: string
+          price: number
+          service_type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string[] | null
+          id?: string
+          name?: string
+          price?: number
+          service_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
