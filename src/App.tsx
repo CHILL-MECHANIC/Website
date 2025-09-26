@@ -20,7 +20,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <>
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
@@ -44,7 +44,7 @@ const App = () => (
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>
-  </QueryClientProvider>
+  </>
 );
 
 export default App;
