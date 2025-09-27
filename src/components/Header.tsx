@@ -48,9 +48,7 @@ export default function Header({
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="hover:text-primary">
-                  Services
-                </Button>
+                <Button variant="ghost" className="hover:text-primary font-semibold text-base">SERVICES</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {services.map(service => <DropdownMenuItem key={service.path} asChild>

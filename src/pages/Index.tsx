@@ -88,7 +88,9 @@ const Index = () => {
       <Header cartItemsCount={getCartItemsCount()} />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary/90 to-primary/70 text-primary-foreground py-16 bg-cover bg-center bg-no-repeat overflow-hidden" style={{backgroundImage: `url(${heroBackground})`}}>
+      <section className="relative bg-gradient-to-r from-primary/90 to-primary/70 text-primary-foreground py-16 bg-cover bg-center bg-no-repeat overflow-hidden" style={{
+      backgroundImage: `url(${heroBackground})`
+    }}>
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px]"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl mb-4 text-white text-center font-bold md:text-7xl animate-fade-in drop-shadow-2xl [text-shadow:_2px_2px_8px_rgba(0,0,0,0.8)]">
@@ -97,15 +99,12 @@ const Index = () => {
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-white/90 animate-fade-in [animation-delay:200ms] drop-shadow-lg [text-shadow:_1px_1px_4px_rgba(0,0,0,0.7)]">
             Dependable, reliable and efficient services for Less home appliance demands & service today!
           </p>
-          <Button 
-            size="lg" 
-            variant="secondary" 
-            className="text-lg px-8 py-3 animate-scale-in [animation-delay:400ms] hover-scale shadow-2xl"
-            onClick={() => {
-              const servicesSection = document.querySelector('[data-services-section]');
-              servicesSection?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
+          <Button size="lg" variant="secondary" className="text-lg px-8 py-3 animate-scale-in [animation-delay:400ms] hover-scale shadow-2xl" onClick={() => {
+          const servicesSection = document.querySelector('[data-services-section]');
+          servicesSection?.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }}>
             Book Service Now
           </Button>
         </div>
@@ -115,7 +114,7 @@ const Index = () => {
       <section className="py-16" data-services-section>
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">OUR SERVICES</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Professional appliance repair and maintenance services you can trust. 
               Quick, reliable, and affordable solutions for your home.
