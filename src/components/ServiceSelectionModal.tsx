@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -111,8 +112,21 @@ export default function ServiceSelectionModal({
   onAddToCart,
 }: ServiceSelectionModalProps) {
   const [selectedServices, setSelectedServices] = useState<ServiceOption[]>([]);
+  const navigate = useNavigate();
   
   const options = serviceOptions[serviceType] || [];
+
+  const handleOtherServicesClick = () => {
+    onClose();
+    navigate("/");
+    // Scroll to services section after navigation
+    setTimeout(() => {
+      const servicesSection = document.querySelector('[data-services-section]');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
 
   const handleServiceToggle = (service: ServiceOption, checked: boolean) => {
     if (checked) {
@@ -172,7 +186,7 @@ export default function ServiceSelectionModal({
           })}
           
           <div className="text-center p-4 border rounded-lg bg-muted/20">
-            <Button variant="link" className="text-primary">
+            <Button variant="link" className="text-primary" onClick={handleOtherServicesClick}>
               + Other Services
             </Button>
           </div>
