@@ -79,7 +79,7 @@ export default function UserProfile() {
           city: data.city || "",
           state: data.state || "",
           pincode: data.pincode || "",
-          avatar_url: data.avatar_url || ""
+          avatar_url: (data as any).avatar_url || ""
         });
       }
     } catch (error) {
