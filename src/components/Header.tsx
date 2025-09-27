@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
 interface HeaderProps {
   cartItemsCount?: number;
@@ -12,6 +13,8 @@ export default function Header({
   cartItemsCount = 0
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  
   const services = [{
     name: "AC Service",
     path: "/services/ac"
@@ -56,15 +59,12 @@ export default function Header({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link to="/how-it-works" className="hover:text-primary transition-colors">
-              How it works
-            </Link>
-            <Link to="/contact" className="hover:text-primary transition-colors">
-              Contact Us
+            <Link to="/about" className="hover:text-primary transition-colors">
+              About Us
             </Link>
           </nav>
 
-          {/* Cart and CTA */}
+          {/* Cart, Profile and CTA */}
           <div className="flex items-center space-x-4">
             <Link to="/cart" className="relative">
               <ShoppingCart className="h-6 w-6 hover:text-primary transition-colors" />
@@ -72,6 +72,37 @@ export default function Header({
                   {cartItemsCount}
                 </Badge>}
             </Link>
+            
+            {/* Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="hidden md:inline-flex">
+                  <User className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {user ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile">View Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => signOut()}>
+                      Sign Out
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth">Sign In</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth">Sign Up</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             <Button variant="default" className="hidden md:inline-flex" asChild>
               <Link to="/get-the-app">Get The App</Link>
@@ -98,12 +129,25 @@ export default function Header({
                   </Link>)}
               </div>
               
-              <Link to="/how-it-works" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-                How it works
+              <Link to="/about" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+                About Us
               </Link>
-              <Link to="/contact" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-                Contact Us
-              </Link>
+
+              {/* Mobile Profile Section */}
+              {user ? (
+                <>
+                  <Link to="/profile" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+                    View Profile
+                  </Link>
+                  <Button variant="ghost" className="justify-start p-0 h-auto hover:text-primary" onClick={() => signOut()}>
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+                  Sign In / Sign Up
+                </Link>
+              )}
               
               <Button variant="default" className="w-full mt-4" asChild>
                 <Link to="/get-the-app" onClick={() => setIsMenuOpen(false)}>
