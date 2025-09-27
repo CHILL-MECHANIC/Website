@@ -12,6 +12,7 @@ import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
+import heroBackground from "@/assets/hero-background.jpg";
 const services = [{
   id: "ac",
   title: "AC Service",
@@ -87,7 +88,7 @@ const Index = () => {
       <Header cartItemsCount={getCartItemsCount()} />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-16">
+      <section className="relative bg-gradient-to-r from-primary/90 to-primary/70 text-primary-foreground py-16 bg-cover bg-center bg-no-repeat" style={{backgroundImage: `url(${heroBackground})`}}>
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl mb-4 text-gray-50 text-center font-bold md:text-7xl">HAPPY APPLIANCES, HAPPIER HOMES</h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
