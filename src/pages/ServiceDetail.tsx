@@ -191,10 +191,10 @@ export default function ServiceDetail() {
                   
                   <div className="flex gap-3">
                     <Button 
-                      onClick={() => handleBookNow(serviceItem)}
+                      onClick={() => navigate(`/services/${serviceType}/${serviceItem.id}`)}
                       className="flex-1"
                     >
-                      Book Now
+                      View Details
                     </Button>
                     <Button 
                       onClick={() => handleAddToCart(serviceItem)}
