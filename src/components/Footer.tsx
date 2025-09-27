@@ -6,7 +6,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <img src={logo} alt="ChillMechanic Logo" className="h-16 w-16 mb-4" />
+            <img src={logo} alt="ChillMechanic Logo" className="h-24 w-24 mb-4 mx-auto" />
             
             
           </div>
