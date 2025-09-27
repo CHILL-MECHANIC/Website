@@ -13,8 +13,10 @@ export default function Header({
   cartItemsCount = 0
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
-  
+  const {
+    user,
+    signOut
+  } = useAuth();
   const services = [{
     name: "AC Service",
     path: "/services/ac"
@@ -32,19 +34,17 @@ export default function Header({
     path: "/services/washing-machine"
   }];
   return <header className="bg-background border-b sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-3 rounded-lg">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src={logo} alt="The Chill Mechanic" className="h-10 w-10" />
-            <span className="text-xl font-bold text-primary">CHILL MECHANIC</span>
+            <span className="text-xl font-bold text-slate-900">CHILLMECHANIC</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="hover:text-primary transition-colors">
-              Home
-            </Link>
+            <Link to="/" className="hover:text-primary transition-colors">HOME</Link>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -59,9 +59,7 @@ export default function Header({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link to="/about" className="hover:text-primary transition-colors">
-              About Us
-            </Link>
+            <Link to="/about" className="hover:text-primary transition-colors">ABOUT US</Link>
           </nav>
 
           {/* Cart, Profile and CTA */}
@@ -81,8 +79,7 @@ export default function Header({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {user ? (
-                  <>
+                {user ? <>
                     <DropdownMenuItem asChild>
                       <Link to="/profile">View Profile</Link>
                     </DropdownMenuItem>
@@ -90,17 +87,14 @@ export default function Header({
                     <DropdownMenuItem onClick={() => signOut()}>
                       Sign Out
                     </DropdownMenuItem>
-                  </>
-                ) : (
-                  <>
+                  </> : <>
                     <DropdownMenuItem asChild>
                       <Link to="/auth">Sign In</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/auth">Sign Up</Link>
                     </DropdownMenuItem>
-                  </>
-                )}
+                  </>}
               </DropdownMenuContent>
             </DropdownMenu>
             
@@ -134,20 +128,16 @@ export default function Header({
               </Link>
 
               {/* Mobile Profile Section */}
-              {user ? (
-                <>
+              {user ? <>
                   <Link to="/profile" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                     View Profile
                   </Link>
                   <Button variant="ghost" className="justify-start p-0 h-auto hover:text-primary" onClick={() => signOut()}>
                     Sign Out
                   </Button>
-                </>
-              ) : (
-                <Link to="/auth" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+                </> : <Link to="/auth" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                   Sign In / Sign Up
-                </Link>
-              )}
+                </Link>}
               
               <Button variant="default" className="w-full mt-4" asChild>
                 <Link to="/get-the-app" onClick={() => setIsMenuOpen(false)}>
