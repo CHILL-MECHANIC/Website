@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
-
 export default function Footer() {
-  return (
-    <footer className="bg-card border-t">
+  return <footer className="bg-card border-t">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-primary">The Chill Mechanic</h3>
+            <h3 className="text-lg font-bold text-primary">ChillMechanic</h3>
             <p className="text-sm text-muted-foreground">
               Your trusted partner for all cooling and heating appliance services. 
               Professional, reliable, and affordable.
@@ -84,6 +82,5 @@ export default function Footer() {
           <p>&copy; 2024 The Chill Mechanic. All rights reserved.</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 }
