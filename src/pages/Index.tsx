@@ -97,7 +97,15 @@ const Index = () => {
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-white/90 animate-fade-in [animation-delay:200ms] drop-shadow-lg [text-shadow:_1px_1px_4px_rgba(0,0,0,0.7)]">
             Dependable, reliable and efficient services for Less home appliance demands & service today!
           </p>
-          <Button size="lg" variant="secondary" className="text-lg px-8 py-3 animate-scale-in [animation-delay:400ms] hover-scale shadow-2xl">
+          <Button 
+            size="lg" 
+            variant="secondary" 
+            className="text-lg px-8 py-3 animate-scale-in [animation-delay:400ms] hover-scale shadow-2xl"
+            onClick={() => {
+              const servicesSection = document.querySelector('[data-services-section]');
+              servicesSection?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
             Book Service Now
           </Button>
         </div>
