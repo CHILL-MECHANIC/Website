@@ -1,11 +1,71 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useCart } from "@/contexts/CartContext";
-import { Shield, Eye, Lock, Users } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import { Shield, Eye, Lock, Users, UserX, AlertTriangle } from "lucide-react";
 
 export default function Privacy() {
   const { getCartItemsCount } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+
+    setIsDeleting(true);
+    try {
+      // Delete user's data from profiles table first
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (profileError) {
+        console.error('Error deleting profile:', profileError);
+      }
+
+      // Delete user's bookings and booking items (cascading delete will handle booking_items)
+      const { error: bookingsError } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (bookingsError) {
+        console.error('Error deleting bookings:', bookingsError);
+      }
+
+      // Delete the user account from auth (user can delete their own account)
+      const { error: deleteError } = await supabase.rpc('delete_user');
+      
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      toast({
+        title: "Account deleted",
+        description: "Your account and all associated data have been permanently deleted.",
+      });
+
+      navigate('/');
+    } catch (error: any) {
+      console.error('Error deleting account:', error);
+      toast({
+        title: "Error deleting account",
+        description: error.message || "Failed to delete your account. Please try again or contact support.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -184,6 +244,83 @@ export default function Privacy() {
                 </p>
               </CardContent>
             </Card>
+
+            {/* Delete Account Section */}
+            {user && (
+              <Card className="border-destructive bg-destructive/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-destructive">
+                    <UserX className="mr-2 h-5 w-5" />
+                    Delete Account
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-start space-x-3 p-4 bg-destructive/10 rounded-lg">
+                    <AlertTriangle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-destructive">Warning: This action is irreversible</h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Deleting your account will permanently remove all your data, including:
+                      </p>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground mt-2">
+                        <li>Your profile information and contact details</li>
+                        <li>All booking history and service records</li>
+                        <li>Payment history and receipts</li>
+                        <li>Preferences and settings</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <p className="text-muted-foreground text-sm">
+                      Before deleting your account, consider:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                      <li>Downloading any important data or receipts you may need</li>
+                      <li>Completing any pending service appointments</li>
+                      <li>Canceling any active service agreements</li>
+                    </ul>
+                  </div>
+
+                  <div className="pt-4">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="lg" disabled={isDeleting}>
+                          {isDeleting ? "Deleting..." : "Delete My Account"}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center text-destructive">
+                            <AlertTriangle className="mr-2 h-5 w-5" />
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="space-y-3">
+                            <p>
+                              This action cannot be undone. This will permanently delete your account 
+                              and remove all your data from our servers.
+                            </p>
+                            <p className="font-semibold">
+                              Type your email address to confirm: <span className="text-primary">{user.email}</span>
+                            </p>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleDeleteAccount}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            disabled={isDeleting}
+                          >
+                            {isDeleting ? "Deleting..." : "Yes, delete my account"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Contact Information */}
             <Card>
