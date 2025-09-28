@@ -1,24 +1,31 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, X } from "lucide-react";
+import { ArrowLeft, Check, X, Clock, Shield, DollarSign } from "lucide-react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 
 import acServiceImage from "@/assets/ac-service.jpg";
+import acServiceImage2 from "@/assets/ac-service-2.jpg";
+import acServiceImage3 from "@/assets/ac-service-3.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
+import refrigeratorServiceImage2 from "@/assets/refrigerator-service-2.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
+import roServiceImage2 from "@/assets/ro-service-2.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
+import geyserServiceImage2 from "@/assets/geyser-service-2.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
+import washingMachineServiceImage2 from "@/assets/washing-machine-service-2.jpg";
 
 const serviceItemDetails = {
   "ac-full": {
     id: "ac-full",
     name: "AC Full Servicing",
     categoryTitle: "AC Service & Repair",
-    image: acServiceImage,
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
     price: 749,
     duration: "2-3 hours",
     warranty: "30 days",
@@ -46,7 +53,7 @@ const serviceItemDetails = {
     id: "ac-basic",
     name: "AC Basic Cleaning",
     categoryTitle: "AC Service & Repair",
-    image: acServiceImage,
+    images: [acServiceImage, acServiceImage2],
     price: 299,
     duration: "1-2 hours",
     warranty: "15 days",
@@ -71,7 +78,7 @@ const serviceItemDetails = {
     id: "ac-repair",
     name: "AC Repair",
     categoryTitle: "AC Service & Repair",
-    image: acServiceImage,
+    images: [acServiceImage, acServiceImage3],
     price: 1200,
     duration: "2-4 hours",
     warranty: "90 days",
@@ -98,7 +105,7 @@ const serviceItemDetails = {
     id: "fridge-full",
     name: "Refrigerator Full Service",
     categoryTitle: "Refrigerator Service & Repair",
-    image: refrigeratorServiceImage,
+    images: [refrigeratorServiceImage, refrigeratorServiceImage2],
     price: 699,
     duration: "2-3 hours",
     warranty: "30 days",
@@ -125,7 +132,7 @@ const serviceItemDetails = {
     id: "ro-service",
     name: "RO Service & Maintenance",
     categoryTitle: "RO Water Purifier Service",
-    image: roServiceImage,
+    images: [roServiceImage, roServiceImage2],
     price: 399,
     duration: "1-2 hours",
     warranty: "60 days",
@@ -152,7 +159,7 @@ const serviceItemDetails = {
     id: "geyser-service",
     name: "Geyser Service",
     categoryTitle: "Geyser Service & Repair",
-    image: geyserServiceImage,
+    images: [geyserServiceImage, geyserServiceImage2],
     price: 499,
     duration: "1-2 hours",
     warranty: "30 days",
@@ -179,7 +186,7 @@ const serviceItemDetails = {
     id: "wm-service",
     name: "Washing Machine Service",
     categoryTitle: "Washing Machine Service & Repair",
-    image: washingMachineServiceImage,
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
     price: 599,
     duration: "2-3 hours",
     warranty: "30 days",
@@ -261,13 +268,23 @@ export default function ServiceItemDetail() {
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Service Image */}
+          {/* Service Image Carousel */}
           <div className="relative">
-            <img
-              src={serviceItem.image}
-              alt={serviceItem.name}
-              className="w-full h-96 object-cover rounded-lg shadow-lg"
-            />
+            <Carousel className="w-full">
+              <CarouselContent>
+                {serviceItem.images.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <img
+                      src={image}
+                      alt={`${serviceItem.name} - Image ${index + 1}`}
+                      className="w-full h-96 object-cover rounded-lg shadow-lg"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-4" />
+              <CarouselNext className="right-4" />
+            </Carousel>
           </div>
 
           {/* Service Details */}
@@ -279,23 +296,45 @@ export default function ServiceItemDetail() {
             <h1 className="text-4xl font-bold mb-4">{serviceItem.name}</h1>
             
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">${serviceItem.price}</div>
-                <div className="text-sm text-muted-foreground">Price</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">{serviceItem.duration}</div>
-                <div className="text-sm text-muted-foreground">Duration</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">{serviceItem.warranty}</div>
-                <div className="text-sm text-muted-foreground">Warranty</div>
-              </div>
+              <Card className="p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <DollarSign className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">${serviceItem.price}</div>
+                  <div className="text-sm text-muted-foreground">Price</div>
+                </div>
+              </Card>
+              <Card className="p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{serviceItem.duration}</div>
+                  <div className="text-sm text-muted-foreground">Duration</div>
+                </div>
+              </Card>
+              <Card className="p-4">
+                <div className="flex items-center justify-center mb-2">
+                  <Shield className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{serviceItem.warranty}</div>
+                  <div className="text-sm text-muted-foreground">Warranty</div>
+                </div>
+              </Card>
             </div>
 
-            <p className="text-lg text-muted-foreground mb-6">
-              {serviceItem.detailedDescription}
-            </p>
+            <Card className="p-6 mb-6">
+              <CardHeader className="px-0 pt-0">
+                <CardTitle className="text-xl">Service Description</CardTitle>
+              </CardHeader>
+              <CardContent className="px-0">
+                <p className="text-muted-foreground leading-relaxed">
+                  {serviceItem.detailedDescription}
+                </p>
+              </CardContent>
+            </Card>
 
             <div className="flex gap-3 mb-8">
               <Button onClick={handleBookNow} size="lg" className="flex-1">
