@@ -7,9 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2, Minus, Plus, ShoppingBag, Calendar, Clock } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Trash2, Minus, Plus, ShoppingBag, CalendarIcon, Clock } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -45,19 +50,31 @@ export default function Cart() {
   }
 
   const [bookingDetails, setBookingDetails] = useState({
-    date: "",
+    date: null as Date | null,
     time: "",
     instructions: ""
   });
-  const [showScheduling, setShowScheduling] = useState(false);
+  const [showSchedulingModal, setShowSchedulingModal] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
   const handleScheduleBooking = () => {
     if (!bookingDetails.date || !bookingDetails.time) {
       return; // Basic validation
     }
+    
+    if (!user) {
+      setShowSchedulingModal(false);
+      setShowAuthPrompt(true);
+      return;
+    }
+    
     navigate("/payment", { 
       state: { 
-        bookingData: bookingDetails 
+        bookingData: {
+          date: bookingDetails.date.toISOString().split('T')[0],
+          time: bookingDetails.time,
+          instructions: bookingDetails.instructions
+        }
       } 
     });
   };
@@ -148,6 +165,7 @@ export default function Cart() {
                   <CardTitle>Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {/* Order Summary */}
                   <div className="flex justify-between">
                     <span>Subtotal ({getCartItemsCount()} items)</span>
                     <span>${getCartTotal()}</span>
@@ -172,89 +190,14 @@ export default function Cart() {
                     </span>
                   </div>
                   
-                  {!showScheduling ? (
-                    <Button 
-                      className="w-full" 
-                      size="lg"
-                      onClick={() => {
-                        if (!user) {
-                          navigate("/auth");
-                          return;
-                        }
-                        setShowScheduling(true);
-                      }}
-                    >
-                      <Calendar className="mr-2 h-4 w-4" />
-                      Schedule Booking
-                    </Button>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="date">Preferred Date</Label>
-                          <Input
-                            id="date"
-                            type="date"
-                            value={bookingDetails.date}
-                            onChange={(e) => setBookingDetails({
-                              ...bookingDetails,
-                              date: e.target.value
-                            })}
-                            min={new Date().toISOString().split('T')[0]}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="time">Preferred Time</Label>
-                          <select
-                            id="time"
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            value={bookingDetails.time}
-                            onChange={(e) => setBookingDetails({
-                              ...bookingDetails,
-                              time: e.target.value
-                            })}
-                          >
-                            <option value="">Select Time</option>
-                            <option value="09:00">9:00 AM</option>
-                            <option value="10:00">10:00 AM</option>
-                            <option value="11:00">11:00 AM</option>
-                            <option value="12:00">12:00 PM</option>
-                            <option value="14:00">2:00 PM</option>
-                            <option value="15:00">3:00 PM</option>
-                            <option value="16:00">4:00 PM</option>
-                            <option value="17:00">5:00 PM</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="instructions">Special Instructions (Optional)</Label>
-                        <Textarea
-                          id="instructions"
-                          placeholder="Any special instructions for the technician..."
-                          value={bookingDetails.instructions}
-                          onChange={(e) => setBookingDetails({
-                            ...bookingDetails,
-                            instructions: e.target.value
-                          })}
-                        />
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button 
-                          className="flex-1" 
-                          onClick={handleScheduleBooking}
-                          disabled={!bookingDetails.date || !bookingDetails.time}
-                        >
-                          Proceed to Payment
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          onClick={() => setShowScheduling(false)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+                  <Button 
+                    className="w-full" 
+                    size="lg"
+                    onClick={() => setShowSchedulingModal(true)}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    Schedule Booking
+                  </Button>
                   
                   <Button 
                     variant="outline" 
@@ -269,6 +212,118 @@ export default function Cart() {
           </div>
         </div>
       </div>
+      
+      {/* Schedule Booking Modal */}
+      <Dialog open={showSchedulingModal} onOpenChange={setShowSchedulingModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Schedule Your Service</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Preferred Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !bookingDetails.date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {bookingDetails.date ? format(bookingDetails.date, "PPP") : "Pick a date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={bookingDetails.date}
+                    onSelect={(date) => setBookingDetails({...bookingDetails, date})}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Preferred Time</Label>
+              <select
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                value={bookingDetails.time}
+                onChange={(e) => setBookingDetails({...bookingDetails, time: e.target.value})}
+              >
+                <option value="">Select Time</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="17:00">5:00 PM</option>
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Special Instructions (Optional)</Label>
+              <Textarea
+                placeholder="Any special instructions for the technician..."
+                value={bookingDetails.instructions}
+                onChange={(e) => setBookingDetails({...bookingDetails, instructions: e.target.value})}
+              />
+            </div>
+            
+            <div className="flex space-x-2 pt-4">
+              <Button 
+                className="flex-1" 
+                onClick={handleScheduleBooking}
+                disabled={!bookingDetails.date || !bookingDetails.time}
+              >
+                Continue
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowSchedulingModal(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Auth Prompt Modal */}
+      <Dialog open={showAuthPrompt} onOpenChange={setShowAuthPrompt}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Sign in required</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-muted-foreground">
+              Please sign in or create an account to continue with your booking.
+            </p>
+            <div className="flex flex-col space-y-2">
+              <Button 
+                onClick={() => {
+                  setShowAuthPrompt(false);
+                  navigate("/auth");
+                }}
+              >
+                Sign In / Sign Up
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAuthPrompt(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       
       <Footer />
     </div>
