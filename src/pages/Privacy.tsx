@@ -22,33 +22,16 @@ export default function Privacy() {
 
     setIsDeleting(true);
     try {
-      // Delete user's data from profiles table first
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('user_id', user.id);
-
-      if (profileError) {
-        console.error('Error deleting profile:', profileError);
-      }
-
-      // Delete user's bookings and booking items (cascading delete will handle booking_items)
-      const { error: bookingsError } = await supabase
-        .from('bookings')
-        .delete()
-        .eq('user_id', user.id);
-
-      if (bookingsError) {
-        console.error('Error deleting bookings:', bookingsError);
-      }
-
-      // Delete the user account from auth (user can delete their own account)
-      const { error: deleteError } = await supabase.rpc('delete_user');
+      // Call the database function to delete user account and all associated data
+      const { error: deleteError } = await supabase.rpc('delete_user_account');
       
       if (deleteError) {
         throw deleteError;
       }
 
+      // Sign out the user
+      await supabase.auth.signOut();
+      
       toast({
         title: "Account deleted",
         description: "Your account and all associated data have been permanently deleted.",
