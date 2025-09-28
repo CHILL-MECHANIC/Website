@@ -128,6 +128,11 @@ export default function ServiceSelectionModal({
     }, 100);
   };
 
+  const handleServiceCategoryClick = (category: string) => {
+    onClose();
+    navigate(`/services/${category}`);
+  };
+
   const handleServiceToggle = (service: ServiceOption, checked: boolean) => {
     if (checked) {
       setSelectedServices([...selectedServices, service]);
@@ -185,10 +190,52 @@ export default function ServiceSelectionModal({
             );
           })}
           
-          <div className="text-center p-4 border rounded-lg bg-muted/20">
-            <Button variant="link" className="text-primary" onClick={handleOtherServicesClick}>
-              + Other Services
-            </Button>
+          <div className="p-4 border rounded-lg bg-muted/20">
+            <div className="text-center mb-3">
+              <span className="text-sm font-medium text-muted-foreground">Browse Other Services</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => handleServiceCategoryClick('ac')}
+                className="text-xs"
+              >
+                AC Services
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => handleServiceCategoryClick('refrigerator')}
+                className="text-xs"
+              >
+                Refrigerator
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => handleServiceCategoryClick('ro')}
+                className="text-xs"
+              >
+                RO Services
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => handleServiceCategoryClick('geyser')}
+                className="text-xs"
+              >
+                Geyser Services
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => handleServiceCategoryClick('washing-machine')}
+                className="text-xs col-span-2"
+              >
+                Washing Machine
+              </Button>
+            </div>
           </div>
         </div>
 
