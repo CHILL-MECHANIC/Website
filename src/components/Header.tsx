@@ -34,6 +34,9 @@ export default function Header({
   }, {
     name: "Washing Machine Service",
     path: "/services/washing-machine"
+  }, {
+    name: "Microwave Service",
+    path: "/services/microwave"
   }];
   return <header className="bg-background border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 rounded-lg">
