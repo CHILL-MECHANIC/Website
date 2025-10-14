@@ -48,7 +48,7 @@ export default function Header({
             <img src={logo} alt="The Chill Mechanic" className="h-10 w-10" />
             <span className="text-xl font-bold">
               <span className="text-[#1277BD]">CHILL</span>
-              <span className="text-slate-900"> MECHANIC</span>
+              <span className="text-[#FBB044]"> MECHANIC</span>
             </span>
           </Link>
 
