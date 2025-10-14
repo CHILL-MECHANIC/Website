@@ -10,6 +10,7 @@ import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
+import microwaveServiceImage from "@/assets/microwave-service.jpg";
 
 const serviceDetails = {
   ac: {
@@ -86,6 +87,21 @@ const serviceDetails = {
       { id: "wm-service", name: "Washing Machine Service", price: 599, description: "Regular maintenance with drum cleaning and performance check." },
       { id: "wm-repair", name: "Washing Machine Repair", price: 1199, description: "Complete repair services for motor, belt, and control issues." },
       { id: "wm-installation", name: "Washing Machine Installation", price: 699, description: "Professional installation and setup of new washing machines." },
+    ],
+  },
+  microwave: {
+    title: "Microwave Service & Repair",
+    image: microwaveServiceImage,
+    description: "Professional microwave repair services for heating issues, door problems, and electrical faults.",
+    longDescription: `
+      Our microwave repair services include magnetron replacement, door repair, turntable fixes, 
+      control panel repairs, and complete system diagnostics. We handle all major brands and 
+      ensure your microwave operates safely and efficiently for convenient cooking.
+    `,
+    services: [
+      { id: "microwave-service", name: "Microwave Service", price: 399, description: "Complete maintenance with interior cleaning and component check." },
+      { id: "microwave-repair", name: "Microwave Repair", price: 799, description: "Professional repair for heating issues, door problems, and electrical faults." },
+      { id: "microwave-installation", name: "Microwave Installation", price: 499, description: "Professional installation and setup of new microwave units." },
     ],
   },
 };

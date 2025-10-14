@@ -19,6 +19,8 @@ import geyserServiceImage from "@/assets/geyser-service.jpg";
 import geyserServiceImage2 from "@/assets/geyser-service-2.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
 import washingMachineServiceImage2 from "@/assets/washing-machine-service-2.jpg";
+import microwaveServiceImage from "@/assets/microwave-service.jpg";
+import microwaveServiceImage2 from "@/assets/microwave-service-2.jpg";
 
 const serviceItemDetails = {
   "ac-full": {
@@ -207,6 +209,86 @@ const serviceItemDetails = {
       "Control board repairs",
       "Drum replacement",
       "Installation services"
+    ]
+  },
+  "microwave-service": {
+    id: "microwave-service",
+    name: "Microwave Service",
+    categoryTitle: "Microwave Service & Repair",
+    images: [microwaveServiceImage, microwaveServiceImage2],
+    price: 399,
+    duration: "1-2 hours",
+    warranty: "30 days",
+    description: "Complete maintenance with interior cleaning and component check.",
+    detailedDescription: "Professional microwave maintenance including interior cleaning, magnetron testing, turntable inspection, and safety checks for optimal cooking performance.",
+    included: [
+      "Interior deep cleaning",
+      "Magnetron functionality test",
+      "Turntable and roller inspection",
+      "Door seal and alignment check",
+      "Control panel testing",
+      "Safety interlock inspection",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Magnetron replacement",
+      "Control board replacement",
+      "Door replacement",
+      "Cavity repair",
+      "Installation services"
+    ]
+  },
+  "microwave-repair": {
+    id: "microwave-repair",
+    name: "Microwave Repair",
+    categoryTitle: "Microwave Service & Repair",
+    images: [microwaveServiceImage, microwaveServiceImage2],
+    price: 799,
+    duration: "2-3 hours",
+    warranty: "60 days",
+    description: "Professional repair for heating issues, door problems, and electrical faults.",
+    detailedDescription: "Expert microwave repair service to diagnose and fix heating issues, door problems, electrical faults, and component failures to restore your microwave to optimal working condition.",
+    included: [
+      "Complete diagnostic assessment",
+      "Heating issue repair",
+      "Door mechanism repair",
+      "Electrical fault correction",
+      "Component replacement (if needed)",
+      "Safety system verification",
+      "60-day repair warranty"
+    ],
+    notIncluded: [
+      "Cost of major replacement parts",
+      "Cavity structural repairs",
+      "Cosmetic damage repairs",
+      "Installation of new units",
+      "Extended warranty coverage"
+    ]
+  },
+  "microwave-installation": {
+    id: "microwave-installation",
+    name: "Microwave Installation",
+    categoryTitle: "Microwave Service & Repair",
+    images: [microwaveServiceImage, microwaveServiceImage2],
+    price: 499,
+    duration: "1-2 hours",
+    warranty: "15 days",
+    description: "Professional installation and setup of new microwave units.",
+    detailedDescription: "Complete microwave installation service including mounting, electrical connection, safety checks, and operational demonstration for countertop and over-the-range models.",
+    included: [
+      "Professional mounting and positioning",
+      "Electrical connection setup",
+      "Safety and functionality testing",
+      "Operational demonstration",
+      "User guide explanation",
+      "15-day installation warranty"
+    ],
+    notIncluded: [
+      "Microwave unit cost",
+      "Custom cabinetry work",
+      "Major electrical upgrades",
+      "Wall modifications",
+      "Removal of old unit"
     ]
   }
 };

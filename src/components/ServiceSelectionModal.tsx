@@ -102,6 +102,26 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       price: 1199,
     },
   ],
+  microwave: [
+    {
+      id: "microwave-service",
+      name: "Microwave Service",
+      description: ["Interior Cleaning", "Magnetron Test", "Turntable Check"],
+      price: 399,
+    },
+    {
+      id: "microwave-repair",
+      name: "Microwave Repair",
+      description: ["Heating Issues", "Door Repair", "Electrical Faults"],
+      price: 799,
+    },
+    {
+      id: "microwave-installation",
+      name: "Microwave Installation",
+      description: ["Professional Mounting", "Electrical Setup", "Safety Test"],
+      price: 499,
+    },
+  ],
 };
 
 export default function ServiceSelectionModal({
@@ -231,9 +251,17 @@ export default function ServiceSelectionModal({
                 variant="outline" 
                 size="sm" 
                 onClick={() => handleServiceCategoryClick('washing-machine')}
-                className="text-xs col-span-2"
+                className="text-xs"
               >
                 Washing Machine
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => handleServiceCategoryClick('microwave')}
+                className="text-xs"
+              >
+                Microwave
               </Button>
             </div>
           </div>

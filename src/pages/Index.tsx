@@ -12,6 +12,7 @@ import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
+import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import heroBackground from "@/assets/hero-background.jpg";
 const services = [{
   id: "ac",
@@ -48,6 +49,13 @@ const services = [{
   image: washingMachineServiceImage,
   price: "$349",
   route: "/services/washing-machine"
+}, {
+  id: "microwave",
+  title: "Microwave Service",
+  description: "Professional microwave repair and maintenance services. We handle heating issues, door repairs, and electrical problems.",
+  image: microwaveServiceImage,
+  price: "$249",
+  route: "/services/microwave"
 }];
 const Index = () => {
   const [selectedServiceType, setSelectedServiceType] = useState<string>("");
