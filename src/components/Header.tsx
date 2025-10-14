@@ -18,7 +18,9 @@ export default function Header({
     user,
     signOut
   } = useAuth();
-  const { isAdmin } = useAdmin();
+  const {
+    isAdmin
+  } = useAdmin();
   const services = [{
     name: "AC Service",
     path: "/services/ac"
@@ -44,7 +46,7 @@ export default function Header({
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src={logo} alt="The Chill Mechanic" className="h-10 w-10" />
-            <span className="text-xl font-bold text-slate-900">CHILLMECHANIC</span>
+            <span className="text-xl font-bold text-slate-900">CHILL MECHANIC</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -141,11 +143,9 @@ export default function Header({
                   <Link to="/profile" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                     View Profile
                   </Link>
-                  {isAdmin && (
-                    <Link to="/admin" className="text-primary font-medium hover:text-primary/80 transition-colors" onClick={() => setIsMenuOpen(false)}>
+                  {isAdmin && <Link to="/admin" className="text-primary font-medium hover:text-primary/80 transition-colors" onClick={() => setIsMenuOpen(false)}>
                       Admin Dashboard
-                    </Link>
-                  )}
+                    </Link>}
                   <Button variant="ghost" className="justify-start p-0 h-auto hover:text-primary" onClick={() => signOut()}>
                     Sign Out
                   </Button>
