@@ -46,7 +46,10 @@ export default function Header({
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src={logo} alt="The Chill Mechanic" className="h-10 w-10" />
-            <span className="text-xl font-bold text-slate-900">CHILL MECHANIC</span>
+            <span className="text-xl font-bold">
+              <span className="text-[#1277BD]">CHILL</span>
+              <span className="text-slate-900"> MECHANIC</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
