@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdmin } from "@/hooks/useAdmin";
 import logo from "@/assets/logo.png";
 interface HeaderProps {
   cartItemsCount?: number;
@@ -17,6 +18,7 @@ export default function Header({
     user,
     signOut
   } = useAuth();
+  const { isAdmin } = useAdmin();
   const services = [{
     name: "AC Service",
     path: "/services/ac"
@@ -81,6 +83,12 @@ export default function Header({
                     <DropdownMenuItem asChild>
                       <Link to="/profile">View Profile</Link>
                     </DropdownMenuItem>
+                    {isAdmin && <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="text-primary font-medium">Admin Dashboard</Link>
+                      </DropdownMenuItem>
+                    </>}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => signOut()}>
                       Sign Out
@@ -130,6 +138,11 @@ export default function Header({
                   <Link to="/profile" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                     View Profile
                   </Link>
+                  {isAdmin && (
+                    <Link to="/admin" className="text-primary font-medium hover:text-primary/80 transition-colors" onClick={() => setIsMenuOpen(false)}>
+                      Admin Dashboard
+                    </Link>
+                  )}
                   <Button variant="ghost" className="justify-start p-0 h-auto hover:text-primary" onClick={() => signOut()}>
                     Sign Out
                   </Button>
