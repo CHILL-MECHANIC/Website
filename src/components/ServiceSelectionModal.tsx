@@ -102,6 +102,7 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       price: 1199,
     },
   ],
+<<<<<<< HEAD
   microwave: [
     {
       id: "microwave-service",
@@ -122,6 +123,8 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       price: 499,
     },
   ],
+=======
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 };
 
 export default function ServiceSelectionModal({
@@ -202,7 +205,11 @@ export default function ServiceSelectionModal({
                     </ul>
                     <div className="mt-2">
                       <span className="text-sm text-muted-foreground">Total Price incl. taxes </span>
+<<<<<<< HEAD
                       <span className="font-bold text-lg">{service.price}</span>
+=======
+                      <span className="font-bold text-lg">${service.price}</span>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                     </div>
                   </div>
                 </div>
@@ -251,6 +258,7 @@ export default function ServiceSelectionModal({
                 variant="outline" 
                 size="sm" 
                 onClick={() => handleServiceCategoryClick('washing-machine')}
+<<<<<<< HEAD
                 className="text-xs"
               >
                 Washing Machine
@@ -263,6 +271,12 @@ export default function ServiceSelectionModal({
               >
                 Microwave
               </Button>
+=======
+                className="text-xs col-span-2"
+              >
+                Washing Machine
+              </Button>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
             </div>
           </div>
         </div>
@@ -271,7 +285,11 @@ export default function ServiceSelectionModal({
           <div className="border-t pt-4">
             <div className="flex justify-between items-center mb-4">
               <span className="font-medium">Total Amount:</span>
+<<<<<<< HEAD
               <span className="text-xl font-bold text-primary">₹{totalPrice}</span>
+=======
+              <span className="text-xl font-bold text-primary">${totalPrice}</span>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
             </div>
           </div>
         )}

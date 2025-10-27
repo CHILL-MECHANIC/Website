@@ -19,8 +19,11 @@ import geyserServiceImage from "@/assets/geyser-service.jpg";
 import geyserServiceImage2 from "@/assets/geyser-service-2.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
 import washingMachineServiceImage2 from "@/assets/washing-machine-service-2.jpg";
+<<<<<<< HEAD
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import microwaveServiceImage2 from "@/assets/microwave-service-2.jpg";
+=======
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 
 const serviceItemDetails = {
   "ac-full": {
@@ -210,6 +213,7 @@ const serviceItemDetails = {
       "Drum replacement",
       "Installation services"
     ]
+<<<<<<< HEAD
   },
   "microwave-service": {
     id: "microwave-service",
@@ -290,6 +294,8 @@ const serviceItemDetails = {
       "Wall modifications",
       "Removal of old unit"
     ]
+=======
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   }
 };
 
@@ -383,7 +389,11 @@ export default function ServiceItemDetail() {
                   <DollarSign className="h-5 w-5 text-primary" />
                 </div>
                 <div className="text-center">
+<<<<<<< HEAD
                   <div className="text-2xl font-bold text-primary">₹{serviceItem.price}</div>
+=======
+                  <div className="text-2xl font-bold text-primary">${serviceItem.price}</div>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                   <div className="text-sm text-muted-foreground">Price</div>
                 </div>
               </Card>

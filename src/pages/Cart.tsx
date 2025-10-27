@@ -86,7 +86,11 @@ export default function Cart() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
+<<<<<<< HEAD
             <h1 className="text-3xl font-bold">Your Cart</h1>
+=======
+            <h1 className="text-3xl font-bold">YOUR CART</h1>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
             <Button 
               variant="outline" 
               onClick={clearCart}
@@ -111,7 +115,11 @@ export default function Cart() {
                           ))}
                         </div>
                         <div className="text-lg font-bold text-primary mt-2">
+<<<<<<< HEAD
                           ₹{item.price}
+=======
+                          ${item.price}
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                         </div>
                       </div>
                       
@@ -151,7 +159,11 @@ export default function Cart() {
                     {/* Item Total */}
                     <div className="mt-4 pt-4 border-t flex justify-between items-center">
                       <span className="font-medium">Subtotal:</span>
+<<<<<<< HEAD
                       <span className="font-bold text-primary">₹{item.price * item.quantity}</span>
+=======
+                      <span className="font-bold text-primary">${item.price * item.quantity}</span>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                     </div>
                   </CardContent>
                 </Card>
@@ -168,17 +180,29 @@ export default function Cart() {
                   {/* Order Summary */}
                   <div className="flex justify-between">
                     <span>Subtotal ({getCartItemsCount()} items)</span>
+<<<<<<< HEAD
                     <span>₹{getCartTotal()}</span>
+=======
+                    <span>${getCartTotal()}</span>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                   </div>
                   
                   <div className="flex justify-between">
                     <span>Service Tax</span>
+<<<<<<< HEAD
                     <span>₹{(getCartTotal() * 0.18).toFixed(0)}</span>
+=======
+                    <span>${(getCartTotal() * 0.18).toFixed(0)}</span>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                   </div>
                   
                   <div className="flex justify-between">
                     <span>Travel Charges</span>
+<<<<<<< HEAD
                     <span>₹50</span>
+=======
+                    <span>$50</span>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                   </div>
                   
                   <hr />
@@ -186,7 +210,11 @@ export default function Cart() {
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-primary">
+<<<<<<< HEAD
                       ₹{(getCartTotal() + getCartTotal() * 0.18 + 50).toFixed(0)}
+=======
+                      ${(getCartTotal() + getCartTotal() * 0.18 + 50).toFixed(0)}
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                     </span>
                   </div>
                   

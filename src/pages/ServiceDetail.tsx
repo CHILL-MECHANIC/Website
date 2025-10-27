@@ -10,7 +10,10 @@ import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
+<<<<<<< HEAD
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
+=======
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 
 const serviceDetails = {
   ac: {
@@ -89,6 +92,7 @@ const serviceDetails = {
       { id: "wm-installation", name: "Washing Machine Installation", price: 699, description: "Professional installation and setup of new washing machines." },
     ],
   },
+<<<<<<< HEAD
   microwave: {
     title: "Microwave Service & Repair",
     image: microwaveServiceImage,
@@ -104,6 +108,8 @@ const serviceDetails = {
       { id: "microwave-installation", name: "Microwave Installation", price: 499, description: "Professional installation and setup of new microwave units." },
     ],
   },
+=======
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 };
 
 export default function ServiceDetail() {
@@ -202,7 +208,11 @@ export default function ServiceDetail() {
                   
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm text-muted-foreground">Starting from</span>
+<<<<<<< HEAD
                     <span className="text-2xl font-bold text-primary">₹{serviceItem.price}</span>
+=======
+                    <span className="text-2xl font-bold text-primary">${serviceItem.price}</span>
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                   </div>
                   
                   <div className="flex gap-3">

@@ -12,41 +12,61 @@ import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
+<<<<<<< HEAD
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
+=======
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 import heroBackground from "@/assets/hero-background.jpg";
 const services = [{
   id: "ac",
   title: "AC Service",
   description: "Expert AC repair and maintenance services. We fix cooling issues, clean filters, and ensure optimal performance for your comfort.",
   image: acServiceImage,
+<<<<<<< HEAD
   price: "₹299",
+=======
+  price: "$299",
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   route: "/services/ac"
 }, {
   id: "refrigerator",
   title: "Refrigerator Service",
   description: "Professional refrigerator repair services. From cooling problems to compressor issues, we keep your appliances running smoothly.",
   image: refrigeratorServiceImage,
+<<<<<<< HEAD
   price: "₹399",
+=======
+  price: "$399",
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   route: "/services/refrigerator"
 }, {
   id: "ro",
   title: "RO Service",
   description: "Complete RO water purifier service and maintenance. Filter replacements, membrane cleaning, and installation services.",
   image: roServiceImage,
+<<<<<<< HEAD
   price: "₹199",
+=======
+  price: "$199",
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   route: "/services/ro"
 }, {
   id: "geyser",
   title: "Geyser Service",
   description: "Reliable geyser repair and installation services. We handle heating element replacement, thermostat issues, and safety checks.",
   image: geyserServiceImage,
+<<<<<<< HEAD
   price: "₹249",
+=======
+  price: "$249",
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   route: "/services/geyser"
 }, {
   id: "washing-machine",
   title: "Washing Machine Service",
   description: "Expert washing machine repair services. Motor repairs, drum cleaning, and maintenance to keep your laundry running smoothly.",
   image: washingMachineServiceImage,
+<<<<<<< HEAD
   price: "₹349",
   route: "/services/washing-machine"
 }, {
@@ -56,6 +76,10 @@ const services = [{
   image: microwaveServiceImage,
   price: "₹249",
   route: "/services/microwave"
+=======
+  price: "$349",
+  route: "/services/washing-machine"
+>>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 }];
 const Index = () => {
   const [selectedServiceType, setSelectedServiceType] = useState<string>("");
