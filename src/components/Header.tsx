@@ -5,10 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
-<<<<<<< HEAD
 import { useAdmin } from "@/hooks/useAdmin";
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 import logo from "@/assets/Logo.webp";
 interface HeaderProps {
   cartItemsCount?: number;
@@ -21,12 +18,9 @@ export default function Header({
     user,
     signOut
   } = useAuth();
-<<<<<<< HEAD
   const {
     isAdmin
   } = useAdmin();
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   const services = [{
     name: "AC Service",
     path: "/services/ac"
@@ -42,12 +36,9 @@ export default function Header({
   }, {
     name: "Washing Machine Service",
     path: "/services/washing-machine"
-<<<<<<< HEAD
   }, {
     name: "Microwave Service",
     path: "/services/microwave"
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   }];
   return <header className="bg-background border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 rounded-lg">
@@ -55,14 +46,11 @@ export default function Header({
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img src={logo} alt="The Chill Mechanic" className="h-10 w-10" />
-<<<<<<< HEAD
             <span className="text-xl font-bold">
               <span className="text-[#1277BD]">CHILL</span>
               <span className="text-[#FBB044]"> MECHANIC</span>
             </span>
-=======
             <span className="text-xl font-bold text-slate-900">CHILL MECHANIC</span>
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
           </Link>
 
           {/* Desktop Navigation */}
@@ -104,15 +92,12 @@ export default function Header({
                     <DropdownMenuItem asChild>
                       <Link to="/profile">View Profile</Link>
                     </DropdownMenuItem>
-<<<<<<< HEAD
                     {isAdmin && <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <Link to="/admin" className="text-primary font-medium">Admin Dashboard</Link>
                       </DropdownMenuItem>
                     </>}
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => signOut()}>
                       Sign Out
@@ -162,12 +147,9 @@ export default function Header({
                   <Link to="/profile" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                     View Profile
                   </Link>
-<<<<<<< HEAD
                   {isAdmin && <Link to="/admin" className="text-primary font-medium hover:text-primary/80 transition-colors" onClick={() => setIsMenuOpen(false)}>
                       Admin Dashboard
                     </Link>}
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
                   <Button variant="ghost" className="justify-start p-0 h-auto hover:text-primary" onClick={() => signOut()}>
                     Sign Out
                   </Button>

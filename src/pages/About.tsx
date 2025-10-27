@@ -16,11 +16,8 @@ export default function About() {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-<<<<<<< HEAD
               About <span className="text-primary">Chill Mechanic</span>
-=======
               About <span className="text-primary">ChillMechanic</span>
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Your trusted partner for all cooling and heating appliance services. 

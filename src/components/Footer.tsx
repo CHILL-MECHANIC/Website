@@ -6,11 +6,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-<<<<<<< HEAD
             <img src={logo} alt="ChillMechanic Logo" className="h-26 w-26 mb-4 mx-auto" />
-=======
             <img src={logo} alt="ChillMechanic Logo" className="h-27 w-27 mb-4 mx-auto" />
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
             
             
           </div>
@@ -44,14 +41,11 @@ export default function Footer() {
                   Washing Machine Service
                 </Link>
               </li>
-<<<<<<< HEAD
               <li>
                 <Link to="/services/microwave" className="text-muted-foreground hover:text-primary transition-colors">
                   Microwave Services
                 </Link>
               </li>
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
             </ul>
           </div>
 
@@ -90,11 +84,8 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-<<<<<<< HEAD
           <p>&copy; 2024 The Chill Mechanic. All rights reserved.</p>
-=======
           <p>&copy; 2025 ChillMechanic. All rights reserved.</p>
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
         </div>
       </div>
     </footer>;

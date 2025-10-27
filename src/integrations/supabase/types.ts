@@ -63,10 +63,7 @@ export type Database = {
           service_tax: number
           special_instructions: string | null
           status: string
-<<<<<<< HEAD
           technician_id: string | null
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
           total_amount: number
           travel_charges: number
           updated_at: string
@@ -82,10 +79,7 @@ export type Database = {
           service_tax?: number
           special_instructions?: string | null
           status?: string
-<<<<<<< HEAD
           technician_id?: string | null
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
           total_amount: number
           travel_charges?: number
           updated_at?: string
@@ -101,16 +95,12 @@ export type Database = {
           service_tax?: number
           special_instructions?: string | null
           status?: string
-<<<<<<< HEAD
           technician_id?: string | null
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
           total_amount?: number
           travel_charges?: number
           updated_at?: string
           user_id?: string
         }
-<<<<<<< HEAD
         Relationships: [
           {
             foreignKeyName: "bookings_technician_id_fkey"
@@ -120,9 +110,7 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-=======
         Relationships: []
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
       }
       profiles: {
         Row: {
@@ -169,7 +157,6 @@ export type Database = {
         }
         Relationships: []
       }
-<<<<<<< HEAD
       ratings: {
         Row: {
           booking_id: string
@@ -205,8 +192,6 @@ export type Database = {
           },
         ]
       }
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
       services: {
         Row: {
           created_at: string
@@ -234,7 +219,6 @@ export type Database = {
         }
         Relationships: []
       }
-<<<<<<< HEAD
       technicians: {
         Row: {
           created_at: string
@@ -289,8 +273,6 @@ export type Database = {
         }
         Relationships: []
       }
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
     }
     Views: {
       [_ in never]: never
@@ -300,7 +282,6 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
-<<<<<<< HEAD
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -311,11 +292,9 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
-=======
     }
     Enums: {
       [_ in never]: never
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
     }
     CompositeTypes: {
       [_ in never]: never
@@ -442,12 +421,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-<<<<<<< HEAD
     Enums: {
       app_role: ["admin", "user"],
     },
-=======
     Enums: {},
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
   },
 } as const

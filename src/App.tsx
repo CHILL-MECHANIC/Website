@@ -10,7 +10,6 @@ import Index from "./pages/Index";
 import ServiceDetail from "./pages/ServiceDetail";
 import ServiceItemDetail from "./pages/ServiceItemDetail";
 import Cart from "./pages/Cart";
-<<<<<<< HEAD
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminBookings from "./pages/admin/AdminBookings";
 import AdminServices from "./pages/admin/AdminServices";
@@ -18,8 +17,6 @@ import AdminTechnicians from "./pages/admin/AdminTechnicians";
 import AdminRatings from "./pages/admin/AdminRatings";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSettings from "./pages/admin/AdminSettings";
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
 import Payment from "./pages/Payment";
 import BookingSuccess from "./pages/BookingSuccess";
 import Auth from "./pages/Auth";
@@ -51,8 +48,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
-<<<<<<< HEAD
-              
+
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/bookings" element={<AdminBookings />} />
@@ -61,9 +57,6 @@ const App = () => (
               <Route path="/admin/ratings" element={<AdminRatings />} />
               <Route path="/admin/analytics" element={<AdminAnalytics />} />
               <Route path="/admin/settings" element={<AdminSettings />} />
-              
-=======
->>>>>>> 0f8122ef4c719446dd94de588517d559432f8136
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
