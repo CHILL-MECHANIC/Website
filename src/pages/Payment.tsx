@@ -49,9 +49,9 @@ export default function Payment() {
   }, [user, bookingData, cartItems.length, navigate]);
 
   const subtotal = getCartTotal();
-  const serviceTax = Math.round(subtotal * 0.18);
+  const GST = Math.round(subtotal * 0.18);
   const travelCharges = 50;
-  const total = subtotal + serviceTax + travelCharges;
+  const total = subtotal + GST + travelCharges;
 
   const handleCardInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -95,7 +95,7 @@ export default function Payment() {
           booking_date: bookingData.date,
           booking_time: bookingData.time,
           total_amount: subtotal,
-          service_tax: serviceTax,
+          service_tax: GST,
           travel_charges: travelCharges,
           final_amount: total,
           status: "confirmed",
@@ -186,8 +186,8 @@ export default function Payment() {
                         <span>₹{subtotal}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Service Tax (18%)</span>
-                        <span>₹{serviceTax}</span>
+                        <span>GST(18%)</span>
+                        <span>₹{GST}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Travel Charges</span>

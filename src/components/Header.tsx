@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdmin } from "@/hooks/useAdmin";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/Logo.webp";
 interface HeaderProps {
   cartItemsCount?: number;
 }

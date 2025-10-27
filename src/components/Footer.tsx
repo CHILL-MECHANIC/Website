@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/Logo.webp";
 export default function Footer() {
   return <footer className="bg-card border-t">
       <div className="container mx-auto px-4 py-8">
@@ -38,6 +38,9 @@ export default function Footer() {
               <li>
                 <Link to="/services/washing-machine" className="text-muted-foreground hover:text-primary transition-colors">
                   Washing Machine Service
+                </Link>
+                <Link to="/services/microwave" className="text-muted-foreground hover:text-primary transition-colors">
+                  Microwave Service
                 </Link>
               </li>
             </ul>
@@ -78,7 +81,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 The Chill Mechanic. All rights reserved.</p>
+          <p>&copy; 2025 Chill Mechanic | Happy Appliances, Happier Homes. All rights reserved.</p>
         </div>
       </div>
     </footer>;

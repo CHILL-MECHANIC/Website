@@ -383,7 +383,7 @@ export default function ServiceItemDetail() {
                   <DollarSign className="h-5 w-5 text-primary" />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">${serviceItem.price}</div>
+                  <div className="text-2xl font-bold text-primary">₹{serviceItem.price}</div>
                   <div className="text-sm text-muted-foreground">Price</div>
                 </div>
               </Card>

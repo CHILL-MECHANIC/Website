@@ -16,11 +16,20 @@ export default function About() {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              About <span className="text-primary">The Chill Mechanic</span>
+              About <span className="text-primary">Chill Mechanic</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Your trusted partner for all cooling and heating appliance services. 
-              We bring professional, reliable, and affordable solutions right to your doorstep.
+              Our Story – From Bhiwani to Gurgaon.
+
+ <b> Chill Mechanic</b> is not just a startup; it’s a legacy reborn.
+
+Almost 50 years ago, in a small town called Bhiwani, Haryana, a visionary and my mentor – Mr. Rajkumar Kakkar – saw an opportunity where others saw a problem. At a time when refrigerators were used only seasonally and home appliances were rare in small towns, he founded a humble repair shop named Standard Refrigeration.
+
+What began as a small initiative by Mr. Rajkumar Kakkar slowly grew into a trusted name. Over the years, that one shop transformed into a recognized business, and his honesty, skills, and dedication earned him such respect that people identified the entire street by his name.
+
+Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Cyber City.
+
+
             </p>
           </div>
 
@@ -31,9 +40,7 @@ export default function About() {
             </CardHeader>
             <CardContent>
               <p className="text-lg text-center text-muted-foreground">
-                To provide exceptional appliance maintenance and repair services that ensure comfort, 
-                efficiency, and peace of mind for every home and business we serve. We believe in 
-                building lasting relationships through quality service and transparent pricing.
+              Our mission is simple: to honor the legacy of Mr. Rajkumar Kakkar by delivering the same trust, the same satisfaction, and the same dedication – but in a modern, <b>innovative</b> way.
               </p>
             </CardContent>
           </Card>

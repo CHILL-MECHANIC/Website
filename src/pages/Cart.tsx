@@ -111,7 +111,7 @@ export default function Cart() {
                           ))}
                         </div>
                         <div className="text-lg font-bold text-primary mt-2">
-                          ${item.price}
+                          ₹{item.price}
                         </div>
                       </div>
                       
@@ -151,7 +151,7 @@ export default function Cart() {
                     {/* Item Total */}
                     <div className="mt-4 pt-4 border-t flex justify-between items-center">
                       <span className="font-medium">Subtotal:</span>
-                      <span className="font-bold text-primary">${item.price * item.quantity}</span>
+                      <span className="font-bold text-primary">₹{item.price * item.quantity}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -168,17 +168,17 @@ export default function Cart() {
                   {/* Order Summary */}
                   <div className="flex justify-between">
                     <span>Subtotal ({getCartItemsCount()} items)</span>
-                    <span>${getCartTotal()}</span>
+                    <span>₹{getCartTotal()}</span>
                   </div>
                   
                   <div className="flex justify-between">
                     <span>Service Tax</span>
-                    <span>${(getCartTotal() * 0.18).toFixed(0)}</span>
+                    <span>₹{(getCartTotal() * 0.18).toFixed(0)}</span>
                   </div>
                   
                   <div className="flex justify-between">
                     <span>Travel Charges</span>
-                    <span>$50</span>
+                    <span>₹50</span>
                   </div>
                   
                   <hr />
@@ -186,7 +186,7 @@ export default function Cart() {
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-primary">
-                      ${(getCartTotal() + getCartTotal() * 0.18 + 50).toFixed(0)}
+                      ₹{(getCartTotal() + getCartTotal() * 0.18 + 50).toFixed(0)}
                     </span>
                   </div>
                   

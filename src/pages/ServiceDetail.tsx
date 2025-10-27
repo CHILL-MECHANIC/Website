@@ -138,7 +138,7 @@ export default function ServiceDetail() {
     addToCart([cartService]);
     toast({
       title: "Added to cart",
-      description: `${serviceItem.name} has been added to your cart.`,
+     description: `₹${serviceItem.price} has been added to your cart.`,
     });
   };
 
@@ -202,7 +202,7 @@ export default function ServiceDetail() {
                   
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm text-muted-foreground">Starting from</span>
-                    <span className="text-2xl font-bold text-primary">${serviceItem.price}</span>
+                    <span className="text-2xl font-bold text-primary">₹{serviceItem.price}</span>
                   </div>
                   
                   <div className="flex gap-3">

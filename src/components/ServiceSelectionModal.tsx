@@ -202,7 +202,7 @@ export default function ServiceSelectionModal({
                     </ul>
                     <div className="mt-2">
                       <span className="text-sm text-muted-foreground">Total Price incl. taxes </span>
-                      <span className="font-bold text-lg">${service.price}</span>
+                      <span className="font-bold text-lg">₹{service.price}</span>
                     </div>
                   </div>
                 </div>
@@ -271,7 +271,7 @@ export default function ServiceSelectionModal({
           <div className="border-t pt-4">
             <div className="flex justify-between items-center mb-4">
               <span className="font-medium">Total Amount:</span>
-              <span className="text-xl font-bold text-primary">${totalPrice}</span>
+              <span className="text-xl font-bold text-primary">₹{totalPrice}</span>
             </div>
           </div>
         )}

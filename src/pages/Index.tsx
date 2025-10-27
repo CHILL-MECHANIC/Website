@@ -19,42 +19,42 @@ const services = [{
   title: "AC Service",
   description: "Expert AC repair and maintenance services. We fix cooling issues, clean filters, and ensure optimal performance for your comfort.",
   image: acServiceImage,
-  price: "$299",
+  price: "₹299",
   route: "/services/ac"
 }, {
   id: "refrigerator",
   title: "Refrigerator Service",
   description: "Professional refrigerator repair services. From cooling problems to compressor issues, we keep your appliances running smoothly.",
   image: refrigeratorServiceImage,
-  price: "$399",
+  price: "₹399",
   route: "/services/refrigerator"
 }, {
   id: "ro",
   title: "RO Service",
   description: "Complete RO water purifier service and maintenance. Filter replacements, membrane cleaning, and installation services.",
   image: roServiceImage,
-  price: "$199",
+  price: "₹199",
   route: "/services/ro"
 }, {
   id: "geyser",
   title: "Geyser Service",
   description: "Reliable geyser repair and installation services. We handle heating element replacement, thermostat issues, and safety checks.",
   image: geyserServiceImage,
-  price: "$249",
+  price: "₹249",
   route: "/services/geyser"
 }, {
   id: "washing-machine",
   title: "Washing Machine Service",
   description: "Expert washing machine repair services. Motor repairs, drum cleaning, and maintenance to keep your laundry running smoothly.",
   image: washingMachineServiceImage,
-  price: "$349",
+  price: "₹349",
   route: "/services/washing-machine"
 }, {
   id: "microwave",
   title: "Microwave Service",
   description: "Professional microwave repair and maintenance services. We handle heating issues, door repairs, and electrical problems.",
   image: microwaveServiceImage,
-  price: "$249",
+  price: "₹249",
   route: "/services/microwave"
 }];
 const Index = () => {
