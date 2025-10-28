@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import DiscountCarousel from "@/components/DiscountCarousel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,23 +11,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Trash2, Minus, Plus, ShoppingBag, CalendarIcon, Clock } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingBag, CalendarIcon, Tag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Cart() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useToast();
   const { 
     cartItems, 
     removeFromCart, 
     updateQuantity, 
     clearCart, 
     getCartTotal, 
-    getCartItemsCount 
+    getCartItemsCount,
+    discountCode,
+    applyDiscount,
+    getDiscountAmount
   } = useCart();
+  
+  const [promoCode, setPromoCode] = useState("");
 
   if (cartItems.length === 0) {
     return (
@@ -57,6 +65,21 @@ export default function Cart() {
   const [showSchedulingModal, setShowSchedulingModal] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
+  const handleApplyPromo = () => {
+    if (applyDiscount(promoCode)) {
+      toast({
+        title: "Promo code applied!",
+        description: `You saved ₹${getDiscountAmount()} on this order.`,
+      });
+    } else {
+      toast({
+        title: "Invalid promo code",
+        description: "Please check the code and try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleScheduleBooking = () => {
     if (!bookingDetails.date || !bookingDetails.time) {
       return; // Basic validation
@@ -86,7 +109,7 @@ export default function Cart() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold">Shopping Cart</h1>
+            <h1 className="text-3xl font-bold">Your Cart</h1>
             <Button 
               variant="outline" 
               onClick={clearCart}
@@ -95,6 +118,9 @@ export default function Cart() {
               Clear Cart
             </Button>
           </div>
+
+          {/* Discount Carousel */}
+          <DiscountCarousel />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
@@ -165,19 +191,48 @@ export default function Cart() {
                   <CardTitle>Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {/* Promo Code Input */}
+                  <div className="space-y-2">
+                    <Label htmlFor="promo">Have a promo code?</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="promo"
+                        placeholder="Enter code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                      />
+                      <Button onClick={handleApplyPromo} variant="outline">
+                        <Tag className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {discountCode && (
+                      <div className="text-sm text-primary font-medium">
+                        Code "{discountCode}" applied!
+                      </div>
+                    )}
+                  </div>
+                  
+                  <hr />
+                  
                   {/* Order Summary */}
                   <div className="flex justify-between">
                     <span>Subtotal ({getCartItemsCount()} items)</span>
                     <span>₹{getCartTotal()}</span>
                   </div>
                   
-                  <div className="flex justify-between">
-                    <span>Service Tax</span>
-                    <span>₹{(getCartTotal() * 0.18).toFixed(0)}</span>
-                  </div>
+                  {getDiscountAmount() > 0 && (
+                    <div className="flex justify-between text-primary">
+                      <span>Discount ({discountCode})</span>
+                      <span>-₹{getDiscountAmount()}</span>
+                    </div>
+                  )}
                   
                   <div className="flex justify-between">
-                    <span>Travel Charges</span>
+                    <span>GST (18%)</span>
+                    <span>₹{((getCartTotal() - getDiscountAmount()) * 0.18).toFixed(0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Visiting Charges</span>
                     <span>₹50</span>
                   </div>
                   
@@ -186,7 +241,7 @@ export default function Cart() {
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-primary">
-                      ₹{(getCartTotal() + getCartTotal() * 0.18 + 50).toFixed(0)}
+                      ₹{(getCartTotal() - getDiscountAmount() + (getCartTotal() - getDiscountAmount()) * 0.18 + 50).toFixed(0)}
                     </span>
                   </div>
                   

@@ -39,6 +39,8 @@ export default function Footer() {
                 <Link to="/services/washing-machine" className="text-muted-foreground hover:text-primary transition-colors">
                   Washing Machine Service
                 </Link>
+              </li>
+              <li>
                 <Link to="/services/microwave" className="text-muted-foreground hover:text-primary transition-colors">
                   Microwave Service
                 </Link>
@@ -72,10 +74,10 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold">Contact</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>📞 +91 98765 43210</p>
-              <p>✉️ info@chillmechanic.com</p>
+              <p>📞 +91 9211970028</p>
+              <p>✉️ support@chillmechanic.com</p>
               <p>🕒 Mon - Sat: 8 AM - 8 PM</p>
-              <p>📍 Available across major cities</p>
+              <p>📍 Delhi NCR</p>
             </div>
           </div>
         </div>

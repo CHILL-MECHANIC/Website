@@ -13,24 +13,32 @@ export default function About() {
       
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-8">
               About <span className="text-primary">Chill Mechanic</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Our Story – From Bhiwani to Gurgaon.
+            
+            <div className="max-w-3xl mx-auto space-y-6 text-left">
+              <h2 className="text-2xl font-semibold text-center mb-4">
+                Our Story – From Bhiwani to Gurgaon
+              </h2>
+              
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                <b>Chill Mechanic</b> is not just a startup; it's a legacy reborn.
+              </p>
 
- <b> Chill Mechanic</b> is not just a startup; it’s a legacy reborn.
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Almost 50 years ago, in a small town called Bhiwani, Haryana, a visionary and my mentor – Mr. Rajkumar Kakkar – saw an opportunity where others saw a problem. At a time when refrigerators were used only seasonally and home appliances were rare in small towns, he founded a humble repair shop named Standard Refrigeration.
+              </p>
 
-Almost 50 years ago, in a small town called Bhiwani, Haryana, a visionary and my mentor – Mr. Rajkumar Kakkar – saw an opportunity where others saw a problem. At a time when refrigerators were used only seasonally and home appliances were rare in small towns, he founded a humble repair shop named Standard Refrigeration.
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                What began as a small initiative by Mr. Rajkumar Kakkar slowly grew into a trusted name. Over the years, that one shop transformed into a recognized business, and his honesty, skills, and dedication earned him such respect that people identified the entire street by his name.
+              </p>
 
-What began as a small initiative by Mr. Rajkumar Kakkar slowly grew into a trusted name. Over the years, that one shop transformed into a recognized business, and his honesty, skills, and dedication earned him such respect that people identified the entire street by his name.
-
-Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Cyber City.
-
-
-            </p>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Cyber City.
+              </p>
+            </div>
           </div>
 
           {/* Mission Section */}

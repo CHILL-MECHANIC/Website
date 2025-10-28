@@ -19,12 +19,16 @@ interface CartContextType {
   clearCart: () => void;
   getCartTotal: () => number;
   getCartItemsCount: () => number;
+  discountCode: string;
+  applyDiscount: (code: string) => boolean;
+  getDiscountAmount: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [discountCode, setDiscountCode] = useState<string>("");
 
   const addToCart = (services: ServiceOption[]) => {
     setCartItems(prevItems => {
@@ -73,6 +77,40 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const applyDiscount = (code: string): boolean => {
+    const validCodes = ["AC10", "PREMIUM10", "FIRST50"];
+    if (validCodes.includes(code.toUpperCase())) {
+      setDiscountCode(code.toUpperCase());
+      return true;
+    }
+    return false;
+  };
+
+  const getDiscountAmount = (): number => {
+    const subtotal = getCartTotal();
+    
+    if (discountCode === "AC10") {
+      // 10% off on all AC services
+      const acServices = cartItems.filter(item => 
+        item.name.toLowerCase().includes("ac")
+      );
+      const acTotal = acServices.reduce((total, item) => total + item.price * item.quantity, 0);
+      return Math.floor(acTotal * 0.1);
+    }
+    
+    if (discountCode === "PREMIUM10" && subtotal >= 1000) {
+      // 10% off on orders above 1000
+      return Math.floor(subtotal * 0.1);
+    }
+    
+    if (discountCode === "FIRST50") {
+      // 50 rupees flat discount
+      return 50;
+    }
+    
+    return 0;
+  };
+
   return (
     <CartContext.Provider value={{
       cartItems,
@@ -82,6 +120,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearCart,
       getCartTotal,
       getCartItemsCount,
+      discountCode,
+      applyDiscount,
+      getDiscountAmount,
     }}>
       {children}
     </CartContext.Provider>

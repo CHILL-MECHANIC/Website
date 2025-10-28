@@ -149,7 +149,7 @@ export default function Contact() {
                     <Phone className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h3 className="font-semibold">Phone</h3>
-                      <p className="text-muted-foreground">+91 98765 43210</p>
+                      <p className="text-muted-foreground">+91 9211970028</p>
                       <p className="text-sm text-muted-foreground">Available 24/7 for emergencies</p>
                     </div>
                   </div>
@@ -158,7 +158,7 @@ export default function Contact() {
                     <Mail className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h3 className="font-semibold">Email</h3>
-                      <p className="text-muted-foreground">info@chillmechanic.com</p>
+                      <p className="text-muted-foreground">support@chillmechanic.com</p>
                       <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
                     </div>
                   </div>
@@ -194,7 +194,7 @@ export default function Contact() {
                   </p>
                   <Button variant="destructive" className="w-full">
                     <Phone className="mr-2 h-4 w-4" />
-                    Call Emergency: +91 98765 43210
+                    Call Emergency: +91 9211970028
                   </Button>
                 </CardContent>
               </Card>

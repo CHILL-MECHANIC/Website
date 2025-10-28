@@ -318,7 +318,7 @@ export default function Privacy() {
                 <div className="space-y-2 text-muted-foreground">
                   <p>Email: privacy@chillmechanic.com</p>
                   <p>Phone: +91 98765 43210</p>
-                  <p>Address: The Chill Mechanic Privacy Office</p>
+                  <p>Address: Chill Mechanic, Private Office</p>
                 </div>
               </CardContent>
             </Card>
