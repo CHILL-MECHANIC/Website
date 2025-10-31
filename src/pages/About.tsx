@@ -15,7 +15,7 @@ export default function About() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-8">
-              About <span className="text-primary">Chill Mechanic</span>
+              About <span className="text-primary">Chill</span> <span className="text-secondary">Mechanic</span>
             </h1>
             
             <div className="max-w-3xl mx-auto space-y-6 text-left">
@@ -36,7 +36,7 @@ export default function About() {
               </p>
 
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Cyber City.
+                Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Millenium City.
               </p>
             </div>
           </div>
