@@ -63,6 +63,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+                  Terms and Conditions
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact Us
                 </Link>
@@ -77,7 +82,7 @@ export default function Footer() {
               <p>📞 +91 9211970028</p>
               <p>✉️ support@chillmechanic.com</p>
               <p>🕒 Mon - Sat: 8 AM - 8 PM</p>
-              <p>📍 Delhi NCR</p>
+              <p>📍 Gurgaon, Haryana</p>
             </div>
           </div>
         </div>
