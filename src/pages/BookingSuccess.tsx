@@ -128,8 +128,4 @@ export default function BookingSuccess() {
       <Footer />
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> d45c02f4aa1bfcdfaadb82d7f8c06fb23dd58f2d
