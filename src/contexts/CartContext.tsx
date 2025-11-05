@@ -19,16 +19,12 @@ interface CartContextType {
   clearCart: () => void;
   getCartTotal: () => number;
   getCartItemsCount: () => number;
-  discountCode: string | null;
-  applyDiscount: (code: string) => boolean;
-  getDiscountAmount: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [discountCode, setDiscountCode] = useState<string | null>(null);
 
   const addToCart = (services: ServiceOption[]) => {
     setCartItems(prevItems => {
@@ -77,57 +73,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
-  const applyDiscount = (code: string): boolean => {
-    // Discount codes: percentage-based and fixed amount
-    const percentageCodes: Record<string, number> = {
-      "SAVE10": 10,
-      "SAVE20": 20,
-    };
-    
-    const fixedAmountCodes: Record<string, number> = {
-      "WELCOME": 50,
-      "FIRST": 100,
-    };
-    
-    const upperCode = code.toUpperCase();
-    if (percentageCodes[upperCode] || fixedAmountCodes[upperCode]) {
-      setDiscountCode(upperCode);
-      return true;
-    }
-    return false;
-  };
-
-  const getDiscountAmount = (): number => {
-    if (!discountCode) return 0;
-    
-    const percentageCodes: Record<string, number> = {
-      "SAVE10": 10,
-      "SAVE20": 20,
-    };
-    
-    const fixedAmountCodes: Record<string, number> = {
-      "WELCOME": 50,
-      "FIRST": 100,
-    };
-    
-    const subtotal = getCartTotal();
-    
-    // Check for fixed amount discounts first
-    if (fixedAmountCodes[discountCode]) {
-      const fixedAmount = fixedAmountCodes[discountCode];
-      // Return the fixed amount, but not more than the subtotal
-      return Math.min(fixedAmount, subtotal);
-    }
-    
-    // Check for percentage discounts
-    if (percentageCodes[discountCode]) {
-      const discountPercent = percentageCodes[discountCode];
-      return Math.floor((subtotal * discountPercent) / 100);
-    }
-    
-    return 0;
-  };
-
   return (
     <CartContext.Provider value={{
       cartItems,
@@ -137,9 +82,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearCart,
       getCartTotal,
       getCartItemsCount,
-      discountCode,
-      applyDiscount,
-      getDiscountAmount,
     }}>
       {children}
     </CartContext.Provider>

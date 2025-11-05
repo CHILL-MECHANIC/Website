@@ -50,7 +50,7 @@ export default function Payment() {
 
   const subtotal = getCartTotal();
   const GST = Math.round(subtotal * 0.18);
-  const total = subtotal + GST
+  const total = subtotal + GST;
 
   const handleCardInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

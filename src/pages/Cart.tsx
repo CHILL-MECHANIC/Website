@@ -24,9 +24,7 @@ export default function Cart() {
     updateQuantity, 
     clearCart, 
     getCartTotal, 
-    getCartItemsCount,
-    discountCode,
-    getDiscountAmount
+    getCartItemsCount
   } = useCart();
 
   const [bookingDetails, setBookingDetails] = useState({
@@ -172,16 +170,9 @@ export default function Cart() {
                     <span>₹{getCartTotal()}</span>
                   </div>
                   
-                  {getDiscountAmount() > 0 && (
-                    <div className="flex justify-between text-primary">
-                      <span>Discount ({discountCode})</span>
-                      <span>-₹{getDiscountAmount()}</span>
-                    </div>
-                  )}
-                  
                   <div className="flex justify-between">
                     <span>Service Tax</span>
-                    <span>₹{((getCartTotal() - getDiscountAmount()) * 0.18).toFixed(0)}</span>
+                    <span>₹{(getCartTotal() * 0.18).toFixed(0)}</span>
                   </div>
                   
                   <hr />
@@ -189,7 +180,7 @@ export default function Cart() {
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-primary">
-                      ₹{(getCartTotal() - getDiscountAmount() + (getCartTotal() - getDiscountAmount()) * 0.18).toFixed(0)}
+                      ₹{(getCartTotal() + getCartTotal() * 0.18).toFixed(0)}
                     </span>
                   </div>
                   
