@@ -110,10 +110,7 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-<<<<<<< HEAD
         Relationships: []
-=======
->>>>>>> d45c02f4aa1bfcdfaadb82d7f8c06fb23dd58f2d
       }
       profiles: {
         Row: {
@@ -296,12 +293,6 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
     }
-<<<<<<< HEAD
-    Enums: {
-      [_ in never]: never
-    }
-=======
->>>>>>> d45c02f4aa1bfcdfaadb82d7f8c06fb23dd58f2d
     CompositeTypes: {
       [_ in never]: never
     }
@@ -430,9 +421,5 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
     },
-<<<<<<< HEAD
-    Enums: {},
-=======
->>>>>>> d45c02f4aa1bfcdfaadb82d7f8c06fb23dd58f2d
   },
 } as const

@@ -48,11 +48,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
-<<<<<<< HEAD
-
-=======
               
->>>>>>> d45c02f4aa1bfcdfaadb82d7f8c06fb23dd58f2d
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/bookings" element={<AdminBookings />} />
@@ -61,10 +57,7 @@ const App = () => (
               <Route path="/admin/ratings" element={<AdminRatings />} />
               <Route path="/admin/analytics" element={<AdminAnalytics />} />
               <Route path="/admin/settings" element={<AdminSettings />} />
-<<<<<<< HEAD
-=======
               
->>>>>>> d45c02f4aa1bfcdfaadb82d7f8c06fb23dd58f2d
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
