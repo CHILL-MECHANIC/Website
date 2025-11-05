@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from "@/assets/Logo.webp";
+
 export default function Footer() {
   return <footer className="bg-card border-t">
       <div className="container mx-auto px-4 py-8">
@@ -7,9 +8,6 @@ export default function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <img src={logo} alt="ChillMechanic Logo" className="h-26 w-26 mb-4 mx-auto" />
-            <img src={logo} alt="ChillMechanic Logo" className="h-27 w-27 mb-4 mx-auto" />
-            
-            
           </div>
 
           {/* Services */}
@@ -64,6 +62,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact Us
                 </Link>
@@ -75,17 +78,16 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold">Contact</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>📞 +91 98765 43210</p>
-              <p>✉️ info@chillmechanic.com</p>
-              <p>🕒 Mon - Sat: 8 AM - 8 PM</p>
-              <p>📍 Available across major cities</p>
+              <p>📞 +91 9211970031</p>
+              <p>✉️ support@chillmechanic.com</p>
+              <p>🕒 Mon - Sat: 9:30AM - 7:30 PM</p>
+              <p>📍 Gurgaon, Haryana, India</p>
             </div>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 The Chill Mechanic. All rights reserved.</p>
-          <p>&copy; 2025 ChillMechanic. All rights reserved.</p>
+          <p>&copy; 2025 Chill Mechanic. Happy Appliance, Happier Homes. All rights reserved.</p>
         </div>
       </div>
     </footer>;

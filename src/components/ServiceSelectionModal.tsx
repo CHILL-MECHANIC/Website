@@ -28,22 +28,88 @@ interface ServiceSelectionModalProps {
 const serviceOptions: { [key: string]: ServiceOption[] } = {
   ac: [
     {
-      id: "ac-full",
-      name: "AC Full Servicing",
-      description: ["Full Cleaning", "Filter Cleaning", "Compressor Leakage", "Line Leakage"],
-      price: 749,
+      id: "ac-foam-1",
+      name: "Foam Power Jet Service-1 AC",
+      description: ["Basic foam cleaning", "Filter cleaning"],
+      price: 549,
     },
     {
-      id: "ac-basic",
-      name: "AC Basic Cleaning",
-      description: ["Basic Cleaning", "Filter Replacement"],
-      price: 299,
+      id: "ac-foam-2",
+      name: "Foam Power Jet Service-2 AC",
+      description: ["Deep foam cleaning", "Filter cleaning", "Basic maintenance"],
+      price: 949,
     },
     {
-      id: "ac-repair",
-      name: "AC Repair",
-      description: ["Compressor Repair", "Coolant Refill", "Electrical Issues"],
-      price: 1200,
+      id: "ac-foam-3",
+      name: "Foam Power Jet Service-3 AC",
+      description: ["Deep foam cleaning", "Complete filter service", "Coil cleaning"],
+      price: 1399,
+    },
+    {
+      id: "ac-foam-4",
+      name: "Foam Power Jet Service-4 AC",
+      description: ["Premium foam cleaning", "Complete servicing", "Performance check"],
+      price: 1949,
+    },
+    {
+      id: "ac-foam-5",
+      name: "Foam Power Jet Service-5 AC",
+      description: ["Ultimate foam cleaning", "Complete deep service", "Full inspection"],
+      price: 2449,
+    },
+    {
+      id: "ac-not-cooling",
+      name: "AC Not Cooling/Less Cooling",
+      description: ["Diagnose cooling issues", "Basic repair"],
+      price: 249,
+    },
+    {
+      id: "ac-power-issue",
+      name: "AC Power Issue",
+      description: ["Electrical diagnosis", "Power circuit repair"],
+      price: 249,
+    },
+    {
+      id: "ac-noise",
+      name: "AC Noise Reduction",
+      description: ["Noise diagnosis", "Component adjustment", "Lubrication"],
+      price: 449,
+    },
+    {
+      id: "ac-water-leakage",
+      name: "AC Water Leakage Repair",
+      description: ["Leak detection", "Drain cleaning", "Seal repair"],
+      price: 549,
+    },
+    {
+      id: "ac-gas-refill",
+      name: "Gas Refill & Check Up",
+      description: ["Gas leak detection", "Gas refill", "Pressure check"],
+      price: 2399,
+    },
+    {
+      id: "ac-split-installation",
+      name: "Split AC Installation",
+      description: ["Complete installation", "Piping & wiring", "Testing"],
+      price: 1449,
+    },
+    {
+      id: "ac-split-uninstallation",
+      name: "Split AC Uninstallation",
+      description: ["Safe removal", "Gas recovery", "Dismantling"],
+      price: 1299,
+    },
+    {
+      id: "ac-window-installation",
+      name: "Window AC Installation",
+      description: ["Window mounting", "Electrical setup", "Testing"],
+      price: 1049,
+    },
+    {
+      id: "ac-window-uninstallation",
+      name: "Window AC Uninstallation",
+      description: ["Safe removal", "Window restoration"],
+      price: 949,
     },
   ],
   refrigerator: [
@@ -202,8 +268,7 @@ export default function ServiceSelectionModal({
                     </ul>
                     <div className="mt-2">
                       <span className="text-sm text-muted-foreground">Total Price incl. taxes </span>
-                      <span className="font-bold text-lg">{service.price}</span>
-                      <span className="font-bold text-lg">${service.price}</span>
+                      <span className="font-bold text-lg">₹{service.price}</span>
                     </div>
                   </div>
                 </div>
@@ -264,10 +329,6 @@ export default function ServiceSelectionModal({
               >
                 Microwave
               </Button>
-                className="text-xs col-span-2"
-              >
-                Washing Machine
-              </Button>
             </div>
           </div>
         </div>
@@ -277,7 +338,6 @@ export default function ServiceSelectionModal({
             <div className="flex justify-between items-center mb-4">
               <span className="font-medium">Total Amount:</span>
               <span className="text-xl font-bold text-primary">₹{totalPrice}</span>
-              <span className="text-xl font-bold text-primary">${totalPrice}</span>
             </div>
           </div>
         )}

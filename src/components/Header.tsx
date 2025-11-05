@@ -50,7 +50,6 @@ export default function Header({
               <span className="text-[#1277BD]">CHILL</span>
               <span className="text-[#FBB044]"> MECHANIC</span>
             </span>
-            <span className="text-xl font-bold text-slate-900">CHILL MECHANIC</span>
           </Link>
 
           {/* Desktop Navigation */}

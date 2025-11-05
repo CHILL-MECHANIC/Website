@@ -4,13 +4,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Trash2, Minus, Plus, ShoppingBag, CalendarIcon, Clock } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingBag, CalendarIcon } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { format } from "date-fns";
@@ -25,7 +24,9 @@ export default function Cart() {
     updateQuantity, 
     clearCart, 
     getCartTotal, 
-    getCartItemsCount 
+    getCartItemsCount,
+    discountCode,
+    getDiscountAmount
   } = useCart();
 
   if (cartItems.length === 0) {
@@ -87,7 +88,6 @@ export default function Cart() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-3xl font-bold">Your Cart</h1>
-            <h1 className="text-3xl font-bold">YOUR CART</h1>
             <Button 
               variant="outline" 
               onClick={clearCart}
@@ -113,7 +113,6 @@ export default function Cart() {
                         </div>
                         <div className="text-lg font-bold text-primary mt-2">
                           ₹{item.price}
-                          ${item.price}
                         </div>
                       </div>
                       
@@ -154,7 +153,6 @@ export default function Cart() {
                     <div className="mt-4 pt-4 border-t flex justify-between items-center">
                       <span className="font-medium">Subtotal:</span>
                       <span className="font-bold text-primary">₹{item.price * item.quantity}</span>
-                      <span className="font-bold text-primary">${item.price * item.quantity}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -172,19 +170,18 @@ export default function Cart() {
                   <div className="flex justify-between">
                     <span>Subtotal ({getCartItemsCount()} items)</span>
                     <span>₹{getCartTotal()}</span>
-                    <span>${getCartTotal()}</span>
                   </div>
+                  
+                  {getDiscountAmount() > 0 && (
+                    <div className="flex justify-between text-primary">
+                      <span>Discount ({discountCode})</span>
+                      <span>-₹{getDiscountAmount()}</span>
+                    </div>
+                  )}
                   
                   <div className="flex justify-between">
                     <span>Service Tax</span>
-                    <span>₹{(getCartTotal() * 0.18).toFixed(0)}</span>
-                    <span>${(getCartTotal() * 0.18).toFixed(0)}</span>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span>Travel Charges</span>
-                    <span>₹50</span>
-                    <span>$50</span>
+                    <span>₹{((getCartTotal() - getDiscountAmount()) * 0.18).toFixed(0)}</span>
                   </div>
                   
                   <hr />
@@ -192,8 +189,7 @@ export default function Cart() {
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-primary">
-                      ₹{(getCartTotal() + getCartTotal() * 0.18 + 50).toFixed(0)}
-                      ${(getCartTotal() + getCartTotal() * 0.18 + 50).toFixed(0)}
+                      ₹{(getCartTotal() - getDiscountAmount() + (getCartTotal() - getDiscountAmount()) * 0.18).toFixed(0)}
                     </span>
                   </div>
                   

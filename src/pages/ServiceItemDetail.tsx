@@ -23,138 +23,588 @@ import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import microwaveServiceImage2 from "@/assets/microwave-service-2.jpg";
 
 const serviceItemDetails = {
-  "ac-full": {
-    id: "ac-full",
-    name: "AC Full Servicing",
+  "ac-foam-1": {
+    id: "ac-foam-1",
+    name: "Foam Power Jet Service-1 AC",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
-    price: 749,
+    price: 549,
     duration: "2-3 hours",
     warranty: "30 days",
-    description: "Complete AC maintenance with filter cleaning, compressor check, and performance optimization.",
-    detailedDescription: "Our comprehensive AC full servicing ensures your air conditioning unit operates at peak efficiency. Our certified technicians perform thorough cleaning, inspection, and optimization to maximize cooling performance and extend your AC's lifespan.",
+    description: "Basic foam cleaning and filter cleaning for single AC unit.",
+    detailedDescription: "Our foam power jet service uses advanced cleaning technology to deeply clean your AC unit, removing dirt, bacteria, and allergens for improved air quality and cooling efficiency.",
     included: [
-      "Deep cleaning of indoor and outdoor units",
-      "Filter cleaning and replacement if needed",
-      "Compressor inspection and testing",
-      "Refrigerant level check and top-up if required",
-      "Electrical connection inspection",
-      "Thermostat calibration",
-      "Performance optimization",
+      "Foam jet cleaning of indoor unit",
+      "Filter cleaning and sanitization",
+      "Outdoor unit basic cleaning",
+      "Cooling performance check",
+      "Drainage system check",
       "30-day service warranty"
     ],
     notIncluded: [
-      "Major component replacement (compressor, condenser)",
-      "Refrigerant gas refill (charged separately)",
-      "Electrical wiring repairs",
-      "Ductwork cleaning",
-      "Installation or relocation services"
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs",
+      "Installation services"
     ]
   },
-  "ac-basic": {
-    id: "ac-basic",
-    name: "AC Basic Cleaning",
+  "ac-foam-2": {
+    id: "ac-foam-2",
+    name: "Foam Power Jet Service-2 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 949,
+    duration: "3-4 hours",
+    warranty: "30 days",
+    description: "Deep foam cleaning with filter service and basic maintenance.",
+    detailedDescription: "Complete foam power jet cleaning for two AC units, providing thorough maintenance and improved air quality throughout your space.",
+    included: [
+      "Deep foam jet cleaning of 2 indoor units",
+      "Filter cleaning and sanitization for both units",
+      "Outdoor unit cleaning for both",
+      "Cooling performance check",
+      "Drainage system cleaning",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs",
+      "Installation services"
+    ]
+  },
+  "ac-foam-3": {
+    id: "ac-foam-3",
+    name: "Foam Power Jet Service-3 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 1399,
+    duration: "4-5 hours",
+    warranty: "30 days",
+    description: "Deep foam cleaning with complete filter service and coil cleaning.",
+    detailedDescription: "Comprehensive foam power jet service for three AC units, ensuring optimal performance and air quality across multiple rooms.",
+    included: [
+      "Deep foam jet cleaning of 3 indoor units",
+      "Filter cleaning and sanitization for all units",
+      "Outdoor unit cleaning for all",
+      "Complete system performance check",
+      "Drainage system cleaning",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs",
+      "Installation services"
+    ]
+  },
+  "ac-foam-4": {
+    id: "ac-foam-4",
+    name: "Foam Power Jet Service-4 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 1949,
+    duration: "5-6 hours",
+    warranty: "30 days",
+    description: "Premium foam cleaning with complete servicing and performance check.",
+    detailedDescription: "Complete foam power jet maintenance for four AC units, providing comprehensive cleaning and performance optimization for larger spaces.",
+    included: [
+      "Premium foam jet cleaning of 4 indoor units",
+      "Filter cleaning and sanitization for all units",
+      "Outdoor unit cleaning for all",
+      "Thorough system inspection",
+      "Drainage system cleaning",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs",
+      "Installation services"
+    ]
+  },
+  "ac-foam-5": {
+    id: "ac-foam-5",
+    name: "Foam Power Jet Service-5 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 2449,
+    duration: "6-7 hours",
+    warranty: "30 days",
+    description: "Ultimate foam cleaning with complete deep service and full inspection.",
+    detailedDescription: "Premium foam power jet service for five AC units, delivering complete maintenance and optimization for commercial or large residential spaces.",
+    included: [
+      "Ultimate foam jet cleaning of 5 indoor units",
+      "Filter cleaning and sanitization for all units",
+      "Outdoor unit cleaning for all",
+      "Complete performance optimization",
+      "Drainage system cleaning",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs",
+      "Installation services"
+    ]
+  },
+  "ac-not-cooling": {
+    id: "ac-not-cooling",
+    name: "AC Not Cooling/Less Cooling",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2],
-    price: 299,
+    price: 249,
     duration: "1-2 hours",
     warranty: "15 days",
-    description: "Basic filter cleaning and general inspection of your AC unit.",
-    detailedDescription: "Essential AC maintenance service focused on cleaning and basic inspection to ensure your air conditioner runs smoothly and efficiently.",
+    description: "Diagnostic and repair service for AC cooling issues and performance problems.",
+    detailedDescription: "Expert diagnosis and solution for AC cooling problems, identifying the root cause and providing effective repairs to restore proper cooling.",
     included: [
-      "Indoor unit filter cleaning",
-      "Outdoor unit basic cleaning",
-      "General inspection of visible components",
-      "Basic performance check",
+      "Complete diagnostic assessment",
+      "Cooling system inspection",
+      "Filter and coil cleaning",
+      "Thermostat check",
+      "Minor adjustments and fixes",
       "15-day service warranty"
     ],
     notIncluded: [
-      "Deep cleaning of internal components",
-      "Refrigerant level check",
-      "Electrical component inspection",
-      "Compressor servicing",
-      "Parts replacement"
+      "Gas refilling (charged separately)",
+      "Compressor replacement",
+      "Major component replacement",
+      "Electrical board repairs"
     ]
   },
-  "ac-repair": {
-    id: "ac-repair",
-    name: "AC Repair",
+  "ac-power-issue": {
+    id: "ac-power-issue",
+    name: "AC Power Issue",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage3],
-    price: 1200,
-    duration: "2-4 hours",
-    warranty: "90 days",
-    description: "Comprehensive repair services for cooling issues, compressor problems, and electrical faults.",
-    detailedDescription: "Professional AC repair service to diagnose and fix cooling issues, electrical problems, and component failures to restore your air conditioner to optimal working condition.",
+    price: 249,
+    duration: "1-2 hours",
+    warranty: "15 days",
+    description: "Electrical troubleshooting and repair for AC power-related problems.",
+    detailedDescription: "Professional electrical troubleshooting to identify and fix power issues, ensuring safe and reliable AC operation.",
     included: [
-      "Complete diagnostic assessment",
-      "Repair of cooling issues",
-      "Electrical fault correction",
-      "Component testing and repair",
-      "Performance restoration",
-      "90-day repair warranty",
-      "Post-repair testing and optimization"
+      "Electrical connection inspection",
+      "Power supply testing",
+      "Control board check",
+      "Wiring inspection",
+      "Safety system verification",
+      "15-day service warranty"
     ],
     notIncluded: [
-      "Cost of replacement parts",
-      "Refrigerant gas charges",
-      "Installation of new units",
-      "Ductwork modifications",
-      "Cosmetic damage repairs"
+      "Major electrical board replacement",
+      "External wiring repairs",
+      "Power supply upgrades",
+      "Compressor replacement"
     ]
   },
-  "fridge-full": {
-    id: "fridge-full",
-    name: "Refrigerator Full Service",
-    categoryTitle: "Refrigerator Service & Repair",
-    images: [refrigeratorServiceImage, refrigeratorServiceImage2],
-    price: 699,
+  "ac-noise-reduction": {
+    id: "ac-noise-reduction",
+    name: "AC Noise Reduction",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2],
+    price: 449,
     duration: "2-3 hours",
     warranty: "30 days",
-    description: "Complete inspection and maintenance of cooling system and components.",
-    detailedDescription: "Comprehensive refrigerator servicing including cooling system maintenance, component inspection, and performance optimization to ensure food preservation efficiency.",
+    description: "Specialized service to identify and fix AC noise and vibration issues.",
+    detailedDescription: "Comprehensive noise reduction service that identifies the source of AC noise and provides effective solutions for quieter operation.",
     included: [
-      "Complete cooling system inspection",
-      "Compressor performance check",
-      "Thermostat calibration",
-      "Door seal inspection and cleaning",
-      "Internal and external cleaning",
-      "Energy efficiency optimization",
+      "Noise source identification",
+      "Fan and motor inspection",
+      "Component tightening and securing",
+      "Lubrication of moving parts",
+      "Vibration dampening",
       "30-day service warranty"
     ],
     notIncluded: [
+      "Compressor replacement",
+      "Fan motor replacement",
       "Major component replacement",
-      "Refrigerant gas refill",
-      "Electrical board repairs",
-      "Ice maker repairs",
-      "Cosmetic damage fixes"
+      "Structural modifications"
     ]
   },
-  "ro-service": {
-    id: "ro-service",
-    name: "RO Service & Maintenance",
-    categoryTitle: "RO Water Purifier Service",
-    images: [roServiceImage, roServiceImage2],
-    price: 399,
-    duration: "1-2 hours",
-    warranty: "60 days",
-    description: "Regular maintenance with filter replacement and system check.",
-    detailedDescription: "Complete RO water purifier maintenance including filter replacement, system cleaning, and water quality testing to ensure safe, clean drinking water.",
+  "ac-water-leakage": {
+    id: "ac-water-leakage",
+    name: "AC Water Leakage Repair",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage3],
+    price: 549,
+    duration: "2-3 hours",
+    warranty: "30 days",
+    description: "Complete repair service for AC water leakage and drainage problems.",
+    detailedDescription: "Expert water leakage repair service addressing drainage issues, pipe blockages, and condensation problems for a leak-free AC operation.",
     included: [
-      "Pre-filter replacement",
-      "Post-carbon filter replacement",
-      "System cleaning and sanitization",
-      "TDS level testing",
-      "Water quality assessment",
-      "Pressure check",
+      "Drainage system inspection",
+      "Pipe cleaning and unclogging",
+      "Drain pan cleaning",
+      "Condensate pump check",
+      "Proper drainage setup",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Drain pan replacement",
+      "Condensate pump replacement",
+      "Major pipe modifications",
+      "Wall or ceiling repairs"
+    ]
+  },
+  "ac-gas-refill": {
+    id: "ac-gas-refill",
+    name: "Gas Refill & Check Up",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 2399,
+    duration: "2-3 hours",
+    warranty: "60 days",
+    description: "Complete refrigerant gas refill service with comprehensive system check.",
+    detailedDescription: "Professional refrigerant gas refilling service including leak detection, pressure testing, and complete system optimization for maximum cooling efficiency.",
+    included: [
+      "Leak detection and repair",
+      "Complete gas evacuation",
+      "Fresh refrigerant gas filling",
+      "Pressure testing",
+      "System performance optimization",
       "60-day service warranty"
     ],
     notIncluded: [
-      "RO membrane replacement (charged separately)",
+      "Compressor replacement",
+      "Major leak repairs",
+      "Coil replacement",
+      "Additional gas top-ups"
+    ]
+  },
+  "ac-split-installation": {
+    id: "ac-split-installation",
+    name: "Split AC Installation",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2],
+    price: 1449,
+    duration: "3-4 hours",
+    warranty: "30 days",
+    description: "Professional installation of split AC units with proper setup and testing.",
+    detailedDescription: "Complete split AC installation service including mounting, pipe work, electrical connections, vacuum testing, and commissioning for optimal performance.",
+    included: [
+      "Indoor and outdoor unit mounting",
+      "Copper pipe connection (up to 3 meters)",
+      "Electrical wiring and connection",
+      "Vacuum testing",
+      "Gas pressure check",
+      "Complete commissioning",
+      "30-day installation warranty"
+    ],
+    notIncluded: [
+      "AC unit cost",
+      "Extra copper piping beyond 3 meters",
+      "External electrical work",
+      "Wall modifications",
+      "Stand or brackets"
+    ]
+  },
+  "ac-split-uninstall": {
+    id: "ac-split-uninstall",
+    name: "Split AC Uninstallation",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage3],
+    price: 1299,
+    duration: "2-3 hours",
+    warranty: "15 days",
+    description: "Safe and careful uninstallation of split AC units.",
+    detailedDescription: "Professional split AC uninstallation with proper gas recovery, safe dismounting, and careful handling to preserve unit condition for future use.",
+    included: [
+      "Gas recovery and storage",
+      "Pipe disconnection",
+      "Indoor unit removal",
+      "Outdoor unit dismounting",
+      "Electrical disconnection",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Wall repairs or patching",
+      "Transportation of unit",
+      "Storage services",
+      "Re-installation"
+    ]
+  },
+  "ac-window-installation": {
+    id: "ac-window-installation",
+    name: "Window AC Installation",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2],
+    price: 1049,
+    duration: "2-3 hours",
+    warranty: "30 days",
+    description: "Professional installation of window AC units with secure mounting.",
+    detailedDescription: "Complete window AC installation with proper mounting, weatherproofing, electrical connection, and testing for reliable operation.",
+    included: [
+      "Window bracket installation",
+      "AC unit mounting and leveling",
+      "Weatherproofing and sealing",
+      "Electrical connection",
+      "Performance testing",
+      "30-day installation warranty"
+    ],
+    notIncluded: [
+      "AC unit cost",
+      "Window modifications",
+      "External electrical work",
+      "Custom bracket fabrication"
+    ]
+  },
+  "ac-window-uninstall": {
+    id: "ac-window-uninstall",
+    name: "Window AC Uninstallation",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage3],
+    price: 949,
+    duration: "1-2 hours",
+    warranty: "15 days",
+    description: "Safe removal and uninstallation of window AC units.",
+    detailedDescription: "Professional window AC removal with careful dismounting and handling to preserve unit condition.",
+    included: [
+      "Electrical disconnection",
+      "Careful unit removal",
+      "Bracket removal",
+      "Basic window cleaning",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Window repairs",
+      "Transportation of unit",
+      "Storage services",
+      "Re-installation"
+    ]
+  },
+  "fridge-single-door": {
+    id: "fridge-single-door",
+    name: "Check Up - Single Door",
+    categoryTitle: "Refrigerator Service & Repair",
+    images: [refrigeratorServiceImage, refrigeratorServiceImage2],
+    price: 199,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up for single door refrigerators with performance assessment.",
+    detailedDescription: "Thorough diagnostic inspection of single door refrigerators to identify any issues and ensure optimal cooling performance.",
+    included: [
+      "Complete diagnostic inspection",
+      "Cooling performance test",
+      "Thermostat check",
+      "Door seal inspection",
+      "Compressor assessment",
+      "Energy efficiency check",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Gas refilling",
+      "Deep cleaning",
+      "Parts cost"
+    ]
+  },
+  "fridge-double-door": {
+    id: "fridge-double-door",
+    name: "Check Up - Double Door",
+    categoryTitle: "Refrigerator Service & Repair",
+    images: [refrigeratorServiceImage, refrigeratorServiceImage2],
+    price: 199,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up for double door refrigerators with cooling system inspection.",
+    detailedDescription: "Comprehensive diagnostic assessment of double door refrigerators including both compartments to ensure proper cooling and functionality.",
+    included: [
+      "Complete diagnostic inspection",
+      "Cooling performance test for both compartments",
+      "Thermostat and temperature control check",
+      "Door seal inspection",
+      "Compressor assessment",
+      "Energy efficiency check",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Gas refilling",
+      "Deep cleaning",
+      "Parts cost"
+    ]
+  },
+  "ro-checkup": {
+    id: "ro-checkup",
+    name: "Check Up - Water Purifier",
+    categoryTitle: "RO Water Purifier Service",
+    images: [roServiceImage, roServiceImage2],
+    price: 249,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up of water purifier with TDS testing and system inspection.",
+    detailedDescription: "Comprehensive water purifier inspection including water quality testing, filter assessment, and system performance evaluation.",
+    included: [
+      "Complete system inspection",
+      "TDS level testing",
+      "Water quality assessment",
+      "Filter condition check",
+      "Pressure and flow rate test",
+      "Leak detection",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Filter replacement",
+      "Membrane cleaning",
+      "Repairs",
+      "Parts cost"
+    ]
+  },
+  "ro-filter-checkup": {
+    id: "ro-filter-checkup",
+    name: "Check Up - Water Purifier Filter",
+    categoryTitle: "RO Water Purifier Service",
+    images: [roServiceImage, roServiceImage2],
+    price: 249,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Detailed filter inspection and performance assessment for water purifier.",
+    detailedDescription: "Focused filter inspection to determine filter condition and recommend necessary replacements for optimal water quality.",
+    included: [
+      "All filter inspection",
+      "Filter life assessment",
+      "Water flow test",
+      "TDS testing",
+      "Filter replacement recommendations",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Filter replacement",
+      "Membrane replacement",
+      "System repairs",
+      "Parts cost"
+    ]
+  },
+  "ro-regular-service": {
+    id: "ro-regular-service",
+    name: "Water Purifier Regular Service",
+    categoryTitle: "RO Water Purifier Service",
+    images: [roServiceImage, roServiceImage2],
+    price: 1699,
+    duration: "2-3 hours",
+    warranty: "90 days",
+    description: "Regular maintenance service with basic filter replacement and system cleaning.",
+    detailedDescription: "Comprehensive regular service including essential filter replacements, system cleaning, and performance optimization for safe drinking water.",
+    included: [
+      "Pre-filter replacement",
+      "Post-carbon filter replacement",
+      "System sanitization",
+      "TDS testing",
+      "Leak detection and repair",
+      "Water quality assessment",
+      "90-day service warranty"
+    ],
+    notIncluded: [
+      "RO membrane replacement",
       "UV lamp replacement",
-      "Pump repairs",
-      "Electrical component fixes",
+      "Pump replacement",
+      "Storage tank replacement"
+    ]
+  },
+  "ro-full-service": {
+    id: "ro-full-service",
+    name: "Water Purifier Full Service",
+    categoryTitle: "RO Water Purifier Service",
+    images: [roServiceImage, roServiceImage2],
+    price: 3799,
+    duration: "3-4 hours",
+    warranty: "180 days",
+    description: "Comprehensive full service with all filter replacements, membrane cleaning, and complete maintenance.",
+    detailedDescription: "Complete water purifier overhaul including all filter and membrane replacements, thorough system cleaning, and comprehensive maintenance for like-new performance.",
+    included: [
+      "All filter replacements (pre, post, carbon)",
+      "RO membrane replacement",
+      "UV lamp replacement (if applicable)",
+      "Complete system sanitization",
+      "Storage tank cleaning",
+      "TDS optimization",
+      "Leak detection and repair",
+      "180-day service warranty"
+    ],
+    notIncluded: [
+      "Pump replacement",
+      "Storage tank replacement",
+      "Major electrical repairs",
       "Installation or relocation"
+    ]
+  },
+  "ro-installation": {
+    id: "ro-installation",
+    name: "Water Purifier Installation",
+    categoryTitle: "RO Water Purifier Service",
+    images: [roServiceImage, roServiceImage2],
+    price: 399,
+    duration: "2-3 hours",
+    warranty: "30 days",
+    description: "Professional installation of new water purifier with complete setup and testing.",
+    detailedDescription: "Complete water purifier installation including mounting, plumbing connections, electrical setup, and water quality testing.",
+    included: [
+      "Wall mounting and setup",
+      "Water inlet connection",
+      "Drain connection",
+      "Electrical connection",
+      "Initial system flushing",
+      "TDS testing",
+      "30-day installation warranty"
+    ],
+    notIncluded: [
+      "Water purifier unit cost",
+      "Additional piping beyond standard",
+      "Electrical board work",
+      "Wall modifications"
+    ]
+  },
+  "ro-uninstallation": {
+    id: "ro-uninstallation",
+    name: "Water Purifier Uninstallation",
+    categoryTitle: "RO Water Purifier Service",
+    images: [roServiceImage, roServiceImage2],
+    price: 349,
+    duration: "1-2 hours",
+    warranty: "15 days",
+    description: "Safe removal and uninstallation of water purifier systems.",
+    detailedDescription: "Professional water purifier removal with proper disconnection and careful handling to preserve unit condition.",
+    included: [
+      "Water connection disconnection",
+      "Drain disconnection",
+      "Electrical disconnection",
+      "Unit removal from wall",
+      "Basic cleanup",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Wall repairs",
+      "Transportation",
+      "Storage",
+      "Re-installation"
+    ]
+  },
+  "geyser-checkup": {
+    id: "geyser-checkup",
+    name: "Check Up - Geyser",
+    categoryTitle: "Geyser Service & Repair",
+    images: [geyserServiceImage, geyserServiceImage2],
+    price: 199,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up of geyser with heating element and thermostat inspection.",
+    detailedDescription: "Thorough geyser inspection to identify any issues with heating, safety systems, and overall performance.",
+    included: [
+      "Heating element inspection",
+      "Thermostat testing",
+      "Safety valve check",
+      "Electrical connection inspection",
+      "Temperature testing",
+      "Leakage detection",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Tank cleaning",
+      "Element replacement",
+      "Parts cost"
     ]
   },
   "geyser-service": {
@@ -162,133 +612,208 @@ const serviceItemDetails = {
     name: "Geyser Service",
     categoryTitle: "Geyser Service & Repair",
     images: [geyserServiceImage, geyserServiceImage2],
-    price: 499,
-    duration: "1-2 hours",
+    price: 549,
+    duration: "2-3 hours",
     warranty: "30 days",
-    description: "Complete maintenance with element check and tank cleaning.",
-    detailedDescription: "Professional geyser servicing including heating element inspection, tank cleaning, and safety system checks for reliable hot water supply.",
+    description: "Complete maintenance service with element check, tank cleaning, and safety inspection.",
+    detailedDescription: "Comprehensive geyser maintenance including tank cleaning, element inspection, safety system checks, and performance optimization.",
     included: [
+      "Tank internal cleaning and descaling",
       "Heating element inspection",
-      "Thermostat testing",
-      "Tank internal cleaning",
-      "Safety valve check",
-      "Electrical connection inspection",
-      "Temperature calibration",
+      "Thermostat calibration",
+      "Safety valve testing",
+      "Electrical safety check",
+      "Temperature optimization",
       "30-day service warranty"
     ],
     notIncluded: [
       "Heating element replacement",
       "Thermostat replacement",
       "Tank replacement",
-      "Pipe fitting modifications",
-      "Electrical rewiring"
+      "Major pipe modifications"
     ]
   },
-  "wm-service": {
-    id: "wm-service",
-    name: "Washing Machine Service",
-    categoryTitle: "Washing Machine Service & Repair",
-    images: [washingMachineServiceImage, washingMachineServiceImage2],
-    price: 599,
+  "geyser-installation": {
+    id: "geyser-installation",
+    name: "Geyser Installation",
+    categoryTitle: "Geyser Service & Repair",
+    images: [geyserServiceImage, geyserServiceImage2],
+    price: 449,
     duration: "2-3 hours",
     warranty: "30 days",
-    description: "Regular maintenance with drum cleaning and performance check.",
-    detailedDescription: "Comprehensive washing machine maintenance including drum cleaning, component inspection, and performance optimization for efficient laundry care.",
+    description: "Professional installation with proper pipe fitting and electrical setup.",
+    detailedDescription: "Complete geyser installation including wall mounting, pipe connections, electrical setup, and safety testing for reliable hot water supply.",
     included: [
-      "Drum deep cleaning and descaling",
-      "Filter cleaning",
-      "Drain pipe cleaning",
-      "Belt and motor inspection",
-      "Control panel testing",
-      "Water inlet valve check",
-      "30-day service warranty"
+      "Wall mounting and bracket installation",
+      "Hot and cold water pipe connections",
+      "Electrical wiring and connection",
+      "Safety valve installation",
+      "Pressure relief valve setup",
+      "Testing and commissioning",
+      "30-day installation warranty"
     ],
     notIncluded: [
-      "Motor replacement",
-      "Belt replacement",
-      "Control board repairs",
-      "Drum replacement",
-      "Installation services"
+      "Geyser unit cost",
+      "Extra piping beyond standard",
+      "Electrical board work",
+      "Wall strengthening",
+      "Stand or bracket cost"
     ]
   },
-  "microwave-service": {
-    id: "microwave-service",
-    name: "Microwave Service",
-    categoryTitle: "Microwave Service & Repair",
-    images: [microwaveServiceImage, microwaveServiceImage2],
-    price: 399,
-    duration: "1-2 hours",
-    warranty: "30 days",
-    description: "Complete maintenance with interior cleaning and component check.",
-    detailedDescription: "Professional microwave maintenance including interior cleaning, magnetron testing, turntable inspection, and safety checks for optimal cooking performance.",
-    included: [
-      "Interior deep cleaning",
-      "Magnetron functionality test",
-      "Turntable and roller inspection",
-      "Door seal and alignment check",
-      "Control panel testing",
-      "Safety interlock inspection",
-      "30-day service warranty"
-    ],
-    notIncluded: [
-      "Magnetron replacement",
-      "Control board replacement",
-      "Door replacement",
-      "Cavity repair",
-      "Installation services"
-    ]
-  },
-  "microwave-repair": {
-    id: "microwave-repair",
-    name: "Microwave Repair",
-    categoryTitle: "Microwave Service & Repair",
-    images: [microwaveServiceImage, microwaveServiceImage2],
-    price: 799,
-    duration: "2-3 hours",
-    warranty: "60 days",
-    description: "Professional repair for heating issues, door problems, and electrical faults.",
-    detailedDescription: "Expert microwave repair service to diagnose and fix heating issues, door problems, electrical faults, and component failures to restore your microwave to optimal working condition.",
-    included: [
-      "Complete diagnostic assessment",
-      "Heating issue repair",
-      "Door mechanism repair",
-      "Electrical fault correction",
-      "Component replacement (if needed)",
-      "Safety system verification",
-      "60-day repair warranty"
-    ],
-    notIncluded: [
-      "Cost of major replacement parts",
-      "Cavity structural repairs",
-      "Cosmetic damage repairs",
-      "Installation of new units",
-      "Extended warranty coverage"
-    ]
-  },
-  "microwave-installation": {
-    id: "microwave-installation",
-    name: "Microwave Installation",
-    categoryTitle: "Microwave Service & Repair",
-    images: [microwaveServiceImage, microwaveServiceImage2],
-    price: 499,
+  "geyser-uninstallation": {
+    id: "geyser-uninstallation",
+    name: "Geyser Uninstallation",
+    categoryTitle: "Geyser Service & Repair",
+    images: [geyserServiceImage, geyserServiceImage2],
+    price: 349,
     duration: "1-2 hours",
     warranty: "15 days",
-    description: "Professional installation and setup of new microwave units.",
-    detailedDescription: "Complete microwave installation service including mounting, electrical connection, safety checks, and operational demonstration for countertop and over-the-range models.",
+    description: "Safe removal and uninstallation of geyser units.",
+    detailedDescription: "Professional geyser removal with proper water drainage, disconnection, and careful handling.",
     included: [
-      "Professional mounting and positioning",
-      "Electrical connection setup",
-      "Safety and functionality testing",
-      "Operational demonstration",
-      "User guide explanation",
-      "15-day installation warranty"
+      "Water drainage",
+      "Pipe disconnection",
+      "Electrical disconnection",
+      "Unit removal from wall",
+      "Basic cleanup",
+      "15-day service warranty"
     ],
     notIncluded: [
-      "Microwave unit cost",
-      "Custom cabinetry work",
-      "Major electrical upgrades",
-      "Wall modifications",
-      "Removal of old unit"
+      "Wall repairs",
+      "Transportation",
+      "Storage",
+      "Re-installation"
+    ]
+  },
+  "wm-top-load-checkup": {
+    id: "wm-top-load-checkup",
+    name: "Checkup - AM Top Load",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 199,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up for automatic top load washing machines.",
+    detailedDescription: "Comprehensive inspection of automatic top load washing machines including drum, motor, control panel, and washing performance assessment.",
+    included: [
+      "Complete diagnostic inspection",
+      "Drum and agitator check",
+      "Motor and belt inspection",
+      "Control panel testing",
+      "Drain system check",
+      "Water inlet valve test",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Deep cleaning",
+      "Parts cost",
+      "Installation services"
+    ]
+  },
+  "wm-front-load-checkup": {
+    id: "wm-front-load-checkup",
+    name: "Checkup - AM Front Load",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 199,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up for automatic front load washing machines.",
+    detailedDescription: "Thorough inspection of automatic front load washing machines including drum seal, suspension, motor, and washing performance assessment.",
+    included: [
+      "Complete diagnostic inspection",
+      "Drum and door seal check",
+      "Motor and suspension inspection",
+      "Control panel testing",
+      "Drain pump check",
+      "Water inlet system test",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Deep cleaning",
+      "Parts cost",
+      "Installation services"
+    ]
+  },
+  "wm-semi-auto-checkup": {
+    id: "wm-semi-auto-checkup",
+    name: "Check Up - Semi Automatic",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 199,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up for semi-automatic washing machines.",
+    detailedDescription: "Complete inspection of semi-automatic washing machines including wash and spin tubs, motor, timer, and overall functionality.",
+    included: [
+      "Complete diagnostic inspection",
+      "Wash and spin tub check",
+      "Motor inspection",
+      "Timer and control testing",
+      "Drain system check",
+      "Performance assessment",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Deep cleaning",
+      "Parts cost",
+      "Installation services"
+    ]
+  },
+  "wm-install-uninstall": {
+    id: "wm-install-uninstall",
+    name: "Installation & Uninstallation",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 349,
+    duration: "1-2 hours",
+    warranty: "15 days",
+    description: "Professional installation or uninstallation service for washing machines.",
+    detailedDescription: "Complete installation or uninstallation service for washing machines including connections, leveling, testing, and proper setup.",
+    included: [
+      "Machine positioning and leveling",
+      "Water inlet connection",
+      "Drain hose setup",
+      "Electrical connection (if installation)",
+      "Test run (if installation)",
+      "Careful disconnection (if uninstallation)",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Washing machine cost",
+      "Extra hose or pipes",
+      "Electrical board work",
+      "Transportation",
+      "Stand cost"
+    ]
+  },
+  "microwave-checkup": {
+    id: "microwave-checkup",
+    name: "Check Up",
+    categoryTitle: "Microwave Service & Repair",
+    images: [microwaveServiceImage, microwaveServiceImage2],
+    price: 199,
+    duration: "1 hour",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up of microwave with functionality testing and safety inspection.",
+    detailedDescription: "Comprehensive microwave inspection including heating performance, door safety, turntable function, and control panel testing.",
+    included: [
+      "Complete diagnostic inspection",
+      "Heating performance test",
+      "Magnetron functionality check",
+      "Door seal and interlock inspection",
+      "Turntable and roller test",
+      "Control panel assessment",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Deep cleaning",
+      "Parts cost",
+      "Installation services"
     ]
   }
 };
@@ -384,7 +909,6 @@ export default function ServiceItemDetail() {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">₹{serviceItem.price}</div>
-                  <div className="text-2xl font-bold text-primary">${serviceItem.price}</div>
                   <div className="text-sm text-muted-foreground">Price</div>
                 </div>
               </Card>

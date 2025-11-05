@@ -7,6 +7,8 @@ import ServiceSelectionModal from "@/components/ServiceSelectionModal";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Phone } from "lucide-react";
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
@@ -19,8 +21,7 @@ const services = [{
   title: "AC Service",
   description: "Expert AC repair and maintenance services. We fix cooling issues, clean filters, and ensure optimal performance for your comfort.",
   image: acServiceImage,
-  price: "₹299",
-  price: "$299",
+  price: "₹249",
   route: "/services/ac"
 }, {
   id: "refrigerator",
@@ -28,7 +29,6 @@ const services = [{
   description: "Professional refrigerator repair services. From cooling problems to compressor issues, we keep your appliances running smoothly.",
   image: refrigeratorServiceImage,
   price: "₹399",
-  price: "$399",
   route: "/services/refrigerator"
 }, {
   id: "ro",
@@ -36,7 +36,6 @@ const services = [{
   description: "Complete RO water purifier service and maintenance. Filter replacements, membrane cleaning, and installation services.",
   image: roServiceImage,
   price: "₹199",
-  price: "$199",
   route: "/services/ro"
 }, {
   id: "geyser",
@@ -44,7 +43,6 @@ const services = [{
   description: "Reliable geyser repair and installation services. We handle heating element replacement, thermostat issues, and safety checks.",
   image: geyserServiceImage,
   price: "₹249",
-  price: "$249",
   route: "/services/geyser"
 }, {
   id: "washing-machine",
@@ -60,12 +58,11 @@ const services = [{
   image: microwaveServiceImage,
   price: "₹249",
   route: "/services/microwave"
-  price: "$349",
-  route: "/services/washing-machine"
 }];
 const Index = () => {
   const [selectedServiceType, setSelectedServiceType] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCallDialogOpen, setIsCallDialogOpen] = useState(false);
   const {
     addToCart,
     getCartItemsCount
@@ -111,16 +108,38 @@ const Index = () => {
             HAPPY APPLIANCES, HAPPIER HOMES
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-white/90 animate-fade-in [animation-delay:200ms] drop-shadow-lg [text-shadow:_1px_1px_4px_rgba(0,0,0,0.7)]">
-            Dependable, reliable and efficient services for Less home appliance demands & service today!
+          Reliable, efficient, and affordable solutions for all your home appliance needs because your comfort deserves the best.
           </p>
-          <Button size="lg" variant="secondary" className="text-lg px-8 py-3 animate-scale-in [animation-delay:400ms] hover-scale shadow-2xl" onClick={() => {
-          const servicesSection = document.querySelector('[data-services-section]');
-          servicesSection?.scrollIntoView({
-            behavior: 'smooth'
-          });
-        }}>
-            Book Service Now
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-3 animate-scale-in [animation-delay:400ms] hover-scale shadow-2xl" onClick={() => {
+              const servicesSection = document.querySelector('[data-services-section]');
+              servicesSection?.scrollIntoView({
+                behavior: 'smooth'
+              });
+            }}>
+              Book Service Now
+            </Button>
+            <Button size="lg" variant="default" className="text-lg px-8 py-3 animate-scale-in [animation-delay:500ms] hover-scale shadow-2xl" onClick={() => setIsCallDialogOpen(true)}>
+              <Phone className="mr-2 h-5 w-5" />
+              Call Now
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Info Strip */}
+      <section className="bg-primary text-primary-foreground py-3 overflow-hidden">
+        <div className="relative flex">
+          <div className="flex animate-[scroll_30s_linear_infinite] whitespace-nowrap">
+            <div className="flex items-center gap-8 px-8">
+              <span className="text-sm font-semibold">🎉 GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10</span>
+            </div>
+          </div>
+          <div className="flex animate-[scroll_30s_linear_infinite] whitespace-nowrap" aria-hidden="true">
+            <div className="flex items-center gap-8 px-8">
+              <span className="text-sm font-semibold">🎉 GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -135,13 +154,43 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map(service => <ServiceCard key={service.id} title={service.title} description={service.description} image={service.image} price={service.price} onBookNow={() => handleBookNow(service.id)} onEnquire={() => handleEnquire(service.id)} />)}
           </div>
         </div>
       </section>
 
       <ServiceSelectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} serviceType={selectedServiceType} onContinue={handleModalContinue} onAddToCart={handleAddToCart} />
+      
+      <Dialog open={isCallDialogOpen} onOpenChange={setIsCallDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Phone className="h-5 w-5" />
+              Call Us Now
+            </DialogTitle>
+            <DialogDescription>
+              Click on any number to call us directly
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 pt-4">
+            <a href="tel:+919999999999" className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
+              <Phone className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-medium">Customer Support</p>
+                <p className="text-lg font-semibold">+91 9211970031</p>
+              </div>
+            </a>
+            <a href="tel:+917777777777" className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
+              <Phone className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-medium">Booking Inquiries</p>
+                <p className="text-lg font-semibold">+91 9211970030</p>
+              </div>
+            </a>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>;
 };
 export default Index;

@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
 import { CheckCircle, Users, Award, Clock, Shield } from "lucide-react";
+import FatherImage from "@/assets/FatherImage.jpg";
 
 export default function About() {
   const { getCartItemsCount } = useCart();
@@ -13,16 +14,39 @@ export default function About() {
       
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              About <span className="text-primary">Chill Mechanic</span>
-              About <span className="text-primary">ChillMechanic</span>
+            <h1 className="text-4xl md:text-5xl font-bold mb-8">
+              About <span className="text-primary">Chill</span> <span className="text-secondary">Mechanic</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Your trusted partner for all cooling and heating appliance services. 
-              We bring professional, reliable, and affordable solutions right to your doorstep.
-            </p>
+            
+            <div className="max-w-3xl mx-auto space-y-6 text-left">
+              <h2 className="text-2xl font-semibold text-center mb-4">
+                Our Story – From Bhiwani to Gurgaon
+              </h2>
+              <div className="mt-8 flex justify-center">
+                <img 
+                  src={FatherImage} 
+                  alt="Chill Mechanic - 50 years of legacy from Bhiwani to Gurgaon" 
+                  className="w-80 h-80 object-cover"
+                />
+              </div>
+              
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                <b>Chill Mechanic</b> is not just a startup; it's a legacy reborn.
+              </p>
+
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Almost 50 years ago, in a small town called Bhiwani, Haryana, a visionary and my mentor – Mr. Rajkumar Kakkar – saw an opportunity where others saw a problem. At a time when refrigerators were used only seasonally and home appliances were rare in small towns, he founded a humble repair shop named Standard Refrigeration.
+              </p>
+
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                What began as a small initiative by Mr. Rajkumar Kakkar slowly grew into a trusted name. Over the years, that one shop transformed into a recognized business, and his honesty, skills, and dedication earned him such respect that people identified the entire street by his name.
+              </p>
+
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Cyber City.
+              </p>
+            </div>
           </div>
 
           {/* Mission Section */}
@@ -32,9 +56,7 @@ export default function About() {
             </CardHeader>
             <CardContent>
               <p className="text-lg text-center text-muted-foreground">
-                To provide exceptional appliance maintenance and repair services that ensure comfort, 
-                efficiency, and peace of mind for every home and business we serve. We believe in 
-                building lasting relationships through quality service and transparent pricing.
+              Our mission is simple: to honor the legacy of Mr. Rajkumar Kakkar by delivering the same trust, the same satisfaction, and the same dedication – but in a modern, <b>innovative</b> way.
               </p>
             </CardContent>
           </Card>
