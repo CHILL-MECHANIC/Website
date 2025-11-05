@@ -29,6 +29,14 @@ export default function Cart() {
     getDiscountAmount
   } = useCart();
 
+  const [bookingDetails, setBookingDetails] = useState({
+    date: null as Date | null,
+    time: "",
+    instructions: ""
+  });
+  const [showSchedulingModal, setShowSchedulingModal] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-background">
@@ -49,14 +57,6 @@ export default function Cart() {
       </div>
     );
   }
-
-  const [bookingDetails, setBookingDetails] = useState({
-    date: null as Date | null,
-    time: "",
-    instructions: ""
-  });
-  const [showSchedulingModal, setShowSchedulingModal] = useState(false);
-  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
   const handleScheduleBooking = () => {
     if (!bookingDetails.date || !bookingDetails.time) {
