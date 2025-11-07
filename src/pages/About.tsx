@@ -44,7 +44,7 @@ export default function About() {
               </p>
 
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Cyber City.
+                Today, carrying forward the 50-year-old legacy of my father and mentor, we have given this vision a modern identity – Chill Mechanic. With a customer-first approach, updated technology, and a renewed vision, we are continuing the same tradition of trust and customer satisfaction in the city of dreams – Gurugram, also known as Millenium City.
               </p>
             </div>
           </div>
