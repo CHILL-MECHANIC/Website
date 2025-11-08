@@ -140,6 +140,11 @@ const Index = () => {
               <span className="text-sm font-semibold">🎉 GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10</span>
             </div>
           </div>
+          <div className="flex animate-[scroll_30s_linear_infinite] whitespace-nowrap" aria-hidden="true">
+            <div className="flex items-center gap-8 px-8">
+              <span className="text-sm font-semibold">🎉 GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10</span>
+            </div>
+          </div>
         </div>
       </section>
 
