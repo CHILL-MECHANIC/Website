@@ -105,7 +105,10 @@ const Index = () => {
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px]"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl mb-4 text-white text-center font-bold md:text-7xl animate-fade-in drop-shadow-2xl [text-shadow:_2px_2px_8px_rgba(0,0,0,0.8)]">
-            HAPPY APPLIANCES, HAPPIER HOMES
+            HAPPY APPLIANCES,
+          </h1>
+          <h1 className="text-4xl mb-4 text-white text-center font-bold md:text-7xl animate-fade-in drop-shadow-2xl [text-shadow:_2px_2px_8px_rgba(0,0,0,0.8)]">
+            HAPPIER HOMES
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-white/90 animate-fade-in [animation-delay:200ms] drop-shadow-lg [text-shadow:_1px_1px_4px_rgba(0,0,0,0.7)]">
           Reliable, efficient, and affordable solutions for all your home appliance needs because your comfort deserves the best.
