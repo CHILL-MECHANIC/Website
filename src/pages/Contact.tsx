@@ -158,7 +158,7 @@ export default function Contact() {
                     <Mail className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h3 className="font-semibold">Email</h3>
-                      <p className="text-muted-foreground">info@chillmechanic.com</p>
+                      <p className="text-muted-foreground">support@chillmechanic.com</p>
                       <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
                     </div>
                   </div>
@@ -167,8 +167,7 @@ export default function Contact() {
                     <MapPin className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h3 className="font-semibold">Service Areas</h3>
-                      <p className="text-muted-foreground">Available across major cities</p>
-                      <p className="text-sm text-muted-foreground">Delhi NCR, Mumbai, Bangalore, Hyderabad</p>
+                      <p className="text-muted-foreground">Gurgaon</p>
                     </div>
                   </div>
                   
@@ -176,7 +175,7 @@ export default function Contact() {
                     <Clock className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h3 className="font-semibold">Business Hours</h3>
-                      <p className="text-muted-foreground">Mon - Sat: 8:00 AM - 8:00 PM</p>
+                      <p className="text-muted-foreground">Mon - Sat: 9:30 AM - 8:00 PM</p>
                       <p className="text-sm text-muted-foreground">Emergency services available 24/7</p>
                     </div>
                   </div>
@@ -194,7 +193,7 @@ export default function Contact() {
                   </p>
                   <Button variant="destructive" className="w-full">
                     <Phone className="mr-2 h-4 w-4" />
-                    Call Emergency: +91 98765 43210
+                    Call Emergency: +919211970031
                   </Button>
                 </CardContent>
               </Card>
