@@ -128,7 +128,7 @@ const Index = () => {
       </section>
 
       {/* Info Strip */}
-      <section className="bg-primary text-primary-foreground py-3 overflow-hidden">
+      <section className="bg-[#E53935] text-primary-foreground py-3 overflow-hidden">
         <div className="relative flex">
           <div className="flex animate-[scroll_30s_linear_infinite] whitespace-nowrap">
             <div className="flex items-center gap-8 px-8">
