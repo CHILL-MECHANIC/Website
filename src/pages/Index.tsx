@@ -182,18 +182,18 @@ const Index = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-3 pt-4">
-            <a href="tel:+919999999999" className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
+            <a href="tel:+919211970031" className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
               <Phone className="h-5 w-5 text-primary" />
               <div>
                 <p className="font-medium">Customer Support</p>
-                <p className="text-lg font-semibold">+91 9211970031</p>
+                <p className="text-lg font-semibold">+919211970031</p>
               </div>
             </a>
-            <a href="tel:+917777777777" className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
+            <a href="tel:+919211970030" className="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
               <Phone className="h-5 w-5 text-primary" />
               <div>
                 <p className="font-medium">Booking Inquiries</p>
-                <p className="text-lg font-semibold">+91 9211970030</p>
+                <p className="text-lg font-semibold">+919211970030</p>
               </div>
             </a>
           </div>
