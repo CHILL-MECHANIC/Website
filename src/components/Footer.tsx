@@ -80,7 +80,7 @@ export default function Footer() {
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>📞 +91 9211970031</p>
               <p>✉️ support@chillmechanic.com</p>
-              <p>🕒 Mon - Sat: 9:30AM - 7:30 PM</p>
+              <p>🕒 Mon - Sat: 9:30 AM - 7:30 PM</p>
               <p>📍 Gurgaon, Haryana, India</p>
             </div>
           </div>
