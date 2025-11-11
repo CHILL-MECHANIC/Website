@@ -469,6 +469,7 @@ export default function Privacy() {
                   <p className="text-muted-foreground">Chill Mechanic Technologies India Pvt. Ltd.</p>
                   <p className="text-muted-foreground">Gurgaon, Haryana, India</p>
                   <p className="text-muted-foreground">Email: support@chillmechanic.com</p>
+                   <p className="text-muted-foreground">GST: 06AANCC0852E1ZV</p>
                 </div>
                 <p className="text-muted-foreground">
                   Any complaints or concerns regarding the use of the Platform, violation of these Terms, or breach of applicable 
