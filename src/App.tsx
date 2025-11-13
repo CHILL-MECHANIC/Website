@@ -25,6 +25,7 @@ import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./components/UserProfile";
+import SMS from "./pages/SMS";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/sms" element={<SMS />} />
               
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />
