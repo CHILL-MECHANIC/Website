@@ -79,7 +79,7 @@ export default function Privacy() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  Welcome to Chill Mechanic ("CM" or "the Platform"), operated by Chill Mechanic Technologies India Pvt. Ltd., 
+                  Welcome to Chill Mechanic ("CM" or "the Platform"), operated by Chill Mechanic Pvt Ltd, 
                   a company incorporated under the provisions of the Companies Act, 2013, having its registered office at 
                   Gurgaon, Haryana, India (hereinafter referred to as "the Company," "we," "our," or "us").
                 </p>
@@ -120,7 +120,7 @@ export default function Privacy() {
                   <li><strong>"Professional" or "Service Partner"</strong> refers to any individual or entity offering their professional services through the Platform.</li>
                   <li><strong>"Platform"</strong> refers to the Chill Mechanic website and/or mobile application that facilitates the connection between Users and Professionals.</li>
                   <li><strong>"Services"</strong> means all services made available on or through the Platform, including repair, maintenance, inspection, and related tasks.</li>
-                  <li><strong>"Company"</strong> refers to Chill Mechanic Technologies India Pvt. Ltd.</li>
+                  <li><strong>"Company"</strong> refers to Chill Mechanic Pvt Ltd</li>
                   <li><strong>"Content"</strong> means all text, graphics, images, audio, video, software, data compilations, and other information appearing on or forming part of the Platform.</li>
                 </ul>
               </CardContent>
@@ -301,7 +301,7 @@ export default function Privacy() {
               </CardHeader>
               <CardContent>
                 <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                  <li>All content, software, designs, graphics, text, trademarks, and logos on the Platform are the intellectual property of Chill Mechanic Technologies India Pvt. Ltd. or its licensors.</li>
+                  <li>All content, software, designs, graphics, text, trademarks, and logos on the Platform are the intellectual property of Chill Mechanic Pvt Ltd or its licensors.</li>
                   <li>You agree not to reproduce, modify, copy, distribute, transmit, display, perform, or create derivative works from any material obtained from the Platform without prior written consent.</li>
                   <li>You retain ownership of any content or feedback submitted by you to CM; however, by doing so, you grant CM a worldwide, royalty-free, perpetual license to use, modify, reproduce, and display such content for the purpose of operating and improving the Platform.</li>
                   <li>Any unauthorized use of the Platform's intellectual property may result in legal action under applicable laws.</li>
@@ -384,7 +384,7 @@ export default function Privacy() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <p className="text-muted-foreground">
-                  You agree to indemnify, defend, and hold harmless Chill Mechanic Technologies India Pvt. Ltd., its directors, 
+                  You agree to indemnify, defend, and hold harmless Chill Mechanic Pvt Ltd, its directors, 
                   employees, agents, affiliates, and representatives from and against any and all losses, liabilities, damages, 
                   claims, demands, costs, or expenses (including reasonable legal fees) arising out of or in connection with:
                 </p>
@@ -466,7 +466,7 @@ export default function Privacy() {
                 </p>
                 <div className="bg-muted p-4 rounded-lg space-y-2">
                   <p className="font-semibold">Grievance Officer:</p>
-                  <p className="text-muted-foreground">Chill Mechanic Technologies India Pvt. Ltd.</p>
+                  <p className="text-muted-foreground">Chill Mechanic Pvt Ltd</p>
                   <p className="text-muted-foreground">Gurgaon, Haryana, India</p>
                   <p className="text-muted-foreground">Email: support@chillmechanic.com</p>
                    <p className="text-muted-foreground">GST: 06AANCC0852E1ZV</p>
@@ -566,7 +566,7 @@ export default function Privacy() {
                   For general inquiries, feedback, or support, you may reach us at:
                 </p>
                 <div className="bg-muted p-4 rounded-lg space-y-2">
-                  <p className="font-semibold">Chill Mechanic Technologies India Pvt. Ltd.</p>
+                  <p className="font-semibold">Chill Mechanic Pvt Ltd</p>
                   <p className="text-muted-foreground">Registered Office: Suncity Vatsal Valley Sector 02 Gwal Pahari Gurgaon 122003, Haryana, India</p>
                   <p className="text-muted-foreground">Website: https://www.chillmechanic.com</p>
                   <p className="text-muted-foreground">Email: support@chillmechanic.com</p>
