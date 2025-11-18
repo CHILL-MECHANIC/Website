@@ -137,7 +137,7 @@ export default function Payment() {
         title: "Payment Successful!",
         description: "Your booking has been confirmed. You will receive a confirmation email shortly."
       });
-
+    
     } catch (error) {
       console.error("Payment error:", error);
       toast({

@@ -78,10 +78,13 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold">Contact</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>📞 +91 9211970031</p>
+              <p>📞 +91 9211970030</p>
               <p>✉️ support@chillmechanic.com</p>
               <p>🕒 Mon - Sat: 9:30 AM - 7:30 PM</p>
-              <p>📍 Gurgaon, Haryana, India</p>
+              <div className="space-y-1">
+                <p className="font-medium">📍 Chill Mechanic Pvt. Ltd.</p>
+                <p>Suncity Vatsal Valley, Sector 02 Gwal Pahari Gurgaon 122003, Haryana, India</p>
+              </div>
             </div>
           </div>
         </div>
