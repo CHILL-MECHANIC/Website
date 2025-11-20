@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from "@/assets/Logo.webp";
+import { SiInstagram, SiFacebook, SiWhatsapp, SiLinkedin, SiX } from "react-icons/si";
 
 export default function Footer() {
   return <footer className="bg-card border-t">
@@ -71,7 +72,24 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
-            </ul>
+              <div className="flex items-center gap-3">
+              <a href="https://www.facebook.com/share/17c6FYTJ9H/" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Facebook">
+                <SiFacebook size={20} className="text-foreground hover:text-[#1877F2] transition-colors" />
+              </a>
+              <a href="https://www.instagram.com/p/DQ8e6tjkxCK/?igsh=MXN6M244cGJ2NnZ6aA==" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Instagram">
+                <SiInstagram size={20} className="text-foreground hover:text-[#E4405F] transition-colors" />
+              </a>
+              <a href="https://x.com/chill_mechanic?s=21" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Twitter">
+                <SiX size={20} className="text-foreground hover:text-[#000000] transition-colors" />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="LinkedIn">
+                <SiLinkedin size={20} className="text-foreground hover:text-[#0A66C2] transition-colors" />
+              </a>
+              <a href="https://wa.me/message/SGJEOWC7BT4QA1" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="WhatsApp">
+                <SiWhatsapp size={20} className="text-foreground hover:text-[#25D366] transition-colors" />
+              </a>
+            </div>
+          </ul>
           </div>
 
           {/* Contact */}

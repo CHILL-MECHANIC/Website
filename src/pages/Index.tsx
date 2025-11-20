@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Phone } from "lucide-react";
+import { SiWhatsapp } from "react-icons/si";
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
@@ -16,6 +17,9 @@ import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import heroBackground from "@/assets/hero-background.jpg";
+import { Card, CardContent } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+
 const services = [{
   id: "ac",
   title: "AC Service",
@@ -151,6 +155,7 @@ const Index = () => {
         </div>
       </section>
 
+
       {/* Services Section */}
       <section className="py-16" data-services-section>
         <div className="container mx-auto px-4">
@@ -167,6 +172,99 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Customer Reviews Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">WHAT OUR CUSTOMERS SAY</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              We appreciate your feedback and are committed to providing the best possible service.
+            </p>
+          </div>
+
+          <Carousel className="w-full max-w-5xl mx-auto">
+            <CarouselContent>
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card>
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {"⭐".repeat(5)}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      "It was a good experience for washing machine repair."
+                    </p>
+                    <div>
+                      <p className="font-semibold">Hima</p>
+                      <p className="text-xs text-muted-foreground">Gurgaon</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card>
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {"⭐".repeat(5)}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      "I recently used Chill Mechanic for some home repairs, and l was very impressed. Their prices are really reasonable which made it easy for me to get the help I needed without breaking the bank. The quality of their work was excellent too. They were professional and quick. Highly recommend Chill Mechanic for any one looking for affordable and reliable home repair services!"
+                    </p>
+                    <div>
+                      <p className="font-semibold">Shashi</p>
+                      <p className="text-xs text-muted-foreground">Gurgaon</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card>
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {"⭐".repeat(5)}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      "Chill Mechanic is a top-notch home utility and repair service that truly stands out! Their team is professional, reliable, and has an impressive knack for fixing appliances in excellent condition. I recently had my refrigerator serviced and the results were remarkable!They offer quick response times and exceptional customer care. Highly recommend Chill Mechanic for anyone in need of appliance repair or maintenance. Your home will thank you!"
+                    </p>
+                    <div>
+                      <p className="font-semibold">Sumit</p>
+                      <p className="text-xs text-muted-foreground">Gurgaon</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card>
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {"⭐".repeat(5)}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and did a good job."
+                    </p>
+                    <div>
+                      <p className="font-semibold">Nitin</p>
+                      <p className="text-xs text-muted-foreground">Gurgaon</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
+        </div>
+      </section>
+
+      <a
+        href="https://wa.me/message/SGJEOWC7BT4QA1"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white rounded-full p-4 shadow-lg hover:scale-110 transition-transform duration-200 hover:shadow-xl"
+        aria-label="Chat on WhatsApp"
+      >
+        <SiWhatsapp className="h-6 w-6" />
+      </a>
 
       <ServiceSelectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} serviceType={selectedServiceType} onContinue={handleModalContinue} onAddToCart={handleAddToCart} />
       
