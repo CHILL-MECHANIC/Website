@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from "@/assets/Logo.webp";
 import { SiInstagram, SiFacebook, SiWhatsapp, SiLinkedin, SiX } from "react-icons/si";
+import { Phone, Mail, Clock, MapPin } from "lucide-react";
 
 export default function Footer() {
   return <footer className="bg-card border-t">
@@ -95,14 +96,45 @@ export default function Footer() {
           {/* Contact */}
           <div className="space-y-4">
             <h4 className="font-semibold">Contact</h4>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>📞 +91 9211970030</p>
-              <p>✉️ support@chillmechanic.com</p>
-              <p>🕒 Mon - Sat: 9:30 AM - 7:30 PM</p>
-              <div className="space-y-1">
-                <p className="font-medium">📍 Chill Mechanic Pvt. Ltd.</p>
-                <p>Suncity Vatsal Valley, Sector 02 Gwal Pahari Gurgaon 122003, Haryana, India</p>
+            <div className="space-y-3 text-sm text-muted-foreground">
+              <a 
+                href="tel:+919211970030" 
+                className="flex items-center gap-2 group hover:text-primary transition-all duration-200 cursor-pointer"
+              >
+                <div className="p-1.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-200 group-hover:scale-110">
+                  <Phone className="h-4 w-4 flex-shrink-0 text-primary group-hover:scale-110 transition-transform duration-200" />
+                </div>
+                <span className="group-hover:translate-x-1 transition-transform duration-200">+91 9211970030</span>
+              </a>
+              <a 
+                href="mailto:support@chillmechanic.com" 
+                className="flex items-center gap-2 group hover:text-primary transition-all duration-200 cursor-pointer"
+              >
+                <div className="p-1.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-200 group-hover:scale-110">
+                  <Mail className="h-4 w-4 flex-shrink-0 text-primary group-hover:scale-110 transition-transform duration-200" />
+                </div>
+                <span className="group-hover:translate-x-1 transition-transform duration-200">support@chillmechanic.com</span>
+              </a>
+              <div className="flex items-center gap-2 group">
+                <div className="p-1.5 rounded-full bg-primary/10">
+                  <Clock className="h-4 w-4 flex-shrink-0 text-primary" />
+                </div>
+                <span>Mon - Sat: 9:30 AM - 7:30 PM</span>
               </div>
+              <a 
+                href="https://maps.google.com/?q=Suncity+Vatsal+Valley,+Sector+02+Gwal+Pahari+Gurgaon+122003,+Haryana,+India" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="space-y-1 group block"
+              >
+                <p className="font-medium flex items-center gap-2 hover:text-primary transition-all duration-200">
+                  <div className="p-1.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-200 group-hover:scale-110">
+                    <MapPin className="h-4 w-4 flex-shrink-0 text-primary group-hover:scale-110 transition-transform duration-200" />
+                  </div>
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">Chill Mechanic Pvt. Ltd.</span>
+                </p>
+                <p className="ml-6 group-hover:text-primary/80 transition-colors duration-200">Suncity Vatsal Valley, Sector 02 Gwal Pahari Gurgaon 122003, Haryana, India</p>
+              </a>
             </div>
           </div>
         </div>

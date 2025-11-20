@@ -8,7 +8,7 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Phone } from "lucide-react";
+import { Phone, Sparkles, Star } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
@@ -139,17 +139,26 @@ const Index = () => {
         <div className="relative flex">
           <div className="flex animate-[scroll_30s_linear_infinite] whitespace-nowrap">
             <div className="flex items-center gap-8 px-8">
-              <span className="text-sm font-semibold">🎉 GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10</span>
+              <span className="text-sm font-semibold flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10
+              </span>
             </div>
           </div>
           <div className="flex animate-[scroll_30s_linear_infinite] whitespace-nowrap" aria-hidden="true">
             <div className="flex items-center gap-8 px-8">
-              <span className="text-sm font-semibold">🎉 GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10</span>
+              <span className="text-sm font-semibold flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10
+              </span>
             </div>
           </div>
           <div className="flex animate-[scroll_30s_linear_infinite] whitespace-nowrap" aria-hidden="true">
             <div className="flex items-center gap-8 px-8">
-              <span className="text-sm font-semibold">🎉 GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10</span>
+              <span className="text-sm font-semibold flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10
+              </span>
             </div>
           </div>
         </div>
@@ -189,7 +198,9 @@ const Index = () => {
                 <Card>
                   <CardContent className="p-6 space-y-4">
                     <div className="flex items-center gap-1 text-yellow-500">
-                      {"⭐".repeat(5)}
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-current" />
+                      ))}
                     </div>
                     <p className="text-sm text-muted-foreground">
                       "It was a good experience for washing machine repair."
@@ -205,7 +216,9 @@ const Index = () => {
                 <Card>
                   <CardContent className="p-6 space-y-4">
                     <div className="flex items-center gap-1 text-yellow-500">
-                      {"⭐".repeat(5)}
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-current" />
+                      ))}
                     </div>
                     <p className="text-sm text-muted-foreground">
                       "I recently used Chill Mechanic for some home repairs, and l was very impressed. Their prices are really reasonable which made it easy for me to get the help I needed without breaking the bank. The quality of their work was excellent too. They were professional and quick. Highly recommend Chill Mechanic for any one looking for affordable and reliable home repair services!"
@@ -221,7 +234,9 @@ const Index = () => {
                 <Card>
                   <CardContent className="p-6 space-y-4">
                     <div className="flex items-center gap-1 text-yellow-500">
-                      {"⭐".repeat(5)}
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-current" />
+                      ))}
                     </div>
                     <p className="text-sm text-muted-foreground">
                       "Chill Mechanic is a top-notch home utility and repair service that truly stands out! Their team is professional, reliable, and has an impressive knack for fixing appliances in excellent condition. I recently had my refrigerator serviced and the results were remarkable!They offer quick response times and exceptional customer care. Highly recommend Chill Mechanic for anyone in need of appliance repair or maintenance. Your home will thank you!"
@@ -237,7 +252,9 @@ const Index = () => {
                 <Card>
                   <CardContent className="p-6 space-y-4">
                     <div className="flex items-center gap-1 text-yellow-500">
-                      {"⭐".repeat(5)}
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-current" />
+                      ))}
                     </div>
                     <p className="text-sm text-muted-foreground">
                       "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and did a good job."
