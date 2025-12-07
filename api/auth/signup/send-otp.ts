@@ -34,8 +34,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Check auth.users
     const { data: authUsers } = await supabase.auth.admin.listUsers();
-    const existingAuthUser = authUsers?.users?.find(
-      u => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
+    const users = authUsers?.users || [];
+    const existingAuthUser = users.find(
+      (u: any) => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
     );
 
     if (existingAuthUser) {

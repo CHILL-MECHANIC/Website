@@ -26,11 +26,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .maybeSingle();
 
     // Also check auth.users
-    let existingAuthUser = null;
+    let existingAuthUser: any = null;
     if (!existingProfile) {
       const { data: authUsers } = await supabase.auth.admin.listUsers();
-      existingAuthUser = authUsers?.users?.find(
-        u => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
+      const users = authUsers?.users || [];
+      existingAuthUser = users.find(
+        (u: any) => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
       );
     }
 

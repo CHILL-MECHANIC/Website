@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-const JWT_EXPIRY = process.env.JWT_EXPIRY || '7d';
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
 
 export interface JWTPayload {
   userId: string;
@@ -10,8 +9,12 @@ export interface JWTPayload {
   isProfileComplete: boolean;
 }
 
-export function signToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY });
+export function signToken(payload: JWTPayload): string {
+  return jwt.sign(
+    payload as object,
+    JWT_SECRET,
+    { expiresIn: '7d' } as jwt.SignOptions
+  );
 }
 
 export function verifyToken(token: string): JWTPayload | null {
@@ -21,4 +24,3 @@ export function verifyToken(token: string): JWTPayload | null {
     return null;
   }
 }
-

@@ -52,8 +52,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!profile) {
       // Check auth.users and create profile if missing
       const { data: authUsers } = await supabase.auth.admin.listUsers();
-      const existingAuthUser = authUsers?.users?.find(
-        u => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
+      const users = authUsers?.users || [];
+      const existingAuthUser = users.find(
+        (u: any) => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
       );
 
       if (!existingAuthUser) {
