@@ -15,7 +15,7 @@ export default function Header({
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
-    user,
+    profile,
     signOut
   } = useAuth();
   const {
@@ -87,7 +87,7 @@ export default function Header({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {user ? <>
+                {profile ? <>
                     <DropdownMenuItem asChild>
                       <Link to="/profile">View Profile</Link>
                     </DropdownMenuItem>
@@ -142,7 +142,7 @@ export default function Header({
               </Link>
 
               {/* Mobile Profile Section */}
-              {user ? <>
+              {profile ? <>
                   <Link to="/profile" className="hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                     View Profile
                   </Link>

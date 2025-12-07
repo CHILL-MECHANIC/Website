@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,68 +12,19 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, ArrowLeft, ChevronDown } from "lucide-react";
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [authMethod, setAuthMethod] = useState<"email" | "phone">("email");
   const [otpSent, setOtpSent] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [isSignUp, setIsSignUp] = useState<boolean | null>(null); // null = not checked yet, true = sign up, false = sign in
+  const [userName, setUserName] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    fullName: "",
     phone: "",
     otp: ""
   });
-  const { signIn, signUp, signInWithPhone, verifyOtp } = useAuth();
+  const { checkPhoneExists, signUp, signIn, verifySignUpOtp, verifySignInOtp, resendOtp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (isLogin) {
-        const { error } = await signIn(formData.email, formData.password);
-        if (error) {
-          toast({
-            title: "Login failed",
-            description: error.message,
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Welcome back!",
-            description: "You have been logged in successfully."
-          });
-          navigate("/");
-        }
-      } else {
-        const { error } = await signUp(formData.email, formData.password, formData.fullName);
-        if (error) {
-          toast({
-            title: "Signup failed",
-            description: error.message,
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Account created!",
-            description: "Please check your email to verify your account."
-          });
-        }
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,19 +41,47 @@ export default function Auth() {
       
       setLoading(true);
       try {
-        const { error } = await signInWithPhone(formData.phone);
-        if (error) {
-          toast({
-            title: "Failed to send OTP",
-            description: error.message,
-            variant: "destructive"
-          });
+        // First check if phone exists
+        const { exists, hasName } = await checkPhoneExists(formData.phone);
+        
+        if (exists) {
+          // Phone exists - Sign In flow
+          setIsSignUp(false);
+          const { error, userName: name } = await signIn(formData.phone);
+          if (error) {
+            toast({
+              title: "Failed to send OTP",
+              description: error.message,
+              variant: "destructive"
+            });
+            setIsSignUp(null);
+          } else {
+            setOtpSent(true);
+            setUserName(name || null);
+            toast({
+              title: "OTP Sent!",
+              description: name ? `Welcome back! Please check your phone for the verification code.` : "Please check your phone for the verification code."
+            });
+          }
         } else {
-          setOtpSent(true);
-          toast({
-            title: "OTP Sent!",
-            description: "Please check your phone for the verification code."
-          });
+          // Phone doesn't exist - Sign Up flow
+          setIsSignUp(true);
+          const { error } = await signUp(formData.phone);
+          if (error) {
+            toast({
+              title: "Failed to send OTP",
+              description: error.message,
+              variant: "destructive"
+            });
+            setIsSignUp(null);
+          } else {
+            setOtpSent(true);
+            setUserName(null);
+            toast({
+              title: "OTP Sent!",
+              description: "Please check your phone for the verification code to complete registration."
+            });
+          }
         }
       } catch (error) {
         toast({
@@ -110,25 +89,34 @@ export default function Auth() {
           description: "Something went wrong. Please try again.",
           variant: "destructive"
         });
+        setIsSignUp(null);
       } finally {
         setLoading(false);
       }
     } else {
+      // Verify OTP
       setLoading(true);
       try {
-        const { error } = await verifyOtp(formData.phone, formData.otp);
-        if (error) {
+        let result;
+        if (isSignUp) {
+          result = await verifySignUpOtp(formData.phone, formData.otp);
+        } else {
+          result = await verifySignInOtp(formData.phone, formData.otp);
+        }
+        
+        if (result.error) {
           toast({
             title: "Verification failed",
-            description: error.message,
+            description: result.error.message,
             variant: "destructive"
           });
         } else {
-          toast({
-            title: "Success!",
-            description: "You have been logged in successfully."
-          });
-          navigate("/");
+          // Navigate based on user state
+          if (result.user?.isNewUser || !result.user?.isProfileComplete) {
+            navigate("/profile");
+          } else {
+            navigate("/");
+          }
         }
       } catch (error) {
         toast({
@@ -142,11 +130,51 @@ export default function Auth() {
     }
   };
 
+  const handleResendOtp = async () => {
+    setLoading(true);
+    try {
+      const { error } = await resendOtp(formData.phone);
+      if (error) {
+        toast({
+          title: "Failed to resend OTP",
+          description: error.message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "OTP Resent!",
+          description: "Please check your phone for the new verification code."
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Reset sign up/in state when phone changes
+    if (e.target.name === 'phone' && otpSent) {
+      setIsSignUp(null);
+      setOtpSent(false);
+      setFormData(prev => ({ ...prev, otp: "" }));
+    }
+  };
+
+  const handleChangePhone = () => {
+    setOtpSent(false);
+    setIsSignUp(null);
+    setUserName(null);
+    setFormData({ ...formData, otp: "" });
   };
 
   return (
@@ -161,15 +189,17 @@ export default function Auth() {
         <Card className="w-full shadow-lg">
           <CardHeader className="text-center space-y-2 pb-6">
             <CardTitle className="text-3xl font-bold tracking-tight">
-              {isLogin ? "Welcome Back" : "Create Account"}
+              {isSignUp === false && userName ? `Welcome back, ${userName}!` : isSignUp === true ? "Join ChillMechanic" : "Welcome to ChillMechanic"}
             </CardTitle>
+            {isSignUp === false && (
+              <p className="text-sm text-muted-foreground">Sign in to your account</p>
+            )}
+            {isSignUp === true && (
+              <p className="text-sm text-muted-foreground">Create your account</p>
+            )}
           </CardHeader>
           <CardContent className="px-6 pb-6">
-            <Tabs value={authMethod} onValueChange={(v) => setAuthMethod(v as "email" | "phone")} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-8 h-11">
-                <TabsTrigger value="phone" className="text-sm font-medium">Phone + OTP</TabsTrigger>
-                <TabsTrigger value="email" className="text-sm font-medium">Email + Password</TabsTrigger>
-              </TabsList>
+            <Tabs value="phone" className="w-full">
 
               <TabsContent value="phone" className="space-y-6">
                 <form onSubmit={handlePhoneSubmit} className="space-y-5">
@@ -198,8 +228,8 @@ export default function Auth() {
                         value={formData.otp}
                         onChange={handleInputChange}
                         required
-                        placeholder="Enter 6-digit OTP"
-                        maxLength={6}
+                        placeholder="Enter 4-digit OTP"
+                        maxLength={4}
                         className="h-11 text-center text-lg tracking-widest"
                       />
                     </div>
@@ -261,92 +291,29 @@ export default function Auth() {
                     </Button>
 
                     {otpSent && (
-                      <Button
-                        type="button"
-                        variant="link"
-                        onClick={() => {
-                          setOtpSent(false);
-                          setFormData({ ...formData, otp: "" });
-                        }}
-                        className="w-full h-auto py-2 text-sm"
-                      >
-                        Change phone number
-                      </Button>
+                      <div className="space-y-2">
+                        <Button
+                          type="button"
+                          variant="link"
+                          onClick={handleResendOtp}
+                          disabled={loading}
+                          className="w-full h-auto py-2 text-sm"
+                        >
+                          Resend OTP
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="link"
+                          onClick={handleChangePhone}
+                          disabled={loading}
+                          className="w-full h-auto py-2 text-sm"
+                        >
+                          Change phone number
+                        </Button>
+                      </div>
                     )}
                   </div>
                 </form>
-              </TabsContent>
-
-              <TabsContent value="email" className="space-y-6">
-                <form onSubmit={handleEmailSubmit} className="space-y-5">
-                  {!isLogin && (
-                    <div className="space-y-2.5">
-                      <Label htmlFor="fullName" className="text-sm font-medium">Full Name</Label>
-                      <Input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        required={!isLogin}
-                        placeholder="Enter your full name"
-                        className="h-11"
-                      />
-                    </div>
-                  )}
-                  
-                  <div className="space-y-2.5">
-                    <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter your email"
-                      className="h-11"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2.5">
-                    <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter your password"
-                      minLength={6}
-                      className="h-11"
-                    />
-                  </div>
-                  
-                  <div className="pt-2">
-                    <Button type="submit" className="w-full h-11 text-base font-medium" disabled={loading}>
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {isLogin ? "Signing In..." : "Creating Account..."}
-                        </>
-                      ) : (
-                        isLogin ? "Sign In" : "Sign Up"
-                      )}
-                    </Button>
-                  </div>
-                </form>
-
-                <div className="pt-2 text-center border-t">
-                  <Button
-                    variant="link"
-                    onClick={() => setIsLogin(!isLogin)}
-                    className="text-sm h-auto py-2"
-                  >
-                    {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-                  </Button>
-                </div>
               </TabsContent>
             </Tabs>
           </CardContent>

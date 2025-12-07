@@ -1,47 +1,56 @@
+import './config/env';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import smsRoutes from './routes/sms';
-import { requestLogger, errorLogger } from './middleware/logger';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
-
-// Load environment variables
-dotenv.config();
+import { requestLogger, errorLogger } from './middleware/logger';
+// Import ALL routes
+import smsRoutes from './routes/sms';
+import authRoutes from './routes/auth';
+import profileRoutes from './routes/profile';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:8080',
-  credentials: true
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:8080',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL
+].filter(Boolean) as string[];
 
-// Request logging
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked: ${origin}`);
+      callback(null, true); // Allow in development
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(express.json());
 app.use(requestLogger);
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'SMS API is running',
-    timestamp: new Date().toISOString()
-  });
+// Health check
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// API routes
+// REGISTER ALL ROUTES
 app.use('/api/sms', smsRoutes);
-
-// 404 handler
-app.use(notFoundHandler);
+app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Error handling
+app.use(notFoundHandler);
 app.use(errorLogger);
 app.use(errorHandler);
 
-// Start server
 app.listen(PORT, () => {
   console.log(`🚀 SMS API server running on port ${PORT}`);
   console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -49,4 +58,3 @@ app.listen(PORT, () => {
 });
 
 export default app;
-

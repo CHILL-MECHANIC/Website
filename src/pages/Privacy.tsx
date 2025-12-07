@@ -13,12 +13,12 @@ import { Shield, Eye, Lock, Users, UserX, AlertTriangle, FileText, Scale, AlertC
 
 export default function Privacy() {
   const { getCartItemsCount } = useCart();
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDeleteAccount = async () => {
-    if (!user) return;
+    if (!profile) return;
 
     setIsDeleting(true);
     try {
@@ -494,7 +494,7 @@ export default function Privacy() {
             </Card>
 
             {/* Delete Account Section */}
-            {user && (
+            {profile && (
               <Card className="border-destructive bg-destructive/5">
                 <CardHeader>
                   <CardTitle className="flex items-center text-destructive">
@@ -549,7 +549,7 @@ export default function Privacy() {
                               and remove all your data from our servers.
                             </p>
                             <p className="font-semibold">
-                              Type your email address to confirm: <span className="text-primary">{user.email}</span>
+                              Type your email address to confirm: <span className="text-primary">{profile.email || profile.phone}</span>
                             </p>
                           </AlertDialogDescription>
                         </AlertDialogHeader>

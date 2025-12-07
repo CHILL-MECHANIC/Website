@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { SMSRequest, SMSResponse, SMSType, RetryConfig } from '../types/sms';
+import type { SMSRequest, SMSResponse, RetryConfig } from '../types/sms';
 
 /**
  * SMS Service for Unique Digital Outreach API
@@ -16,7 +16,8 @@ const messageSchema = z.string()
   .min(1, 'Message cannot be empty')
   .max(1600, 'Message cannot exceed 1600 characters');
 
-const smsTypeSchema = z.enum(['TRANS', 'PROMO', 'OTP']).optional();
+// Unused - kept for potential future use
+// const smsTypeSchema = z.enum(['TRANS', 'PROMO', 'OTP']).optional();
 
 /**
  * Validates phone number format
@@ -131,7 +132,7 @@ export async function sendSMS(
   // Prepare API request
   const apiKey = process.env.SMS_API_KEY;
   const senderId = request.senderId || process.env.SMS_SENDER_ID || 'SMS';
-  const apiUrl = process.env.SMS_API_URL || 'https://api.uniquedigitaloutreach.com/sms';
+  const apiUrl = process.env.SMS_API_URL || 'https://api.uniquedigitaloutreach.com/v1/sms';
 
   if (!apiKey) {
     return {
@@ -140,15 +141,21 @@ export async function sendSMS(
     };
   }
 
-  // Build request payload
+  // Build request payload - aligned with API_DOCUMENTATION.md
   const payload: Record<string, unknown> = {
-    recipient: request.recipient,
-    message: request.message,
-    sender_id: senderId,
-    type: request.type || 'TRANS',
-    unicode: useUnicode,
-    flash: request.flash || false
+    sender: senderId,
+    to: request.recipient,
+    text: request.message,
+    type: request.type || 'TRANS'
   };
+
+  // Add optional fields if provided
+  if (useUnicode) {
+    payload.unicode = useUnicode;
+  }
+  if (request.flash) {
+    payload.flash = request.flash;
+  }
 
   // Add template support if provided
   if (request.templateId) {
@@ -202,13 +209,26 @@ export async function sendSMS(
         throw new Error(errorMessage);
       }
 
-      const data = await response.json();
+      // Parse response - aligned with API_DOCUMENTATION.md format
+      // Expected: { id, data: [{ recipient, messageId }], totalCount, message, error }
+      const data = await response.json() as {
+        id?: string;
+        data?: Array<{
+          recipient?: string;
+          messageId?: string;
+        }>;
+        totalCount?: number;
+        message?: string;
+        error?: string | null;
+      };
 
-      // Handle API response
-      if (data.success || data.message_id || data.status === 'success') {
+      // Handle API response according to API_DOCUMENTATION.md
+      if (data.message === 'Message Sent Successfully!' && data.data && data.data.length > 0) {
+        // Extract messageId from data array
+        const messageId = data.data[0]?.messageId || data.id || undefined;
         return {
           success: true,
-          messageId: data.message_id || data.id || data.transaction_id,
+          messageId: messageId,
           message: data.message || 'SMS sent successfully'
         };
       } else {

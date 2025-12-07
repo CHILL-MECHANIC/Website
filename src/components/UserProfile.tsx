@@ -35,7 +35,7 @@ interface Booking {
 }
 
 export default function UserProfile() {
-  const { user, signOut } = useAuth();
+  const { profile: authProfile, signOut } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -54,18 +54,18 @@ export default function UserProfile() {
   const [loadingBookings, setLoadingBookings] = useState(true);
 
   useEffect(() => {
-    if (user) {
+    if (authProfile) {
       fetchProfile();
       fetchBookings();
     }
-  }, [user]);
+  }, [authProfile]);
 
   const fetchProfile = async () => {
     try {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("user_id", user?.id)
+        .eq("id", authProfile?.id)
         .single();
 
       if (error) throw error;
@@ -98,7 +98,7 @@ export default function UserProfile() {
             quantity
           )
         `)
-        .eq("user_id", user?.id)
+        .eq("user_id", authProfile?.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -117,9 +117,9 @@ export default function UserProfile() {
       const { error } = await supabase
         .from("profiles")
         .upsert({
-          user_id: user?.id,
+          id: authProfile?.id,
           ...profile
-        });
+        } as any);
 
       if (error) throw error;
 
@@ -147,12 +147,12 @@ export default function UserProfile() {
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user) return;
+    if (!file || !authProfile) return;
 
     setUploadingAvatar(true);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/avatar.${fileExt}`;
+      const fileName = `${authProfile.id}/avatar.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -171,9 +171,9 @@ export default function UserProfile() {
       const { error: updateError } = await supabase
         .from('profiles')
         .upsert({
-          user_id: user.id,
+          id: authProfile.id,
           ...updatedProfile
-        });
+        } as any);
 
       if (updateError) throw updateError;
 
@@ -221,7 +221,7 @@ export default function UserProfile() {
                 <div className="flex flex-col items-center space-y-4">
                   <div className="relative">
                     <Avatar className="h-24 w-24">
-                      <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
+                      <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
                       <AvatarFallback className="text-lg">
                         {profile.full_name ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
                       </AvatarFallback>

@@ -19,6 +19,9 @@ dist-ssr
 backend/.env
 backend/.env.local
 
+# Vercel
+.vercel
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -29,3 +32,25 @@ backend/.env.local
 *.njsproj
 *.sln
 *.sw?
+
+ DIAGNOSTIC_REPORT.md
+ IMPLEMENTATION_SUMMARY.md
+ BACKEND_STATUS.md
+ ENV_VARIABLES.md
+ SECURITY.md
+ API_DOCUMENTATION.md
+ TROUBLESHOOTING.md
+SMS_LOGS.md
+SMS_INTEGRATION_README.md
+IMPLEMENTATION_SUMMARY.md
+API_DOCUMENTATION.md
+TROUBLESHOOTING.md
+SECURITY.md
+ENV_VARIABLES.md
+BACKEND_STATUS.md
+DIAGNOSTIC_REPORT.md
+SMS_LOGS.md
+SMS_INTEGRATION_README.md
+IMPLEMENTATION_SUMMARY.md
+API_DOCUMENTATION.md
+TROUBLESHOOTING.md

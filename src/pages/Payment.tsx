@@ -23,7 +23,7 @@ export default function Payment() {
   const navigate = useNavigate();
   const location = useLocation();
   const { cartItems, getCartTotal, clearCart, getCartItemsCount } = useCart();
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export default function Payment() {
   const bookingData: BookingData = location.state?.bookingData;
 
   useEffect(() => {
-    if (!user) {
+    if (!profile) {
       navigate("/auth");
       return;
     }
@@ -46,7 +46,7 @@ export default function Payment() {
       navigate("/cart");
       return;
     }
-  }, [user, bookingData, cartItems.length, navigate]);
+  }, [profile, bookingData, cartItems.length, navigate]);
 
   const subtotal = getCartTotal();
   const GST = Math.round(subtotal * 0.18);

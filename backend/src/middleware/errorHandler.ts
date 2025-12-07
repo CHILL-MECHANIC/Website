@@ -1,73 +1,61 @@
-import type { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
-/**
- * Custom error class for API errors
- */
 export class APIError extends Error {
-  constructor(
-    public statusCode: number,
-    message: string,
-    public code?: string
-  ) {
+  statusCode: number;
+  isOperational: boolean;
+  constructor(statusCode: number, message: string, isOperational = true) {
     super(message);
-    this.name = 'APIError';
+    this.statusCode = statusCode;
+    this.isOperational = isOperational;
+    Object.setPrototypeOf(this, APIError.prototype);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
-/**
- * Global error handler middleware
- * Formats and sends error responses
- */
-export function errorHandler(
-  err: Error | APIError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
-  // If response already sent, delegate to default Express error handler
-  if (res.headersSent) {
-    return next(err);
-  }
+// Async handler wrapper - MUST BE EXPORTED
+export const asyncHandler = (
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
+) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+};
 
-  // Handle API errors
-  if (err instanceof APIError) {
-    res.status(err.statusCode).json({
-      success: false,
-      error: err.message,
-      code: err.code
-    });
-    return;
-  }
-
-  // Handle validation errors
-  if (err.name === 'ValidationError' || err.name === 'ZodError') {
-    res.status(400).json({
-      success: false,
-      error: err.message,
-      code: 'VALIDATION_ERROR'
-    });
-    return;
-  }
-
-  // Handle unknown errors
-  console.error('Unhandled error:', err);
-  res.status(500).json({
-    success: false,
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : err.message,
-    code: 'INTERNAL_ERROR'
-  });
-}
-
-/**
- * 404 Not Found handler
- */
-export function notFoundHandler(req: Request, res: Response): void {
+// 404 handler
+export const notFoundHandler = (_req: Request, res: Response) => {
   res.status(404).json({
     success: false,
-    error: `Route ${req.method} ${req.path} not found`,
-    code: 'NOT_FOUND'
+    message: 'Resource not found'
   });
-}
+};
 
+// Global error handler
+export const errorHandler = (
+  err: Error | APIError,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  console.error('Error:', {
+    name: err.name,
+    message: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+  if (err instanceof APIError) {
+    return res.status(err.statusCode).json({
+      success: false,
+      message: err.message
+    });
+  }
+  if (err.name === 'ZodError') {
+    return res.status(400).json({
+      success: false,
+      message: 'Validation error',
+      errors: (err as any).errors
+    });
+  }
+  return res.status(500).json({
+    success: false,
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+  });
+};

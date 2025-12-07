@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { 
     cartItems, 
     removeFromCart, 
@@ -61,7 +61,7 @@ export default function Cart() {
       return; // Basic validation
     }
     
-    if (!user) {
+    if (!profile) {
       setShowSchedulingModal(false);
       setShowAuthPrompt(true);
       return;

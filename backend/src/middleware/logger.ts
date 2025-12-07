@@ -28,7 +28,7 @@ export function requestLogger(req: Request, res: Response, next: NextFunction): 
  * Error logging middleware
  * Logs errors with full context
  */
-export function errorLogger(err: Error, req: Request, res: Response, next: NextFunction): void {
+export function errorLogger(err: Error, req: Request, _res: Response, next: NextFunction): void {
   console.error(`[${new Date().toISOString()}] Error in ${req.method} ${req.path}:`, {
     message: err.message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
