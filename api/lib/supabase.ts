@@ -32,8 +32,20 @@ export function generateOTP(): string {
   return Math.floor(1000 + Math.random() * 9000).toString();
 }
 
-export function setCorsHeaders(res: any) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+export function setCorsHeaders(res: any, origin?: string) {
+  // Allow specific origins in production, all in development
+  const allowedOrigins = [
+    'https://chillmechanic.com',
+    'https://www.chillmechanic.com',
+    'http://localhost:8080',
+    'http://localhost:5173'
+  ];
+  
+  const requestOrigin = origin || '*';
+  const corsOrigin = allowedOrigins.includes(requestOrigin) ? requestOrigin : allowedOrigins[0];
+  
+  res.setHeader('Access-Control-Allow-Origin', corsOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
 }

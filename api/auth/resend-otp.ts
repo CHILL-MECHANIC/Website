@@ -1,17 +1,35 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabase, formatPhoneNumber, generateOTP, setCorsHeaders } from '../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
 
-const OTP_VALIDITY_MINUTES = 10;
+function formatPhoneNumber(phone: string): string {
+  let digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('0')) digits = digits.substring(1);
+  if (digits.startsWith('91') && digits.length === 12) digits = digits.substring(2);
+  if (digits.length !== 10) throw new Error('Invalid phone number');
+  if (!/^[6-9]/.test(digits)) throw new Error('Invalid Indian mobile number');
+  return '91' + digits;
+}
+
+function generateOTP(): string {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  setCorsHeaders(res);
-  
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
 
   try {
-    const { phone } = req.body;
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    const { phone } = req.body || {};
     if (!phone) {
       return res.status(400).json({ success: false, message: 'Phone number required' });
     }
@@ -27,7 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Generate new OTP
     const otp = generateOTP();
-    const expiresAt = new Date(Date.now() + OTP_VALIDITY_MINUTES * 60 * 1000).toISOString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
     await supabase.from('otp_logs').insert({
       phone: formattedPhone,
@@ -40,7 +58,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const message = `Your webapp login OTP is ${otp} From - Chill Mechanic`;
 
     const smsResponse = await axios.post(
-      process.env.SMS_API_URL || 'https://api.uniquedigitaloutreach.com/v1/sms',
+      'https://api.uniquedigitaloutreach.com/v1/sms',
       {
         sender: process.env.SMS_SENDER_ID || 'CHLMEH',
         to: formattedPhone,
@@ -59,7 +77,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (smsResponse.data?.message === 'Message Sent Successfully!') {
       return res.status(200).json({ success: true, message: 'OTP resent successfully' });
     } else {
-      console.error('SMS API error:', smsResponse.data);
       return res.status(500).json({ success: false, message: 'Failed to resend OTP' });
     }
   } catch (error: any) {
@@ -67,4 +84,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ success: false, message: error.message || 'Failed to resend OTP' });
   }
 }
-

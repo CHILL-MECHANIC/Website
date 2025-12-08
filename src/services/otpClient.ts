@@ -13,7 +13,13 @@
  * - In development: Use VITE_API_URL or default to localhost:3001
  */
 const getApiBaseUrl = (): string => {
-  // Check for explicit production mode or empty URL
+  // In production mode (Vercel), always use relative URLs
+  // This is critical for serverless functions in /api folder
+  if (import.meta.env.PROD) {
+    return '';
+  }
+  
+  // Check for explicit environment URL in development
   const envUrl = import.meta.env.VITE_API_URL;
   
   // If explicitly set to empty or 'relative', use empty base (relative URLs)
@@ -26,8 +32,8 @@ const getApiBaseUrl = (): string => {
     return envUrl.replace(/\/api\/(sms|auth)\/?$/, '').replace(/\/$/, '');
   }
   
-  // Default: localhost for development
-  return import.meta.env.DEV ? 'http://localhost:3001' : '';
+  // Default: localhost for development only
+  return 'http://localhost:3001';
 };
 
 const API_BASE = getApiBaseUrl();
@@ -50,10 +56,14 @@ const buildProfileUrl = (): string => {
 };
 
 // Log the API base URL in development for debugging
-if (import.meta.env.DEV) {
-  console.log('[OTP Client] API Base URL:', API_BASE || '(relative)');
-  console.log('[OTP Client] Auth Base URL:', `${API_BASE}/api/auth`);
-}
+// Using a function wrapper to ensure proper tree-shaking in production
+const logDebugInfo = () => {
+  if (import.meta.env.DEV) {
+    console.log('[OTP Client] API Base URL:', API_BASE || '(relative)');
+    console.log('[OTP Client] Auth Base URL:', `${API_BASE}/api/auth`);
+  }
+};
+logDebugInfo();
 
 // Types
 export interface BaseResponse {

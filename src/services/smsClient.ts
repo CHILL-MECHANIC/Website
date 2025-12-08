@@ -3,7 +3,27 @@
  * Handles all API communication with the SMS backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/sms';
+/**
+ * Gets the SMS API base URL
+ * - In production (Vercel): Use relative URL for serverless functions
+ * - In development: Use VITE_API_URL or default to localhost:3001
+ */
+const getSmsApiBaseUrl = (): string => {
+  // In production, always use relative URLs for Vercel serverless functions
+  if (import.meta.env.PROD) {
+    return '/api/sms';
+  }
+  
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) {
+    // If URL ends with /api/sms, use as-is; otherwise append it
+    return envUrl.includes('/api/sms') ? envUrl : `${envUrl}/api/sms`;
+  }
+  
+  return 'http://localhost:3001/api/sms';
+};
+
+const API_BASE_URL = getSmsApiBaseUrl();
 
 export type SMSType = 'TRANS' | 'PROMO' | 'OTP';
 export type SMSStatus = 'pending' | 'sent' | 'failed' | 'delivered';
