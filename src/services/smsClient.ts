@@ -4,13 +4,22 @@
  */
 
 /**
+ * Checks if we're running on localhost (development)
+ */
+const isLocalhost = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  const hostname = window.location.hostname;
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+};
+
+/**
  * Gets the SMS API base URL
- * - In production (Vercel): Use relative URL for serverless functions
- * - In development: Use VITE_API_URL or default to localhost:3001
+ * - In production (any non-localhost domain): Use relative URL for serverless functions
+ * - In development (localhost): Use VITE_API_URL or default to localhost:3001
  */
 const getSmsApiBaseUrl = (): string => {
-  // In production, always use relative URLs for Vercel serverless functions
-  if (import.meta.env.PROD) {
+  // RUNTIME CHECK: If not on localhost, ALWAYS use relative URLs
+  if (!isLocalhost()) {
     return '/api/sms';
   }
   

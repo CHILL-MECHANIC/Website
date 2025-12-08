@@ -4,22 +4,31 @@
  * 
  * Supports both:
  * - Local development with Express backend (VITE_API_URL=http://localhost:3001)
- * - Production Vercel deployment (VITE_API_URL='' or undefined for relative URLs)
+ * - Production Vercel deployment (uses relative URLs)
  */
 
 /**
- * Gets the base API URL from environment variable
- * - In production (Vercel): Use empty string for relative URLs
- * - In development: Use VITE_API_URL or default to localhost:3001
+ * Checks if we're running on localhost (development)
+ */
+const isLocalhost = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  const hostname = window.location.hostname;
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+};
+
+/**
+ * Gets the base API URL
+ * - In production (any non-localhost domain): Use empty string for relative URLs
+ * - In development (localhost): Use VITE_API_URL or default to localhost:3001
  */
 const getApiBaseUrl = (): string => {
-  // In production mode (Vercel), always use relative URLs
-  // This is critical for serverless functions in /api folder
-  if (import.meta.env.PROD) {
+  // RUNTIME CHECK: If not on localhost, ALWAYS use relative URLs
+  // This ensures production deployments work correctly
+  if (!isLocalhost()) {
     return '';
   }
   
-  // Check for explicit environment URL in development
+  // We're on localhost - check for explicit environment URL
   const envUrl = import.meta.env.VITE_API_URL;
   
   // If explicitly set to empty or 'relative', use empty base (relative URLs)
@@ -32,7 +41,7 @@ const getApiBaseUrl = (): string => {
     return envUrl.replace(/\/api\/(sms|auth)\/?$/, '').replace(/\/$/, '');
   }
   
-  // Default: localhost for development only
+  // Default: localhost:3001 for local development only
   return 'http://localhost:3001';
 };
 

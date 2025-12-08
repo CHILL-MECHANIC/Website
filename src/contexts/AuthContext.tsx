@@ -69,8 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!token) return;
 
     try {
-      // Use relative URL in production, localhost only in development
-      const apiBase = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:3001');
+      // RUNTIME CHECK: Use relative URL if not on localhost
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const apiBase = isLocalhost ? (import.meta.env.VITE_API_URL || 'http://localhost:3001') : '';
       const response = await fetch(`${apiBase}/api/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
