@@ -63,7 +63,8 @@ export default function Profile() {
       const token = localStorage.getItem('auth_token');
       if (!token) return;
 
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      // Use relative URL in production, localhost only in development
+      const apiUrl = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:3001');
       const response = await fetch(`${apiUrl}/api/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -123,7 +124,8 @@ export default function Profile() {
         return;
       }
 
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      // Use relative URL in production, localhost only in development
+      const apiUrl = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:3001');
       console.log('[Profile] Making PUT request to:', `${apiUrl}/api/profile`);
 
       const response = await fetch(`${apiUrl}/api/profile`, {

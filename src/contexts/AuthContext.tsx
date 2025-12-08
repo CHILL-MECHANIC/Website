@@ -69,7 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!token) return;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/profile`, {
+      // Use relative URL in production, localhost only in development
+      const apiBase = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:3001');
+      const response = await fetch(`${apiBase}/api/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
