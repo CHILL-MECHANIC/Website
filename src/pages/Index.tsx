@@ -314,6 +314,8 @@ const Index = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      <Footer />
     </div>;
 };
 export default Index;
