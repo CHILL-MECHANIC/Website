@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
 
 const getSupabase = () => createClient(
@@ -242,8 +242,8 @@ const createSessionForSignUp = async (phone: string) => {
       authMethod: 'phone',
       isProfileComplete: false
     },
-    process.env.JWT_SECRET!,
-    { expiresIn: process.env.JWT_EXPIRY || '30d' }
+    process.env.JWT_SECRET as jwt.Secret,
+    { expiresIn: process.env.JWT_EXPIRY || '30d' } as jwt.SignOptions
   );
 
   // Get profile
@@ -294,8 +294,8 @@ const createSessionForSignIn = async (phone: string) => {
         authMethod: 'phone',
         isProfileComplete: profileByPhone.is_profile_complete || false
       },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRY || '30d' }
+      process.env.JWT_SECRET as jwt.Secret,
+      { expiresIn: process.env.JWT_EXPIRY || '30d' } as jwt.SignOptions
     );
 
     return {
@@ -316,7 +316,7 @@ const createSessionForSignIn = async (phone: string) => {
   // Check auth.users
   const { data: authUsers } = await supabase.auth.admin.listUsers();
   const existingUser = authUsers?.users?.find(
-    u => u.phone === `+${phone}` || u.phone === phone || u.phone === `+91${phone.replace(/^91/, '')}`
+    (u: any) => u.phone === `+${phone}` || u.phone === phone || u.phone === `+91${phone.replace(/^91/, '')}`
   );
 
   if (!existingUser) {
@@ -348,8 +348,8 @@ const createSessionForSignIn = async (phone: string) => {
         authMethod: 'phone',
         isProfileComplete: profileById.is_profile_complete || false
       },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRY || '30d' }
+      process.env.JWT_SECRET as jwt.Secret,
+      { expiresIn: process.env.JWT_EXPIRY || '30d' } as jwt.SignOptions
     );
 
     return {
@@ -388,8 +388,8 @@ const createSessionForSignIn = async (phone: string) => {
       authMethod: 'phone',
       isProfileComplete: false
     },
-    process.env.JWT_SECRET!,
-    { expiresIn: process.env.JWT_EXPIRY || '30d' }
+    process.env.JWT_SECRET as jwt.Secret,
+    { expiresIn: process.env.JWT_EXPIRY || '30d' } as jwt.SignOptions
   );
 
   return {
@@ -556,7 +556,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // Check auth.users
           const { data: authUsers } = await supabase.auth.admin.listUsers();
           const existingAuthUser = authUsers?.users?.find(
-            u => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
+            (u: any) => u.phone === `+${formattedPhone}` || u.phone === formattedPhone
           );
 
           if (!existingAuthUser) {
