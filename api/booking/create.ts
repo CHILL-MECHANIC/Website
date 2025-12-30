@@ -74,7 +74,10 @@ const parseAddressString = (addressString: string): {
     address = parts[0];
   }
 
-  console.log('[Booking] Parsed address:', { original: addressString, address, city, state, pincode });
+  // Only log parsed address in non-production to avoid PII in logs
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('[Booking] Parsed address:', { original: addressString, address, city, state, pincode });
+  }
 
   return { address, city, state, pincode };
 };
@@ -98,7 +101,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const body = req.body || {};
-    console.log('[Booking] Received request:', JSON.stringify(body, null, 2));
+    // Only log non-sensitive data in production
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Booking] Received request:', JSON.stringify(body, null, 2));
+    } else {
+      console.log('[Booking] Request - date:', body.bookingDate, 'items:', body.items?.length || 0);
+    }
 
     const {
       // Booking details
@@ -169,10 +177,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         finalAddress = parsed.address || addressString;
         finalCity = city || parsed.city;
         finalPincode = pincode || parsed.pincode;
-      } else if (address) {
-        finalAddress = address;
-        finalCity = city || null;
-        finalPincode = pincode || null;
       }
     }
 
@@ -189,6 +193,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let calculatedTotal = 0;
 
     if (items && Array.isArray(items) && items.length > 0) {
+      // Validate items have required fields
+      for (const item of items) {
+        const itemName = item.name || item.serviceName || item.service_name;
+        const itemPrice = item.price || item.unitPrice || item.unit_price;
+        
+        if (!itemName) {
+          return res.status(400).json({
+            success: false,
+            message: 'Each item must have a name'
+          });
+        }
+        
+        if (typeof itemPrice !== 'number' || itemPrice < 0) {
+          return res.status(400).json({
+            success: false,
+            message: `Invalid price for item: ${itemName}`
+          });
+        }
+      }
+
       bookingItems = items.map((item: any) => {
         const qty = item.quantity || 1;
         const unitPrice = item.price || item.unitPrice || item.unit_price || 0;
@@ -237,12 +261,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       address_type: addressType,
       special_instructions: specialInstructions || notes || null,
       status: 'pending',
-      payment_status: paymentMode === 'pay_later' ? 'pending' : 'pending',
+      payment_status: 'pending',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
 
-    console.log('[Booking] Creating booking:', JSON.stringify(bookingData, null, 2));
+    // Avoid logging PII in production
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Booking] Creating booking:', JSON.stringify(bookingData, null, 2));
+    } else {
+      console.log('[Booking] Creating booking for user:', user.userId);
+    }
 
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
@@ -251,7 +280,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .single();
 
     if (bookingError) {
-      console.error('[Booking] Create error:', bookingError);
+      console.error('[Booking] Create error:', bookingError.message);
       return res.status(500).json({ 
         success: false, 
         message: 'Failed to create booking',
@@ -266,7 +295,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       created_at: new Date().toISOString()
     }));
 
-    console.log('[Booking] Creating items:', JSON.stringify(itemsToInsert, null, 2));
+    // Avoid logging PII in production
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Booking] Creating items:', JSON.stringify(itemsToInsert, null, 2));
+    } else {
+      console.log('[Booking] Creating', itemsToInsert.length, 'items');
+    }
 
     const { data: insertedItems, error: itemsError } = await supabase
       .from('booking_items')
@@ -274,7 +308,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .select();
 
     if (itemsError) {
-      console.error('[Booking] Items error:', itemsError);
+      console.error('[Booking] Items error:', itemsError.message);
       // Rollback
       await supabase.from('bookings').delete().eq('id', booking.id);
       
@@ -306,7 +340,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
   } catch (error: any) {
-    console.error('[Booking] Error:', error);
+    console.error('[Booking] Error:', error.message);
     return res.status(500).json({ success: false, message: error.message });
   }
 }
