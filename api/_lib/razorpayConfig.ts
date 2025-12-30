@@ -1,4 +1,4 @@
-// api/lib/razorpayConfig.ts
+// api/_lib/razorpayConfig.ts
 import Razorpay from 'razorpay';
 
 // Razorpay API Base URL (for reference)
