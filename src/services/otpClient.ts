@@ -47,14 +47,39 @@ const getApiBaseUrl = (): string => {
 
 const API_BASE = getApiBaseUrl();
 
+// Detect environment: local (Express) vs production (Vercel)
+// If API_BASE is set, we're using Express backend (localhost)
+// If empty, we're using Vercel serverless functions (production)
+const isLocalExpress = !!API_BASE;
+
 /**
  * Builds a full URL for an auth endpoint
- * @param path - The endpoint path (e.g., 'send-otp', 'verify-otp')
+ * @param path - The endpoint path (e.g., 'send-otp', 'verify-otp', 'signup/send-otp')
  * @returns Full URL to the endpoint
  */
 const buildUrl = (path: string): string => {
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  return `${API_BASE}/api/auth/${cleanPath}`;
+  
+  if (isLocalExpress) {
+    // Local Express backend: separate endpoints
+    return `${API_BASE}/api/auth/${cleanPath}`;
+  } else {
+    // Production Vercel: consolidated endpoint with action query param
+    // Map path to action
+    const actionMap: Record<string, string> = {
+      'check-phone': 'check-phone',
+      'send-otp': 'send-otp',
+      'verify-otp': 'verify-otp',
+      'resend-otp': 'resend-otp',
+      'signup/send-otp': 'signup-send-otp',
+      'signin/send-otp': 'signin-send-otp',
+      'signup/verify-otp': 'signup-verify-otp',
+      'signin/verify-otp': 'signin-verify-otp'
+    };
+    
+    const action = actionMap[cleanPath] || cleanPath.replace(/\//g, '-');
+    return `${API_BASE}/api/auth?action=${action}`;
+  }
 };
 
 /**
@@ -69,6 +94,7 @@ const buildProfileUrl = (): string => {
 const logDebugInfo = () => {
   if (import.meta.env.DEV) {
     console.log('[OTP Client] API Base URL:', API_BASE || '(relative)');
+    console.log('[OTP Client] Environment:', isLocalExpress ? 'Local Express' : 'Production Vercel');
     console.log('[OTP Client] Auth Base URL:', `${API_BASE}/api/auth`);
   }
 };
@@ -136,7 +162,13 @@ export interface CheckRateLimitResponse extends BaseResponse {
  * Check if phone number is already registered
  */
 export async function checkPhone(phone: string): Promise<CheckPhoneResponse> {
-  const url = `${buildUrl('check-phone')}?phone=${encodeURIComponent(phone)}`;
+  // Build URL based on environment
+  let url: string;
+  if (isLocalExpress) {
+    url = `${API_BASE}/api/auth/check-phone?phone=${encodeURIComponent(phone)}`;
+  } else {
+    url = `${API_BASE}/api/auth?action=check-phone&phone=${encodeURIComponent(phone)}`;
+  }
   
   if (import.meta.env.DEV) {
     console.log('[OTP Client] Checking phone:', { url, phone: phone.replace(/\d(?=\d{4})/g, '*') });
@@ -574,9 +606,13 @@ export async function resendOTP(phone: string): Promise<ResendOTPResponse> {
  * @returns Promise resolving to CheckRateLimitResponse
  */
 export async function checkRateLimit(phone: string): Promise<CheckRateLimitResponse> {
-  const url = buildUrl('check-rate-limit');
-  const queryParams = new URLSearchParams({ phone });
-  const fullUrl = `${url}?${queryParams.toString()}`;
+  // Build URL based on environment
+  let fullUrl: string;
+  if (isLocalExpress) {
+    fullUrl = `${API_BASE}/api/auth/check-rate-limit?phone=${encodeURIComponent(phone)}`;
+  } else {
+    fullUrl = `${API_BASE}/api/auth?action=check-rate-limit&phone=${encodeURIComponent(phone)}`;
+  }
   
   if (import.meta.env.DEV) {
     console.log('[OTP Client] Checking rate limit:', { url: fullUrl, phone: phone.replace(/\d(?=\d{4})/g, '*') });
