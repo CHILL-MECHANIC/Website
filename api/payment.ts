@@ -237,14 +237,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           bookingId,
           bookingDate,
           bookingTimeSlot,
+          // Address fields are OPTIONAL for payment - address is stored with the booking
+          // The booking API already validated the address when the booking was created
           address,
           city,
           pincode,
           notes
         } = req.body || {};
 
+        // Only validate amount - that's required for payment
+        // Address validation is NOT needed here - it's the booking's responsibility
         if (!amount || amount < 1) {
           return res.status(400).json({ success: false, message: 'Valid amount required (minimum ₹1)' });
+        }
+
+        // Log if address is missing (for debugging) but don't fail
+        if (!address && !city && !pincode && bookingId) {
+          console.log('[Payment] No address provided - using booking address from booking_id:', bookingId);
         }
 
         // Create Razorpay order
