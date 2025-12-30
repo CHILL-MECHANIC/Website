@@ -122,7 +122,7 @@ router.post('/send', async (req: Request, res: Response, next: NextFunction) => 
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return next(new APIError(400, error.errors[0].message, 'VALIDATION_ERROR'));
+      return next(new APIError(400, error.errors[0].message, true));
     }
     next(error);
   }
@@ -197,7 +197,7 @@ router.post('/send-bulk', async (req: Request, res: Response, next: NextFunction
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return next(new APIError(400, error.errors[0].message, 'VALIDATION_ERROR'));
+      return next(new APIError(400, error.errors[0].message, true));
     }
     next(error);
   }
@@ -243,7 +243,7 @@ router.get('/logs', async (req: Request, res: Response, next: NextFunction) => {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return next(new APIError(400, error.errors[0].message, 'VALIDATION_ERROR'));
+      return next(new APIError(400, error.errors[0].message, true));
     }
     next(error);
   }
@@ -258,13 +258,13 @@ router.get('/logs/:id', async (req: Request, res: Response, next: NextFunction) 
     const id = parseInt(req.params.id, 10);
 
     if (isNaN(id)) {
-      return next(new APIError(400, 'Invalid log ID', 'VALIDATION_ERROR'));
+      return next(new APIError(400, 'Invalid log ID', true));
     }
 
     const log = await getSMSLogById(id);
 
     if (!log) {
-      return next(new APIError(404, 'SMS log not found', 'NOT_FOUND'));
+      return next(new APIError(404, 'SMS log not found', true));
     }
 
     res.status(200).json({
@@ -288,15 +288,15 @@ router.post('/resend', async (req: Request, res: Response, next: NextFunction) =
     const log = await getSMSLogById(id);
 
     if (!log) {
-      return next(new APIError(404, 'SMS log not found', 'NOT_FOUND'));
+      return next(new APIError(404, 'SMS log not found', true));
     }
 
     if (log.status !== 'failed') {
-      return next(new APIError(400, 'Can only resend failed SMS', 'INVALID_STATUS'));
+      return next(new APIError(400, 'Can only resend failed SMS', true));
     }
 
     if (log.retryCount >= log.maxRetries) {
-      return next(new APIError(400, 'Maximum retry attempts reached', 'MAX_RETRIES_EXCEEDED'));
+      return next(new APIError(400, 'Maximum retry attempts reached', true));
     }
 
     // Update retry count
@@ -332,7 +332,7 @@ router.post('/resend', async (req: Request, res: Response, next: NextFunction) =
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return next(new APIError(400, error.errors[0].message, 'VALIDATION_ERROR'));
+      return next(new APIError(400, error.errors[0].message, true));
     }
     next(error);
   }

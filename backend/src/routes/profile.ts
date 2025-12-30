@@ -77,7 +77,8 @@ router.get('/', requireAuth, asyncHandler(async (req: Request, res: Response) =>
     throw new APIError(404, 'Profile not found');
   }
 
-  console.log('[Profile] GET - Found profile for user:', profile.user_id || profile.id);
+  const profileAny = profile as any;
+  console.log('[Profile] GET - Found profile for user:', profileAny.user_id || profileAny.id);
 
   // Map database columns to API response
   const profileData = profile as any;

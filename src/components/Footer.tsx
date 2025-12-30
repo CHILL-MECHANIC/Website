@@ -73,7 +73,8 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
-              <div className="flex items-center gap-3">
+            </ul>
+            <div className="flex items-center gap-3 mt-4">
               <a href="https://www.facebook.com/share/17c6FYTJ9H/" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Facebook">
                 <SiFacebook size={20} className="text-foreground hover:text-[#1877F2] transition-colors" />
               </a>
@@ -90,7 +91,6 @@ export default function Footer() {
                 <SiWhatsapp size={20} className="text-foreground hover:text-[#25D366] transition-colors" />
               </a>
             </div>
-          </ul>
           </div>
 
           {/* Contact */}
@@ -122,18 +122,18 @@ export default function Footer() {
                 <span>Mon - Sat: 9:30 AM - 7:30 PM</span>
               </div>
               <a 
-                href="https://maps.google.com/?q=Suncity+Vatsal+Valley,+Sector+02+Gwal+Pahari+Gurgaon+122003,+Haryana,+India" 
+                href="https://maps.google.com/?q=Opposite+Worldmark,+Maidawas+Road,+Sector+64+Gurgaon+122102" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="space-y-1 group block"
               >
-                <p className="font-medium flex items-center gap-2 hover:text-primary transition-all duration-200">
+                <div className="font-medium flex items-center gap-2 hover:text-primary transition-all duration-200">
                   <div className="p-1.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-all duration-200 group-hover:scale-110">
                     <MapPin className="h-4 w-4 flex-shrink-0 text-primary group-hover:scale-110 transition-transform duration-200" />
                   </div>
                   <span className="group-hover:translate-x-1 transition-transform duration-200">Chill Mechanic Pvt. Ltd.</span>
-                </p>
-                <p className="ml-6 group-hover:text-primary/80 transition-colors duration-200">Suncity Vatsal Valley, Sector 02 Gwal Pahari Gurgaon 122003, Haryana, India</p>
+                </div>
+                <div className="ml-6 group-hover:text-primary/80 transition-colors duration-200">Opposite Worldmark, Maidawas Road, Sector 64 Gurgaon 122102</div>
               </a>
             </div>
           </div>

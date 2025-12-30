@@ -110,7 +110,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-        Relationships: []
       }
       profiles: {
         Row: {

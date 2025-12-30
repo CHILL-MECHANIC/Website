@@ -12,6 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
@@ -203,6 +204,9 @@ export default function AdminTechnicians() {
                   <DialogTitle>
                     {editingTechnician ? "Edit Technician" : "Add New Technician"}
                   </DialogTitle>
+                  <DialogDescription>
+                    {editingTechnician ? "Update technician details" : "Add a new technician to the team"}
+                  </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>

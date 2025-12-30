@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Calendar, 
@@ -7,7 +7,8 @@ import {
   BarChart3, 
   Settings,
   LogOut,
-  Wrench
+  Wrench,
+  Home
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -38,6 +39,13 @@ export function AdminSidebar() {
     <aside className="w-64 bg-[hsl(var(--sidebar-bg))] border-r border-border flex flex-col">
       <div className="p-6">
         <h2 className="text-2xl font-bold text-primary">Admin Panel</h2>
+        <Link 
+          to="/" 
+          className="flex items-center gap-2 mt-3 text-sm text-muted-foreground hover:text-primary transition-colors"
+        >
+          <Home className="h-4 w-4" />
+          Back to Home
+        </Link>
       </div>
 
       <nav className="flex-1 px-4 space-y-2">

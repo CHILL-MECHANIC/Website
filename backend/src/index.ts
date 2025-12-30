@@ -7,6 +7,8 @@ import { requestLogger, errorLogger } from './middleware/logger';
 import smsRoutes from './routes/sms';
 import authRoutes from './routes/auth';
 import profileRoutes from './routes/profile';
+import bookingRoutes from './routes/booking';
+import paymentRoutes from './routes/payment';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -45,6 +47,8 @@ app.get('/health', (_req, res) => {
 app.use('/api/sms', smsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/booking', bookingRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Error handling
 app.use(notFoundHandler);

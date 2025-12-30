@@ -30,13 +30,13 @@ const serviceDetails = {
       { id: "ac-foam-5", name: "Foam Power Jet Service-5 AC", price: 2449, description: "Ultimate foam cleaning with complete deep service and full inspection." },
       { id: "ac-not-cooling", name: "AC Not Cooling/Less Cooling", price: 249, description: "Diagnose and fix cooling issues and performance problems." },
       { id: "ac-power-issue", name: "AC Power Issue", price: 249, description: "Electrical diagnosis and power circuit repair." },
-      { id: "ac-noise", name: "AC Noise Reduction", price: 449, description: "Noise diagnosis, component adjustment, and lubrication." },
+      { id: "ac-noise-reduction", name: "AC Noise Reduction", price: 449, description: "Noise diagnosis, component adjustment, and lubrication." },
       { id: "ac-water-leakage", name: "AC Water Leakage Repair", price: 549, description: "Leak detection, drain cleaning, and seal repair." },
       { id: "ac-gas-refill", name: "Gas Refill & Check Up", price: 2399, description: "Gas leak detection, gas refill, and pressure check." },
       { id: "ac-split-installation", name: "Split AC Installation", price: 1449, description: "Complete installation with piping, wiring, and testing." },
-      { id: "ac-split-uninstallation", name: "Split AC Uninstallation", price: 1299, description: "Safe removal with gas recovery and dismantling." },
+      { id: "ac-split-uninstall", name: "Split AC Uninstallation", price: 1299, description: "Safe removal with gas recovery and dismantling." },
       { id: "ac-window-installation", name: "Window AC Installation", price: 1049, description: "Window mounting with electrical setup and testing." },
-      { id: "ac-window-uninstallation", name: "Window AC Uninstallation", price: 949, description: "Safe removal and window restoration." },
+      { id: "ac-window-uninstall", name: "Window AC Uninstallation", price: 949, description: "Safe removal and window restoration." },
     ],
   },
   refrigerator: {
@@ -49,8 +49,8 @@ const serviceDetails = {
       We service all major brands and ensure your refrigerator maintains optimal food preservation.
     `,
     services: [
-      { id: "fridge-single-door", name: "Check Up - Single Door", price: 199, description: "Complete diagnostic check-up for single door refrigerators with performance assessment." },
-      { id: "fridge-double-door", name: "Check Up - Double Door", price: 199, description: "Complete diagnostic check-up for double door refrigerators with cooling system inspection." },
+      { id: "fridge-single-door", name: "Check Up - Single Door", price: 249, description: "Complete diagnostic check-up for single door refrigerators with performance assessment." },
+      { id: "fridge-double-door", name: "Check Up - Double Door", price: 249, description: "Complete diagnostic check-up for double door refrigerators with cooling system inspection." },
     ],
   },
   ro: {
@@ -81,7 +81,7 @@ const serviceDetails = {
       We ensure reliable hot water supply and safe operation of your water heater.
     `,
     services: [
-      { id: "geyser-checkup", name: "Check Up - Geyser", price: 199, description: "Complete diagnostic check-up of geyser with heating element and thermostat inspection." },
+      { id: "geyser-checkup", name: "Check Up - Geyser", price: 249, description: "Complete diagnostic check-up of geyser with heating element and thermostat inspection." },
       { id: "geyser-service", name: "Geyser Service", price: 549, description: "Complete maintenance service with element check, tank cleaning, and safety inspection." },
       { id: "geyser-installation", name: "Geyser Installation", price: 449, description: "Professional installation with proper pipe fitting and electrical setup." },
       { id: "geyser-uninstallation", name: "Geyser Uninstallation", price: 349, description: "Safe removal and uninstallation of geyser units." },
@@ -97,9 +97,9 @@ const serviceDetails = {
       We ensure your washing machine operates efficiently for reliable laundry care.
     `,
     services: [
-      { id: "wm-top-load-checkup", name: "Checkup - AM Top Load", price: 199, description: "Complete diagnostic check-up for automatic top load washing machines." },
-      { id: "wm-front-load-checkup", name: "Checkup - AM Front Load", price: 199, description: "Complete diagnostic check-up for automatic front load washing machines." },
-      { id: "wm-semi-auto-checkup", name: "Check Up - Semi Automatic", price: 199, description: "Complete diagnostic check-up for semi-automatic washing machines." },
+      { id: "wm-top-load-checkup", name: "Checkup - AM Top Load", price: 249, description: "Complete diagnostic check-up for automatic top load washing machines." },
+      { id: "wm-front-load-checkup", name: "Checkup - AM Front Load", price: 249, description: "Complete diagnostic check-up for automatic front load washing machines." },
+      { id: "wm-semi-auto-checkup", name: "Check Up - Semi Automatic", price: 249, description: "Complete diagnostic check-up for semi-automatic washing machines." },
       { id: "wm-install-uninstall", name: "Installation & Uninstallation", price: 349, description: "Professional installation or uninstallation service for washing machines." },
     ],
   },
@@ -113,7 +113,7 @@ const serviceDetails = {
       ensure your microwave operates safely and efficiently for convenient cooking.
     `,
     services: [
-      { id: "microwave-checkup", name: "Check Up", price: 199, description: "Complete diagnostic check-up of microwave with functionality testing and safety inspection." },
+      { id: "microwave-checkup", name: "Check Up", price: 249, description: "Complete diagnostic check-up of microwave with functionality testing and safety inspection." },
     ],
   },
 };

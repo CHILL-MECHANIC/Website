@@ -291,7 +291,7 @@ export default function Privacy() {
                   <h3 className="font-semibold mb-2">Refund Policy:</h3>
                   <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
                     <li>Refunds may be issued in case of service non-fulfillment, cancellation by the Professional, or duplicate transactions, as per CM's refund policy.</li>
-                    <li>Refunds, if applicable, will be processed to the original payment method within 7–10 working days.</li>
+                    <li>Refunds, if applicable, will be processed to the original payment method within 7ΓÇô10 working days.</li>
                     <li>CM reserves the right to deduct administrative or transaction charges, if any.</li>
                   </ul>
                 </div>
@@ -581,7 +581,7 @@ export default function Privacy() {
                 </p>
                 <div className="bg-muted p-4 rounded-lg space-y-2">
                   <p className="font-semibold">Chill Mechanic Pvt Ltd</p>
-                  <p className="text-muted-foreground">Registered Office: Suncity Vatsal Valley Sector 02 Gwal Pahari Gurgaon 122003, Haryana, India</p>
+                  <p className="text-muted-foreground">Registered Office: Opposite Worldmark, Maidawas Road, Sector 64 Gurgaon 122102</p>
                   <p className="text-muted-foreground">Website: https://www.chillmechanic.com</p>
                   <p className="text-muted-foreground">Email: support@chillmechanic.com</p>
                 </div>

@@ -32,14 +32,14 @@ const services = [{
   title: "Refrigerator Service",
   description: "Professional refrigerator repair services. From cooling problems to compressor issues, we keep your appliances running smoothly.",
   image: refrigeratorServiceImage,
-  price: "₹399",
+  price: "₹249",
   route: "/services/refrigerator"
 }, {
   id: "ro",
   title: "RO Service",
   description: "Complete RO water purifier service and maintenance. Filter replacements, membrane cleaning, and installation services.",
   image: roServiceImage,
-  price: "₹199",
+  price: "₹249",
   route: "/services/ro"
 }, {
   id: "geyser",
@@ -53,7 +53,7 @@ const services = [{
   title: "Washing Machine Service",
   description: "Expert washing machine repair services. Motor repairs, drum cleaning, and maintenance to keep your laundry running smoothly.",
   image: washingMachineServiceImage,
-  price: "₹349",
+  price: "₹249",
   route: "/services/washing-machine"
 }, {
   id: "microwave",
@@ -257,7 +257,7 @@ const Index = () => {
                       ))}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and did a good job."
+                      "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and┬ádid┬áa┬ágood┬ájob."
                     </p>
                     <div>
                       <p className="font-semibold">Nitin</p>

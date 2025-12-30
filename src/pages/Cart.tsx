@@ -1,23 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Trash2, Minus, Plus, ShoppingBag, CalendarIcon } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingBag, CalendarIcon, MapPin } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
+// Helper to get API base URL
+const getApiBaseUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return '';
+    }
+  }
+  return 'http://localhost:3001';
+};
+
+interface ProfileAddress {
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+}
+
 export default function Cart() {
   const navigate = useNavigate();
-  const { profile } = useAuth();
+  const { profile, isAuthenticated } = useAuth();
   const { 
     cartItems, 
     removeFromCart, 
@@ -32,8 +52,56 @@ export default function Cart() {
     time: "",
     instructions: ""
   });
+  
+  // Address state
+  const [useProfileAddress, setUseProfileAddress] = useState(true);
+  const [serviceAddress, setServiceAddress] = useState({
+    flatNo: "",
+    buildingName: "",
+    streetArea: "",
+    landmark: "",
+    pincode: ""
+  });
+  const [profileAddress, setProfileAddress] = useState<ProfileAddress | null>(null);
+  
   const [showSchedulingModal, setShowSchedulingModal] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+
+  // Fetch profile address when authenticated
+  useEffect(() => {
+    const fetchProfileAddress = async () => {
+      if (!isAuthenticated) return;
+      
+      const token = localStorage.getItem('auth_token');
+      if (!token) return;
+
+      try {
+        const apiBase = getApiBaseUrl();
+        const response = await fetch(`${apiBase}/api/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.profile) {
+            setProfileAddress({
+              address: result.profile.addressLine1 || "",
+              city: result.profile.city || "",
+              state: result.profile.state || "",
+              pincode: result.profile.pincode || ""
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching profile address:', error);
+      }
+    };
+
+    fetchProfileAddress();
+  }, [isAuthenticated]);
 
   if (cartItems.length === 0) {
     return (
@@ -56,6 +124,28 @@ export default function Cart() {
     );
   }
 
+  // Build the service address string
+  const buildServiceAddressString = (): string => {
+    if (useProfileAddress && profileAddress) {
+      const parts = [
+        profileAddress.address,
+        profileAddress.city,
+        profileAddress.state,
+        profileAddress.pincode ? `Pincode: ${profileAddress.pincode}` : ''
+      ].filter(Boolean);
+      return parts.join(', ');
+    } else {
+      const parts = [
+        serviceAddress.flatNo ? `Flat/Apt: ${serviceAddress.flatNo}` : '',
+        serviceAddress.buildingName,
+        serviceAddress.streetArea,
+        serviceAddress.landmark ? `Landmark: ${serviceAddress.landmark}` : '',
+        serviceAddress.pincode ? `Pincode: ${serviceAddress.pincode}` : ''
+      ].filter(Boolean);
+      return parts.join(', ');
+    }
+  };
+
   const handleScheduleBooking = () => {
     if (!bookingDetails.date || !bookingDetails.time) {
       return; // Basic validation
@@ -66,13 +156,21 @@ export default function Cart() {
       setShowAuthPrompt(true);
       return;
     }
+
+    // Validate address
+    if (!useProfileAddress) {
+      if (!serviceAddress.streetArea || !serviceAddress.pincode) {
+        return; // Need at least street and pincode
+      }
+    }
     
     navigate("/payment", { 
       state: { 
         bookingData: {
           date: bookingDetails.date.toISOString().split('T')[0],
           time: bookingDetails.time,
-          instructions: bookingDetails.instructions
+          instructions: bookingDetails.instructions,
+          serviceAddress: buildServiceAddressString()
         }
       } 
     });
@@ -165,22 +263,10 @@ export default function Cart() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Order Summary */}
-                  <div className="flex justify-between">
-                    <span>Subtotal ({getCartItemsCount()} items)</span>
-                    <span>₹{getCartTotal()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span>Service Tax</span>
-                    <span>₹{(getCartTotal() * 0.18).toFixed(0)}</span>
-                  </div>
-                  
-                  <hr />
-                  
                   <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
+                    <span>Total ({getCartItemsCount()} items)</span>
                     <span className="text-primary">
-                      ₹{(getCartTotal() + getCartTotal() * 0.18).toFixed(0)}
+                      ₹{getCartTotal()}
                     </span>
                   </div>
                   
@@ -209,9 +295,10 @@ export default function Cart() {
       
       {/* Schedule Booking Modal */}
       <Dialog open={showSchedulingModal} onOpenChange={setShowSchedulingModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Schedule Your Service</DialogTitle>
+            <DialogDescription>Choose your preferred date, time slot and service address</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -260,6 +347,100 @@ export default function Cart() {
                 <option value="17:00">5:00 PM</option>
               </select>
             </div>
+
+            {/* Service Address Section */}
+            <div className="space-y-3 pt-2 border-t">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <Label className="text-base font-semibold">Service Address</Label>
+              </div>
+              
+              {/* Same as profile checkbox */}
+              {profileAddress && (profileAddress.address || profileAddress.pincode) && (
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="useProfileAddress"
+                    checked={useProfileAddress}
+                    onCheckedChange={(checked) => setUseProfileAddress(checked as boolean)}
+                  />
+                  <label
+                    htmlFor="useProfileAddress"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Same as my profile address
+                  </label>
+                </div>
+              )}
+
+              {useProfileAddress && profileAddress && (profileAddress.address || profileAddress.pincode) ? (
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    {profileAddress.address && <span>{profileAddress.address}</span>}
+                    {profileAddress.city && <span>, {profileAddress.city}</span>}
+                    {profileAddress.state && <span>, {profileAddress.state}</span>}
+                    {profileAddress.pincode && <span> - {profileAddress.pincode}</span>}
+                  </p>
+                  {!profileAddress.address && !profileAddress.pincode && (
+                    <p className="text-sm text-amber-600">No address found in profile. Please add a different address below.</p>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="flatNo" className="text-xs">Flat/Apt No.</Label>
+                      <Input
+                        id="flatNo"
+                        placeholder="e.g. A-101"
+                        value={serviceAddress.flatNo}
+                        onChange={(e) => setServiceAddress({...serviceAddress, flatNo: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="buildingName" className="text-xs">Building Name</Label>
+                      <Input
+                        id="buildingName"
+                        placeholder="e.g. Sunshine Towers"
+                        value={serviceAddress.buildingName}
+                        onChange={(e) => setServiceAddress({...serviceAddress, buildingName: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <Label htmlFor="streetArea" className="text-xs">Street/Area *</Label>
+                    <Input
+                      id="streetArea"
+                      placeholder="e.g. MG Road, Koramangala"
+                      value={serviceAddress.streetArea}
+                      onChange={(e) => setServiceAddress({...serviceAddress, streetArea: e.target.value})}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="landmark" className="text-xs">Landmark</Label>
+                      <Input
+                        id="landmark"
+                        placeholder="e.g. Near XYZ Mall"
+                        value={serviceAddress.landmark}
+                        onChange={(e) => setServiceAddress({...serviceAddress, landmark: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="pincode" className="text-xs">Pincode *</Label>
+                      <Input
+                        id="pincode"
+                        placeholder="e.g. 560001"
+                        value={serviceAddress.pincode}
+                        onChange={(e) => setServiceAddress({...serviceAddress, pincode: e.target.value})}
+                        maxLength={6}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             
             <div className="space-y-2">
               <Label>Special Instructions (Optional)</Label>
@@ -274,7 +455,11 @@ export default function Cart() {
               <Button 
                 className="flex-1" 
                 onClick={handleScheduleBooking}
-                disabled={!bookingDetails.date || !bookingDetails.time}
+                disabled={
+                  !bookingDetails.date || 
+                  !bookingDetails.time || 
+                  (!useProfileAddress && (!serviceAddress.streetArea || !serviceAddress.pincode))
+                }
               >
                 Continue
               </Button>
@@ -294,6 +479,7 @@ export default function Cart() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Sign in required</DialogTitle>
+            <DialogDescription>Please sign in to continue with your booking</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-muted-foreground">

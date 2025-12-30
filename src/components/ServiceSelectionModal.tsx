@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 
@@ -75,13 +76,13 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       id: "fridge-full",
       name: "Check Up - Single Door",
       description: ["Complete diagnostic inspection", "Cooling system check", "Thermostat calibration"],
-      price: 199,
+      price: 249,
     },
     {
       id: "fridge-repair",
       name: "Check Up - Double Door",
       description: ["Complete diagnostic inspection", "Cooling system check", "Thermostat calibration"],
-      price: 199,
+      price: 249,
     },
   ],
   ro: [
@@ -103,7 +104,7 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       id: "geyser-service",
       name: "Check Up - Geyser",
       description: ["Complete diagnostic inspection", "Heating element inspection", "Thermostat testing", "Safety valve check", "Electrical connection inspection", "Temperature testing", "Leakage detection"],
-      price: 199,
+      price: 249,
     },
     {
       id: "geyser-installation",
@@ -117,13 +118,13 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       id: "wm-service",
       name: "Checkup - AM Top Load",
       description: ["Complete diagnostic inspection", "Drum and agitator check", "Motor and belt inspection", "Control panel testing", "Drain system check", "Water inlet valve test"],
-      price: 199,
+      price: 249,
     },
     {
       id: "wm-repair",
       name: "Checkup - AM Front Load",
       description: ["Complete diagnostic inspection", "Drum and door seal check", "Motor and suspension inspection", "Control panel testing", "Drain pump check", "Water inlet system test"],
-      price: 199,
+      price: 249,
     },
   ],
   microwave: [
@@ -131,7 +132,7 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       id: "microwave-service",
       name: "Check Up - Microwave",
       description: ["Complete diagnostic inspection", "Magnetron functionality check", "Turntable Check"],
-      price: 199,
+      price: 249,
     },
   ],
 };
@@ -191,6 +192,7 @@ export default function ServiceSelectionModal({
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Select Service</DialogTitle>
+          <DialogDescription>Choose the services you need</DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4 py-4">

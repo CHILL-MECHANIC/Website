@@ -62,24 +62,33 @@ export default function UserProfile() {
 
   const fetchProfile = async () => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", authProfile?.id)
-        .single();
+      const token = localStorage.getItem('auth_token');
+      if (!token) return;
 
-      if (error) throw error;
+      // Use relative URL in production, localhost in development
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const apiBase = isLocalhost ? (import.meta.env.VITE_API_URL || 'http://localhost:3001') : '';
 
-      if (data) {
+      const response = await fetch(`${apiBase}/api/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch profile');
+
+      const result = await response.json();
+      if (result.success && result.profile) {
         setProfile({
-          full_name: data.full_name || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          address: data.address || "",
-          city: data.city || "",
-          state: data.state || "",
-          pincode: data.pincode || "",
-          avatar_url: (data as any).avatar_url || ""
+          full_name: result.profile.fullName || "",
+          email: result.profile.email || "",
+          phone: result.profile.phone || "",
+          address: result.profile.addressLine1 || "",
+          city: result.profile.city || "",
+          state: result.profile.state || "",
+          pincode: result.profile.pincode || "",
+          avatar_url: result.profile.avatarUrl || ""
         });
       }
     } catch (error) {
@@ -114,14 +123,34 @@ export default function UserProfile() {
   const updateProfile = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from("profiles")
-        .upsert({
-          id: authProfile?.id,
-          ...profile
-        } as any);
+      const token = localStorage.getItem('auth_token');
+      if (!token) throw new Error('Not authenticated');
 
-      if (error) throw error;
+      // Use relative URL in production, localhost in development
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const apiBase = isLocalhost ? (import.meta.env.VITE_API_URL || 'http://localhost:3001') : '';
+
+      const response = await fetch(`${apiBase}/api/profile`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fullName: profile.full_name,
+          email: profile.email,
+          phone: profile.phone,
+          addressLine1: profile.address,
+          city: profile.city,
+          state: profile.state,
+          pincode: profile.pincode
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to update profile');
+
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message || 'Update failed');
 
       toast({
         title: "Profile updated",

@@ -38,6 +38,9 @@ router.get('/check-phone', asyncHandler(async (req: Request, res: Response) => {
       .select('id, full_name, is_profile_complete')
       .eq('phone', formattedPhone)
       .maybeSingle();
+    
+    type ProfileData = { id: string; full_name: string | null; is_profile_complete: boolean | null } | null;
+    const profileData: ProfileData = profile;
 
     // Also check auth.users (user might exist in auth but not profiles)
     let existsInAuth = false;
@@ -51,9 +54,9 @@ router.get('/check-phone', asyncHandler(async (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      exists: !!profile || existsInAuth,
-      isProfileComplete: profile?.is_profile_complete || false,
-      hasName: !!profile?.full_name
+      exists: !!profileData || existsInAuth,
+      isProfileComplete: (profileData as any)?.is_profile_complete || false,
+      hasName: !!(profileData as any)?.full_name
     });
   } catch (error: any) {
     console.error('[AUTH] Check phone error:', error);
@@ -166,13 +169,15 @@ router.post('/signin/send-otp', asyncHandler(async (req: Request, res: Response)
     throw new APIError(400, result.error || 'Failed to send OTP');
   }
 
+  const profileData = existingProfile as { id: string; full_name: string | null } | null;
+  
   res.json({
     success: true,
-    message: existingProfile?.full_name 
+    message: (profileData as any)?.full_name 
       ? `Welcome back! OTP sent to verify your identity.`
       : 'OTP sent successfully.',
     mode: 'signin',
-    userName: existingProfile?.full_name || null
+    userName: (profileData as any)?.full_name || null
   });
 }));
 
@@ -214,7 +219,7 @@ router.post('/send-otp', asyncHandler(async (req: Request, res: Response) => {
         .single();
       
       if (otpData) {
-        response.debug = { otp: otpData.otp };
+        response.debug = { otp: (otpData as any).otp };
       }
     } catch (error) {
       console.warn('[AUTH] Failed to fetch OTP for debug:', error);

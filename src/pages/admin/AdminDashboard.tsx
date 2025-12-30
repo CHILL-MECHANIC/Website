@@ -14,8 +14,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Star } from "lucide-react";
+import { Search, Star, Bell, RefreshCw, Users, Calendar, IndianRupee, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "@/hooks/use-toast";
 
 export default function AdminDashboard() {
   const { isAdmin, loading } = useAdmin();
@@ -23,6 +24,10 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [ratings, setRatings] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [newBookingAlert, setNewBookingAlert] = useState(false);
+  const [paymentAlert, setPaymentAlert] = useState(false);
+  const [techniciansCount, setTechniciansCount] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -34,23 +39,147 @@ export default function AdminDashboard() {
     if (isAdmin) {
       fetchBookings();
       fetchRatings();
+      fetchTechniciansCount();
+      fetchRevenue();
+
+      // Real-time subscription for bookings and payments
+      const channel = supabase
+        .channel('dashboard-realtime')
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'bookings'
+          },
+          (payload) => {
+            console.log('🔔 New booking received on dashboard:', payload);
+            setNewBookingAlert(true);
+            toast({
+              title: '🔔 New Booking Received!',
+              description: 'A customer just made a new booking.',
+            });
+            fetchBookings();
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'bookings'
+          },
+          (payload: any) => {
+            console.log('📝 Booking updated on dashboard:', payload);
+            // Check if payment status changed to paid
+            if (payload.new?.payment_status === 'paid' && payload.old?.payment_status !== 'paid') {
+              setPaymentAlert(true);
+              toast({
+                title: '💰 Payment Received!',
+                description: `Payment of ₹${payload.new.final_amount} received for booking.`,
+              });
+              fetchRevenue();
+            }
+            fetchBookings();
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'payments'
+          },
+          (payload: any) => {
+            console.log('💳 Payment event:', payload);
+            if (payload.eventType === 'INSERT' || (payload.new?.status === 'paid')) {
+              setPaymentAlert(true);
+              toast({
+                title: '💰 Payment Update!',
+                description: 'A payment has been processed.',
+              });
+              fetchRevenue();
+              fetchBookings();
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [isAdmin]);
 
   const fetchBookings = async () => {
-    const { data, error } = await supabase
-      .from("bookings")
-      .select(`
-        *,
-        profiles(full_name, email),
-        booking_items(service_name),
-        technicians(name)
-      `)
-      .order("created_at", { ascending: false })
-      .limit(10);
+    try {
+      // Step 1: Fetch bookings
+      const { data: bookingsData, error: bookingsError } = await supabase
+        .from("bookings")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(15);
 
-    if (!error && data) {
-      setBookings(data);
+      if (bookingsError || !bookingsData) {
+        console.error("Bookings fetch error:", bookingsError);
+        return;
+      }
+
+      if (bookingsData.length === 0) {
+        setBookings([]);
+        return;
+      }
+
+      // Step 2: Fetch related data separately
+      const userIds = [...new Set(bookingsData.map(b => b.user_id).filter(Boolean))];
+      const technicianIds = [...new Set(bookingsData.map(b => b.technician_id).filter(Boolean))] as string[];
+      const bookingIds = bookingsData.map(b => b.id);
+
+      // Fetch profiles
+      const { data: profilesData } = userIds.length > 0
+        ? await supabase
+            .from('profiles')
+            .select('user_id, full_name, email, phone')
+            .in('user_id', userIds)
+        : { data: [] };
+
+      // Fetch booking items
+      const { data: itemsData } = await supabase
+        .from('booking_items')
+        .select('booking_id, service_name')
+        .in('booking_id', bookingIds);
+
+      // Fetch technicians
+      let techniciansData: any[] = [];
+      if (technicianIds.length > 0) {
+        const { data } = await supabase
+          .from('technicians')
+          .select('id, name')
+          .in('id', technicianIds);
+        techniciansData = data || [];
+      }
+
+      // Step 3: Combine data
+      const profilesMap = new Map((profilesData || []).map(p => [p.user_id, p]));
+      const techniciansMap = new Map(techniciansData.map(t => [t.id, t]));
+      const itemsMap = new Map<string, any[]>();
+      
+      (itemsData || []).forEach(item => {
+        const existing = itemsMap.get(item.booking_id) || [];
+        existing.push(item);
+        itemsMap.set(item.booking_id, existing);
+      });
+
+      const enrichedBookings = bookingsData.map(booking => ({
+        ...booking,
+        profiles: profilesMap.get(booking.user_id) || null,
+        booking_items: itemsMap.get(booking.id) || [],
+        technicians: booking.technician_id ? techniciansMap.get(booking.technician_id) : null
+      }));
+
+      setBookings(enrichedBookings);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
     }
   };
 
@@ -63,6 +192,37 @@ export default function AdminDashboard() {
     if (!error && data) {
       setRatings(data);
     }
+  };
+
+  const fetchTechniciansCount = async () => {
+    const { count, error } = await supabase
+      .from("technicians")
+      .select("*", { count: 'exact', head: true });
+
+    if (!error && count !== null) {
+      setTechniciansCount(count);
+    }
+  };
+
+  const fetchRevenue = async () => {
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("final_amount")
+      .eq("payment_status", "paid");
+
+    if (!error && data) {
+      const total = data.reduce((sum, b) => sum + (b.final_amount || 0), 0);
+      setTotalRevenue(total);
+    }
+  };
+
+  const refreshData = () => {
+    fetchBookings();
+    fetchRatings();
+    fetchTechniciansCount();
+    fetchRevenue();
+    setNewBookingAlert(false);
+    setPaymentAlert(false);
   };
 
   const calculateRatingStats = () => {
@@ -107,29 +267,65 @@ export default function AdminDashboard() {
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-              <p className="text-muted-foreground">Welcome to the admin dashboard</p>
+            <div className="flex items-center gap-4">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+                <p className="text-muted-foreground">Welcome to the admin dashboard</p>
+              </div>
+              {newBookingAlert && (
+                <Badge className="bg-red-500 text-white animate-pulse flex items-center gap-1">
+                  <Bell className="w-3 h-3" />
+                  New Booking!
+                </Badge>
+              )}
+              {paymentAlert && (
+                <Badge className="bg-green-500 text-white animate-pulse flex items-center gap-1">
+                  <CreditCard className="w-3 h-3" />
+                  Payment Received!
+                </Badge>
+              )}
             </div>
-            <Button onClick={() => navigate("/admin/services")}>
-              Add New Service
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={refreshData}>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
+              <Button onClick={() => navigate("/admin/services")}>
+                Add New Service
+              </Button>
+            </div>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card>
-              <CardHeader>
-                <CardTitle>Total Bookings</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
+                <Calendar className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{bookings.length}</div>
+                <p className="text-xs text-muted-foreground mt-1">All time</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle>Average Rating</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Pending Bookings</CardTitle>
+                <Bell className="h-4 w-4 text-yellow-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-yellow-600">
+                  {bookings.filter((b) => b.status === "pending").length}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Needs attention</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
+                <Star className="h-4 w-4 text-yellow-400" />
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
@@ -138,7 +334,7 @@ export default function AdminDashboard() {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-5 w-5 ${
+                        className={`h-4 w-4 ${
                           star <= Math.round(average)
                             ? "fill-yellow-400 text-yellow-400"
                             : "text-gray-300"
@@ -147,20 +343,20 @@ export default function AdminDashboard() {
                     ))}
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-1">
                   {ratings.length} reviews
                 </p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle>Pending Bookings</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                <IndianRupee className="h-4 w-4 text-green-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">
-                  {bookings.filter((b) => b.status === "pending").length}
-                </div>
+                <div className="text-3xl font-bold text-green-600">₹{totalRevenue.toLocaleString('en-IN')}</div>
+                <p className="text-xs text-muted-foreground mt-1">From paid bookings</p>
               </CardContent>
             </Card>
           </div>
@@ -189,6 +385,8 @@ export default function AdminDashboard() {
                     <TableHead>Customer</TableHead>
                     <TableHead>Service</TableHead>
                     <TableHead>Date</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Payment</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -204,6 +402,20 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         {new Date(booking.booking_date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        ₹{booking.final_amount || 0}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={
+                            booking.payment_status === "paid"
+                              ? "bg-green-100 text-green-800 border-green-300"
+                              : "bg-orange-100 text-orange-800 border-orange-300"
+                          }
+                        >
+                          {booking.payment_status === "paid" ? "Paid" : "Pending"}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge

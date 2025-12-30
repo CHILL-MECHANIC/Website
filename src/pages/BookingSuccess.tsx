@@ -1,14 +1,66 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Calendar, Clock, MapPin, Phone } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { format } from "date-fns";
+
+interface BookingData {
+  date: string;
+  time: string;
+  instructions?: string;
+  serviceAddress?: string;
+  amount?: number;
+  paymentMethod?: string;
+}
 
 export default function BookingSuccess() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { getCartItemsCount } = useCart();
+  const { profile } = useAuth();
+
+  const bookingData: BookingData | undefined = location.state?.bookingData;
+  const bookingId = location.state?.bookingId;
+
+  // Redirect if no booking data
+  useEffect(() => {
+    if (!bookingData && !bookingId) {
+      navigate("/");
+    }
+  }, [bookingData, bookingId, navigate]);
+
+  // Format date
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return format(date, "MMMM d, yyyy");
+    } catch {
+      return dateString;
+    }
+  };
+
+  // Format time
+  const formatTime = (timeString: string) => {
+    // If time is in format "HH:MM" or "HH:MM-HH:MM", format it
+    if (timeString.includes("-")) {
+      return timeString;
+    }
+    // Try to parse and format
+    try {
+      const [hours, minutes] = timeString.split(":");
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? "PM" : "AM";
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${minutes || "00"} ${ampm}`;
+    } catch {
+      return timeString;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,37 +85,57 @@ export default function BookingSuccess() {
               <h3 className="text-xl font-semibold mb-4">Booking Details</h3>
               
               <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Calendar className="h-5 w-5 text-primary" />
-                  <div>
-                    <div className="font-medium">April 1, 2025</div>
-                    <div className="text-sm text-muted-foreground">Preferred Date</div>
+                {bookingData?.date && (
+                  <div className="flex items-center space-x-3">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    <div>
+                      <div className="font-medium">{formatDate(bookingData.date)}</div>
+                      <div className="text-sm text-muted-foreground">Preferred Date</div>
+                    </div>
                   </div>
-                </div>
+                )}
                 
-                <div className="flex items-center space-x-3">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <div>
-                    <div className="font-medium">10:00 AM - 12:00 PM</div>
-                    <div className="text-sm text-muted-foreground">Time Slot</div>
+                {bookingData?.time && (
+                  <div className="flex items-center space-x-3">
+                    <Clock className="h-5 w-5 text-primary" />
+                    <div>
+                      <div className="font-medium">{formatTime(bookingData.time)}</div>
+                      <div className="text-sm text-muted-foreground">Time Slot</div>
+                    </div>
                   </div>
-                </div>
+                )}
                 
-                <div className="flex items-center space-x-3">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <div>
-                    <div className="font-medium">Your Address</div>
-                    <div className="text-sm text-muted-foreground">Service Location</div>
+                {bookingData?.serviceAddress && (
+                  <div className="flex items-center space-x-3">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    <div>
+                      <div className="font-medium">{bookingData.serviceAddress}</div>
+                      <div className="text-sm text-muted-foreground">Service Location</div>
+                    </div>
                   </div>
-                </div>
+                )}
                 
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-5 w-5 text-primary" />
-                  <div>
-                    <div className="font-medium">+91-XXXX-XXXX</div>
-                    <div className="text-sm text-muted-foreground">Contact Number</div>
+                {profile?.phone && (
+                  <div className="flex items-center space-x-3">
+                    <Phone className="h-5 w-5 text-primary" />
+                    <div>
+                      <div className="font-medium">{profile.phone}</div>
+                      <div className="text-sm text-muted-foreground">Contact Number</div>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {bookingData?.amount && (
+                  <div className="flex items-center space-x-3 pt-2 border-t">
+                    <div className="h-5 w-5 text-primary flex items-center justify-center font-bold">₹</div>
+                    <div>
+                      <div className="font-medium">₹{bookingData.amount.toLocaleString()}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {bookingData.paymentMethod === 'pay_later' ? 'Pay After Service' : 'Amount Paid'}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

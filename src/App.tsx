@@ -26,6 +26,8 @@ import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./components/UserProfile";
 import SMS from "./pages/SMS";
+import PaymentHistory from "./pages/PaymentHistory";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/services/:serviceType" element={<ServiceDetail />} />
@@ -46,6 +49,7 @@ const App = () => (
               <Route path="/booking-success" element={<BookingSuccess />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile" element={<UserProfile />} />
+              <Route path="/payment-history" element={<PaymentHistory />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />

@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
@@ -174,10 +175,13 @@ export default function AdminServices() {
               <h1 className="text-3xl font-bold mb-2">Services Management</h1>
               <p className="text-muted-foreground">Add, edit, and manage service offerings</p>
             </div>
-            <Dialog open={isDialogOpen} onOpenChange={(open) => {
-              setIsDialogOpen(open);
-              if (!open) resetForm();
-            }}>
+            <Dialog
+              open={isDialogOpen}
+              onOpenChange={(open) => {
+                setIsDialogOpen(open);
+                if (!open) resetForm();
+              }}
+            >
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -189,6 +193,9 @@ export default function AdminServices() {
                   <DialogTitle>
                     {editingService ? "Edit Service" : "Add New Service"}
                   </DialogTitle>
+                  <DialogDescription>
+                    {editingService ? "Update service details and pricing" : "Create a new service offering"}
+                  </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
@@ -196,9 +203,7 @@ export default function AdminServices() {
                     <Input
                       id="name"
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
                     />
                   </div>
@@ -207,9 +212,7 @@ export default function AdminServices() {
                     <Input
                       id="service_type"
                       value={formData.service_type}
-                      onChange={(e) =>
-                        setFormData({ ...formData, service_type: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, service_type: e.target.value })}
                       placeholder="e.g., ac, refrigerator"
                       required
                     />
@@ -220,9 +223,7 @@ export default function AdminServices() {
                       id="price"
                       type="number"
                       value={formData.price}
-                      onChange={(e) =>
-                        setFormData({ ...formData, price: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       required
                     />
                   </div>
@@ -231,9 +232,7 @@ export default function AdminServices() {
                     <Textarea
                       id="description"
                       value={formData.description}
-                      onChange={(e) =>
-                        setFormData({ ...formData, description: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={3}
                     />
                   </div>
@@ -271,11 +270,7 @@ export default function AdminServices() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleEdit(service)}
-                          >
+                          <Button size="sm" variant="outline" onClick={() => handleEdit(service)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
