@@ -4,8 +4,34 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "functions": {
-    "api/**/*.ts": {
-      "memory": 256,
+    "api/auth.ts": {
+      "maxDuration": 10
+    },
+    "api/payment.ts": {
+      "maxDuration": 10
+    },
+    "api/profile.ts": {
+      "maxDuration": 10
+    },
+    "api/booking/create.ts": {
+      "maxDuration": 10
+    },
+    "api/admin/booking.ts": {
+      "maxDuration": 10
+    },
+    "api/admin/bookings/index.ts": {
+      "maxDuration": 10
+    },
+    "api/admin/customers/index.ts": {
+      "maxDuration": 10
+    },
+    "api/admin/services/index.ts": {
+      "maxDuration": 10
+    },
+    "api/admin/stats.ts": {
+      "maxDuration": 10
+    },
+    "api/admin/technicians/index.ts": {
       "maxDuration": 10
     }
   },

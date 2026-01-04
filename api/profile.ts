@@ -1,30 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
-
-const getSupabase = () => createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-const verifyToken = (req: VercelRequest): { userId: string; phone?: string } | null => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith('Bearer ')) return null;
-  
-  try {
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    return {
-      userId: decoded.userId,
-      phone: decoded.phone
-    };
-  } catch {
-    return null;
-  }
-};
+import { verifySupabaseToken, createSupabaseAdmin } from './lib/supabase';
 
 // Helper to find profile by userId (handles both user_id and id columns)
-async function findProfile(supabase: ReturnType<typeof getSupabase>, userId: string) {
+async function findProfile(supabase: ReturnType<typeof createSupabaseAdmin>, userId: string) {
   // Try user_id first
   let result = await supabase
     .from('profiles')
@@ -55,19 +33,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Verify authentication
-  const user = verifyToken(req);
+  const { user, error: authError } = await verifySupabaseToken(req.headers.authorization);
   if (!user) {
-    return res.status(401).json({ success: false, message: 'Authorization required' });
+    return res.status(401).json({ success: false, message: authError || 'Authorization required' });
   }
 
-  const supabase = getSupabase();
+  const userId = user.id;
+  const supabase = createSupabaseAdmin();
 
   try {
     // ===== GET PROFILE =====
     if (req.method === 'GET') {
-      console.log('[Profile] GET - Fetching profile for user:', user.userId);
+      console.log('[Profile] GET - Fetching profile for user:', userId);
 
-      const { data: profile, error } = await findProfile(supabase, user.userId);
+      const { data: profile, error } = await findProfile(supabase, userId);
 
       if (error) {
         console.error('[Profile] GET error:', error);
@@ -107,8 +86,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ===== UPDATE PROFILE =====
     if (req.method === 'PUT') {
-      console.log('[Profile] PUT - Updating profile for user:', user.userId);
-      console.log('[Profile] PUT - Request body:', JSON.stringify(req.body, null, 2));
+      console.log('[Profile] PUT - Updating profile for user:', userId);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[Profile] PUT - Request body:', JSON.stringify(req.body, null, 2));
+      } else {
+        console.log('[Profile] PUT - Updating profile');
+      }
 
       const {
         fullName,
@@ -181,13 +164,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         updateData.avatar_url = avatarUrl.trim();
       }
 
-      console.log('[Profile] PUT - Update data:', JSON.stringify(updateData, null, 2));
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[Profile] PUT - Update data:', JSON.stringify(updateData, null, 2));
+      }
 
       // Try to update by user_id first
       let result = await supabase
         .from('profiles')
         .update(updateData)
-        .eq('user_id', user.userId)
+        .eq('user_id', userId)
         .select()
         .maybeSingle();
 
@@ -197,7 +182,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         result = await supabase
           .from('profiles')
           .update(updateData)
-          .eq('id', user.userId)
+          .eq('id', userId)
           .select()
           .maybeSingle();
       }
@@ -223,7 +208,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           const minResult = await supabase
             .from('profiles')
             .update(minimalUpdate)
-            .eq('user_id', user.userId)
+            .eq('user_id', userId)
             .select()
             .maybeSingle();
 
@@ -260,7 +245,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       if (!result.data) {
-        console.error('[Profile] PUT - No profile found for user:', user.userId);
+        console.error('[Profile] PUT - No profile found for user:', userId);
         return res.status(404).json({ 
           success: false, message: 'Profile not found' 
         });

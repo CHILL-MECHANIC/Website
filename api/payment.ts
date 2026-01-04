@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import axios from 'axios';
-import { createRazorpayInstance, validateRazorpayConfig, getRazorpayMode, RAZORPAY_API_BASE_URL } from './_lib/razorpayConfig';
+import { createRazorpayInstance, validateRazorpayConfig, getRazorpayMode, RAZORPAY_API_BASE_URL } from './lib/razorpayConfig';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS
@@ -305,7 +305,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           status: 'created'
         };
 
-        console.log('[Payment] Attempting to insert payment:', JSON.stringify(insertData, null, 2));
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[Payment] Attempting to insert payment:', JSON.stringify(insertData, null, 2));
+        } else {
+          console.log('[Payment] Creating payment for order:', order.id);
+        }
 
         const { data: payment, error: dbError } = await supabase
           .from('payments')
@@ -314,13 +318,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .single();
 
         if (dbError) {
-          console.error('[Payment] DATABASE ERROR DETAILS:', {
-            code: dbError.code,
-            message: dbError.message,
-            details: dbError.details,
-            hint: dbError.hint,
-            fullError: JSON.stringify(dbError, null, 2)
-          });
+          console.error('[Payment] Database error:', dbError.code, dbError.message);
+          if (process.env.NODE_ENV !== 'production') {
+            console.error('[Payment] Error details:', dbError.hint);
+          }
           
           const errorMessage = process.env.NODE_ENV === 'development'
             ? `Failed to create order record: ${dbError.message}${dbError.hint ? ` (Hint: ${dbError.hint})` : ''}`

@@ -1,23 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
-
-const getSupabase = () => createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-const verifyToken = (req: VercelRequest): { userId: string; phone?: string } | null => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith('Bearer ')) return null;
-  
-  try {
-    const token = authHeader.split(' ')[1];
-    return jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; phone?: string };
-  } catch {
-    return null;
-  }
-};
+import { verifySupabaseToken, createSupabaseAdmin } from '../lib/supabase';
 
 // ===== PARSE ADDRESS STRING =====
 // Handles formats like:
@@ -92,12 +74,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
 
-  const user = verifyToken(req);
+  const { user, error: authError } = await verifySupabaseToken(req.headers.authorization);
   if (!user) {
-    return res.status(401).json({ success: false, message: 'Authorization required' });
+    return res.status(401).json({ success: false, message: authError || 'Authorization required' });
   }
 
-  const supabase = getSupabase();
+  const userId = user.id;
+  const supabase = createSupabaseAdmin();
 
   try {
     const body = req.body || {};
@@ -152,7 +135,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('address, city, pincode, landmark')
-        .eq('id', user.userId)
+        .eq('id', userId)
         .single();
 
       if (profile?.address) {
@@ -245,7 +228,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ===== CREATE BOOKING =====
     const bookingData = {
-      user_id: user.userId,
+      user_id: userId,
       booking_date: bookingDate,
       booking_time: finalBookingTime || null,
       total_amount: calculatedTotal,
@@ -270,7 +253,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (process.env.NODE_ENV !== 'production') {
       console.log('[Booking] Creating booking:', JSON.stringify(bookingData, null, 2));
     } else {
-      console.log('[Booking] Creating booking for user:', user.userId);
+      console.log('[Booking] Creating booking for user:', userId);
     }
 
     const { data: booking, error: bookingError } = await supabase
