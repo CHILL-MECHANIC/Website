@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifySupabaseToken, createSupabaseAdmin } from '../lib/supabase';
+import { verifySupabaseToken, createSupabaseAdmin } from '../_lib/supabase';
 
 // ===== PARSE ADDRESS STRING =====
 // Handles formats like:
