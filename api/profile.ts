@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifySupabaseToken, createSupabaseAdmin } from './_supabase';
+import { verifySupabaseToken, createSupabaseAdmin } from './_lib/supabase';
 
 // Helper to find profile by userId (handles both user_id and id columns)
 async function findProfile(supabase: ReturnType<typeof createSupabaseAdmin>, userId: string) {
