@@ -93,6 +93,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const action = req.query.action as string;
 
   try {
+    // Debug: Check if imports work
+    if (action === 'debug') {
+      return res.json({
+        success: true,
+        message: 'Debug endpoint',
+        env: {
+          hasSupabaseUrl: !!process.env.SUPABASE_URL,
+          hasSupabaseKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+          hasJwtSecret: !!process.env.JWT_SECRET,
+          hasSmsKey: !!process.env.SMS_API_KEY
+        }
+      });
+    }
+
     const supabase = createSupabaseAdmin();
 
     // ===== CHECK PHONE =====
