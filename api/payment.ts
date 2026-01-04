@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import axios from 'axios';
-import { createRazorpayInstance, validateRazorpayConfig, getRazorpayMode, RAZORPAY_API_BASE_URL } from './_lib/razorpayConfig';
+import { createRazorpayInstance, validateRazorpayConfig, getRazorpayMode, RAZORPAY_API_BASE_URL } from './lib/razorpayConfig';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS
