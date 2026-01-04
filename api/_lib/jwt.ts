@@ -1,11 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-  console.error('Missing JWT_SECRET environment variable');
-}
-
 export interface JWTPayload {
   userId: string;
   phone: string;
@@ -14,23 +8,25 @@ export interface JWTPayload {
 }
 
 export function signToken(payload: JWTPayload): string {
-  if (!JWT_SECRET) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
     throw new Error('JWT_SECRET not configured');
   }
   return jwt.sign(
     payload as object,
-    JWT_SECRET,
+    secret,
     { expiresIn: '7d' } as jwt.SignOptions
   );
 }
 
 export function verifyToken(token: string): JWTPayload | null {
-  if (!JWT_SECRET) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
     console.error('JWT_SECRET not configured');
     return null;
   }
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return jwt.verify(token, secret) as JWTPayload;
   } catch {
     return null;
   }

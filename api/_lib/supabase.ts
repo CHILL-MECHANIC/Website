@@ -25,18 +25,14 @@ export const createSupabaseAdmin = (): SupabaseClient => {
   );
 };
 
-// Legacy export for backward compatibility
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient(
-  supabaseUrl || '',
-  supabaseKey || ''
-);
+// Lazy-loaded supabase client (for backward compatibility)
+let _supabaseClient: SupabaseClient | null = null;
+export const getSupabase = (): SupabaseClient => {
+  if (!_supabaseClient) {
+    _supabaseClient = createSupabaseAdmin();
+  }
+  return _supabaseClient;
+};
 
 // Verify Supabase access token
 export const verifySupabaseToken = async (authHeader: string | undefined): Promise<TokenVerifyResult> => {
