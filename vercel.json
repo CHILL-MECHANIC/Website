@@ -5,34 +5,44 @@
   "outputDirectory": "dist",
   "functions": {
     "api/auth.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/payment.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/profile.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/booking/create.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/admin/booking.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/admin/bookings/index.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/admin/customers/index.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/admin/services/index.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/admin/stats.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     },
     "api/admin/technicians/index.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "api/_lib/**"
     }
   },
   "rewrites": [
