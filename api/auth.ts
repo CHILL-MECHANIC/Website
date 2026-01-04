@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createSupabaseAdmin, safeLog } from './lib/supabase';
-import { signToken } from './lib/jwt';
+import { createSupabaseAdmin, safeLog } from './_lib/supabase';
+import { signToken } from './_lib/jwt';
 import axios from 'axios';
 
 // Types
