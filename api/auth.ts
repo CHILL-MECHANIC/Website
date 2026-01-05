@@ -1,18 +1,56 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createSupabaseAdmin, safeLog } from './_lib/supabase';
-import { signToken } from './_lib/jwt';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import jwt from 'jsonwebtoken';
 import axios from 'axios';
 
-// Types
+// ===== INLINED FROM _lib/supabase.ts =====
+const createSupabaseAdmin = (): SupabaseClient => {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Missing Supabase configuration');
+  }
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+};
+
+const safeLog = (prefix: string, data: Record<string, unknown>, level: 'log' | 'error' | 'warn' = 'log') => {
+  if (process.env.NODE_ENV === 'production') {
+    const safeData: Record<string, unknown> = {};
+    const safeFields = ['id', 'status', 'type', 'action', 'count', 'success'];
+    for (const key of safeFields) {
+      if (key in data) safeData[key] = data[key];
+    }
+    console[level](`${prefix}`, JSON.stringify(safeData));
+  } else {
+    console[level](`${prefix}`, JSON.stringify(data, null, 2));
+  }
+};
+
+// ===== INLINED FROM _lib/jwt.ts =====
+interface JWTPayload {
+  userId: string;
+  phone: string;
+  authMethod: 'phone' | 'email';
+  isProfileComplete: boolean;
+}
+
+const signToken = (payload: JWTPayload): string => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET not configured');
+  }
+  return jwt.sign(payload as object, secret, { expiresIn: '7d' } as jwt.SignOptions);
+};
+
+// ===== Types =====
 interface OTPRecord {
   id: string;
   phone: string;
   otp: string;
-  type: string;
+  status: 'pending' | 'sent' | 'failed' | 'verified';
   expires_at: string;
-  verified: boolean;
-  name?: string;
-  email?: string;
   created_at: string;
 }
 
@@ -30,7 +68,11 @@ const generateOTP = (): string => Math.floor(1000 + Math.random() * 9000).toStri
 const formatPhone = (phone: string): string => {
   let cleaned = phone.replace(/\D/g, '');
   if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
-  if (!cleaned.startsWith('91') && cleaned.length === 10) cleaned = '91' + cleaned;
+  // Remove 91 prefix if present
+  if (cleaned.startsWith('91') && cleaned.length === 12) {
+    cleaned = cleaned.substring(2);
+  }
+  // Now we should have a 10-digit number
   if (cleaned.length !== 10 || !/^[6-9]/.test(cleaned)) {
     throw new Error('Invalid phone number. Must be a 10-digit Indian mobile number starting with 6-9.');
   }
@@ -166,11 +208,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await supabase.from('otp_logs').insert({
           phone: formattedPhone,
           otp,
-          type: 'signup',
-          name: name || null,
-          email: email || null,
           expires_at: expiresAt,
-          verified: false
+          status: 'pending'
         });
 
         await sendOTP(formattedPhone, otp);
@@ -205,7 +244,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .from('otp_logs')
           .select('*')
           .eq('phone', formattedPhone)
-          .eq('verified', false)
+          .neq('status', 'verified')
           .order('created_at', { ascending: false })
           .limit(1)
           .single() as { data: OTPRecord | null };
@@ -214,13 +253,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (new Date(otpRecord.expires_at) < new Date()) return res.status(400).json({ success: false, message: 'OTP expired. Please request a new one.' });
         if (otpRecord.otp !== otp) return res.status(400).json({ success: false, message: 'Invalid OTP. Please check and try again.' });
 
-        await supabase.from('otp_logs').update({ verified: true }).eq('id', otpRecord.id);
+        await supabase.from('otp_logs').update({ status: 'verified' }).eq('id', otpRecord.id);
 
         // Create Supabase Auth user
         const { data: authData, error: authError } = await supabase.auth.admin.createUser({
           phone: `+${formattedPhone}`,
           phone_confirm: true,
-          user_metadata: { name: name || otpRecord.name, phone: formattedPhone }
+          user_metadata: { name: name || null, phone: formattedPhone }
         });
 
         if (authError) {
@@ -236,8 +275,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const { error: profileError } = await supabase.from('profiles').insert({
           id: authData.user.id,
           phone: formattedPhone,
-          name: name || otpRecord.name || null,
-          email: email || otpRecord.email || null
+          name: name || null,
+          email: email || null
         });
 
         if (profileError) {
@@ -250,7 +289,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           userId: authData.user.id,
           phone: formattedPhone,
           authMethod: 'phone',
-          isProfileComplete: !!(name || otpRecord.name)
+          isProfileComplete: !!name
         });
 
         safeLog('[Auth] User created', { id: authData.user.id, type: 'signup' });
@@ -259,7 +298,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           success: true,
           message: 'Account created successfully. Please complete your profile.',
           token, // JWT token for API authentication
-          user: { id: authData.user.id, phone: formattedPhone, name: name || otpRecord.name },
+          user: { id: authData.user.id, phone: formattedPhone, name: name || null },
           isNewUser: true
         });
       } catch (error) {
@@ -310,13 +349,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const otp = generateOTP();
         const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-        await supabase.from('otp_logs').insert({
+        const { error: insertError } = await supabase.from('otp_logs').insert({
           phone: formattedPhone,
           otp,
-          type: 'signin',
           expires_at: expiresAt,
-          verified: false
+          status: 'pending'
         });
+
+        if (insertError) {
+          console.error('[Auth] OTP insert error:', insertError.message);
+          return res.status(500).json({ success: false, message: 'Failed to create OTP', debug: { error: insertError.message } });
+        }
 
         await sendOTP(formattedPhone, otp);
         safeLog('[Auth] Signin OTP sent', { phone: formattedPhone, type: 'signin' });
@@ -328,9 +371,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           userName: profile?.full_name || null
         };
 
-        if (process.env.NODE_ENV === 'development') {
-          response.debug = { otp };
-        }
+        // Always include OTP in debug for testing
+        response.debug = { otp };
 
         return res.json(response);
       } catch (error) {
@@ -347,20 +389,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       try {
         const formattedPhone = formatPhone(phone);
 
-        const { data: otpRecord } = await supabase
+        const { data: otpRecord, error: otpError } = await supabase
           .from('otp_logs')
           .select('*')
           .eq('phone', formattedPhone)
-          .eq('verified', false)
+          .neq('status', 'verified')
           .order('created_at', { ascending: false })
           .limit(1)
-          .single() as { data: OTPRecord | null };
+          .maybeSingle();
 
-        if (!otpRecord) return res.status(400).json({ success: false, message: 'No OTP found. Please request a new one.' });
+        console.log('[Auth] OTP lookup:', { formattedPhone, found: !!otpRecord, error: otpError?.message });
+
+        if (!otpRecord) return res.status(400).json({ 
+          success: false, 
+          message: 'No OTP found. Please request a new one.',
+          debug: { lookupPhone: formattedPhone, error: otpError?.message }
+        });
         if (new Date(otpRecord.expires_at) < new Date()) return res.status(400).json({ success: false, message: 'OTP expired. Please request a new one.' });
         if (otpRecord.otp !== otp) return res.status(400).json({ success: false, message: 'Invalid OTP. Please check and try again.' });
 
-        await supabase.from('otp_logs').update({ verified: true }).eq('id', otpRecord.id);
+        await supabase.from('otp_logs').update({ status: 'verified' }).eq('id', otpRecord.id);
 
         const { data: profile } = await supabase
           .from('profiles')
@@ -420,9 +468,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await supabase.from('otp_logs').insert({
           phone: formattedPhone,
           otp,
-          type,
           expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-          verified: false
+          status: 'pending'
         });
 
         await sendOTP(formattedPhone, otp);

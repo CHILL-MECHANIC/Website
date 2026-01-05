@@ -1,5 +1,53 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifySupabaseToken, createSupabaseAdmin } from '../_lib/supabase';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+// ===== INLINED FROM _lib/supabase.ts =====
+interface AuthUser {
+  id: string;
+  phone?: string;
+  email?: string;
+}
+
+interface TokenVerifyResult {
+  user: AuthUser | null;
+  error: string | null;
+}
+
+const createSupabaseAdmin = (): SupabaseClient => {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Missing Supabase configuration');
+  }
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+};
+
+const verifySupabaseToken = async (authHeader: string | undefined): Promise<TokenVerifyResult> => {
+  if (!authHeader?.startsWith('Bearer ')) {
+    return { user: null, error: 'Authorization required' };
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  try {
+    const supabase = createSupabaseAdmin();
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    
+    if (error || !user) {
+      return { user: null, error: error?.message || 'Invalid token' };
+    }
+    
+    return {
+      user: { id: user.id, phone: user.phone, email: user.email },
+      error: null
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Token verification failed';
+    return { user: null, error: message };
+  }
+};
 
 // ===== PARSE ADDRESS STRING =====
 // Handles formats like:
