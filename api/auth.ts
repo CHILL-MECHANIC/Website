@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
 // ===== INLINED FROM _lib/supabase.ts =====
 const createSupabaseAdmin = (): SupabaseClient => {
@@ -15,6 +15,44 @@ const createSupabaseAdmin = (): SupabaseClient => {
   );
 };
 
+// Create anon client for user-level operations
+const createSupabaseAnon = (): SupabaseClient => {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    throw new Error('Missing Supabase anon configuration');
+  }
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  );
+};
+
+// Generate a Supabase-compatible JWT for a user
+const generateSupabaseJWT = (userId: string, phone: string, email?: string): string => {
+  // The Supabase JWT secret can be derived from the service role key
+  // Or set directly as SUPABASE_JWT_SECRET env var
+  // For Supabase hosted projects, the JWT secret is in Settings > API
+  const jwtSecret = process.env.SUPABASE_JWT_SECRET || process.env.JWT_SECRET;
+  
+  if (!jwtSecret) {
+    throw new Error('SUPABASE_JWT_SECRET or JWT_SECRET not configured');
+  }
+  
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    aud: 'authenticated',
+    exp: now + (60 * 60 * 24 * 7), // 7 days
+    iat: now,
+    iss: `${process.env.SUPABASE_URL}/auth/v1`,
+    sub: userId,
+    email: email || undefined,
+    phone: phone ? `+${phone}` : undefined,
+    role: 'authenticated',
+    session_id: `${Date.now()}-${Math.random().toString(36).substring(2)}`,
+  };
+  
+  return jwt.sign(payload, jwtSecret, { algorithm: 'HS256' });
+};
+
 const safeLog = (prefix: string, data: Record<string, unknown>, level: 'log' | 'error' | 'warn' = 'log') => {
   if (process.env.NODE_ENV === 'production') {
     const safeData: Record<string, unknown> = {};
@@ -26,22 +64,6 @@ const safeLog = (prefix: string, data: Record<string, unknown>, level: 'log' | '
   } else {
     console[level](`${prefix}`, JSON.stringify(data, null, 2));
   }
-};
-
-// ===== INLINED FROM _lib/jwt.ts =====
-interface JWTPayload {
-  userId: string;
-  phone: string;
-  authMethod: 'phone' | 'email';
-  isProfileComplete: boolean;
-}
-
-const signToken = (payload: JWTPayload): string => {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error('JWT_SECRET not configured');
-  }
-  return jwt.sign(payload as object, secret, { expiresIn: '7d' } as jwt.SignOptions);
 };
 
 // ===== Types =====
@@ -284,20 +306,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.status(500).json({ success: false, message: 'Failed to create profile' });
         }
 
-        // Generate JWT token for authenticated API calls
-        const token = signToken({
-          userId: authData.user.id,
-          phone: formattedPhone,
-          authMethod: 'phone',
-          isProfileComplete: !!name
-        });
+        // Generate a Supabase-compatible JWT for the new user
+        let accessToken = null;
+        
+        try {
+          accessToken = generateSupabaseJWT(authData.user.id, formattedPhone, email);
+        } catch (jwtError) {
+          console.error('[Auth] JWT generation failed:', jwtError);
+        }
 
-        safeLog('[Auth] User created', { id: authData.user.id, type: 'signup' });
+        safeLog('[Auth] User created', { id: authData.user.id, type: 'signup', hasToken: !!accessToken });
 
         return res.json({
           success: true,
           message: 'Account created successfully. Please complete your profile.',
-          token, // JWT token for API authentication
+          access_token: accessToken,
           user: { id: authData.user.id, phone: formattedPhone, name: name || null },
           isNewUser: true
         });
@@ -418,22 +441,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         if (!profile) return res.status(404).json({ success: false, message: 'User not found. Please sign up first.' });
 
-        // Generate JWT token for authenticated API calls
-        const token = signToken({
-          userId: profile.id,
-          phone: profile.phone || formattedPhone,
-          authMethod: 'phone',
-          isProfileComplete: !!profile.name
-        });
+        // Generate a Supabase-compatible JWT for the user
+        let accessToken = null;
+        
+        try {
+          accessToken = generateSupabaseJWT(profile.id, formattedPhone, profile.email);
+        } catch (jwtError) {
+          console.error('[Auth] JWT generation failed:', jwtError);
+          // Continue without token - user can still be returned
+        }
 
-        safeLog('[Auth] User signed in', { id: profile.id, type: 'signin' });
+        safeLog('[Auth] User signed in', { id: profile.id, type: 'signin', hasToken: !!accessToken });
 
         const welcomeMessage = profile.name ? `Welcome back, ${profile.name}!` : 'Login successful!';
 
         return res.json({
           success: true,
           message: welcomeMessage,
-          token, // JWT token for API authentication
+          access_token: accessToken,
           user: { id: profile.id, phone: profile.phone, name: profile.name, email: profile.email },
           isNewUser: false
         });
