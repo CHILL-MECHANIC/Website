@@ -318,7 +318,7 @@ export async function verifySignUpOTP(phone: string, otp: string): Promise<Verif
       success: true,
       verified: data.verified,
       message: data.message,
-      token: data.token,
+      token: data.access_token || data.token,
       user: data.user
     };
   } catch (error) {
@@ -361,7 +361,7 @@ export async function verifySignInOTP(phone: string, otp: string): Promise<Verif
       success: true,
       verified: data.verified,
       message: data.message,
-      token: data.token,
+      token: data.access_token || data.token,
       user: data.user
     };
   } catch (error) {

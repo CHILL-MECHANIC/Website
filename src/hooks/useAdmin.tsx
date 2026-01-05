@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function useAdmin() {
@@ -21,14 +20,28 @@ export function useAdmin() {
       }
 
       try {
-        const { data, error } = await supabase
-          .rpc('has_role', { _user_id: profile.id, _role: 'admin' });
-
-        if (error) {
-          console.error('Error checking admin status:', error);
+        // Use our API endpoint to check admin status
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
           setIsAdmin(false);
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch('/api/admin/check', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          setIsAdmin(data.isAdmin === true);
         } else {
-          setIsAdmin(data === true);
+          setIsAdmin(false);
         }
       } catch (error) {
         console.error('Error in admin check:', error);
