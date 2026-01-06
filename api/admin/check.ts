@@ -87,20 +87,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const supabase = createSupabaseAdmin();
     
-    // Define admin phone numbers (you can also store these in a database table)
-    const ADMIN_PHONES = [
-      '917987376613',
-      '7987376613',
-      '+917987376613'
-    ];
+    console.log('[Admin Check] Checking admin status for user:', user.id);
     
-    // Check if user's phone is in admin list
-    const userPhone = user.phone?.replace('+', '');
-    if (userPhone && ADMIN_PHONES.some(p => p.replace('+', '') === userPhone || p === userPhone)) {
-      return res.status(200).json({ success: true, isAdmin: true, userId: user.id });
+    // Check admin status from user_roles table
+    try {
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+      
+      console.log('[Admin Check] Role lookup result:', { userId: user.id, roleData, error: roleError?.message });
+      
+      if (roleData) {
+        return res.status(200).json({ success: true, isAdmin: true, userId: user.id });
+      }
+    } catch (roleError) {
+      console.error('[Admin Check] Role lookup error:', roleError);
     }
     
-    // Also try has_role RPC in case user exists in auth.users
+    // Fallback: try has_role RPC function
     try {
       const { data: hasRole } = await supabase
         .rpc('has_role', { _user_id: user.id, _role: 'admin' });
@@ -109,7 +116,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(200).json({ success: true, isAdmin: true, userId: user.id });
       }
     } catch {
-      // Ignore RPC errors - user may not exist in auth.users
+      // Ignore RPC errors - function may not exist
     }
 
     return res.status(200).json({ 

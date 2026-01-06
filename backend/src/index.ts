@@ -9,6 +9,7 @@ import authRoutes from './routes/auth';
 import profileRoutes from './routes/profile';
 import bookingRoutes from './routes/booking';
 import paymentRoutes from './routes/payment';
+import adminRoutes from './routes/admin';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -49,6 +50,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handling
 app.use(notFoundHandler);

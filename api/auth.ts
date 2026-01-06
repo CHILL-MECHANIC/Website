@@ -286,24 +286,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         if (authError) {
           console.error('[Auth] Create user failed:', authError.message);
-          return res.status(500).json({ success: false, message: 'Failed to create user' });
+          return res.status(500).json({ success: false, message: `Failed to create user: ${authError.message}` });
         }
 
         if (!authData.user) {
           return res.status(500).json({ success: false, message: 'Failed to create user' });
         }
 
-        // Create profile
+        // Create profile - delete any existing profile first (from trigger or failed attempt)
+        // then insert a fresh one with new id
+        await supabase.from('profiles').delete().eq('user_id', authData.user.id);
+        
         const { error: profileError } = await supabase.from('profiles').insert({
-          id: authData.user.id,
+          user_id: authData.user.id,
           phone: formattedPhone,
-          name: name || null,
-          email: email || null
+          full_name: name || null,
+          email: email || null,
+          auth_method: 'phone',
+          is_profile_complete: false
         });
 
         if (profileError) {
           console.error('[Auth] Profile creation failed:', profileError.message);
-          return res.status(500).json({ success: false, message: 'Failed to create profile' });
+          // Try to clean up the auth user if profile creation fails
+          await supabase.auth.admin.deleteUser(authData.user.id).catch(() => {});
+          return res.status(500).json({ success: false, message: `Failed to create profile: ${profileError.message}` });
         }
 
         // Generate a Supabase-compatible JWT for the new user
@@ -321,7 +328,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           success: true,
           message: 'Account created successfully. Please complete your profile.',
           access_token: accessToken,
-          user: { id: authData.user.id, phone: formattedPhone, name: name || null },
+          user: { 
+            id: authData.user.id, 
+            phone: formattedPhone, 
+            fullName: name || null,
+            email: email || null,
+            avatarUrl: null,
+            isProfileComplete: false,
+            authMethod: 'phone',
+            isNewUser: true
+          },
           isNewUser: true
         });
       } catch (error) {
@@ -433,34 +449,94 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         await supabase.from('otp_logs').update({ status: 'verified' }).eq('id', otpRecord.id);
 
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('*')
           .eq('phone', formattedPhone)
-          .maybeSingle() as { data: Profile | null };
+          .maybeSingle();
+
+        console.log('[Auth] Profile lookup:', { 
+          formattedPhone, 
+          profile: profile ? { id: profile.id, user_id: profile.user_id, phone: profile.phone } : null,
+          error: profileError?.message 
+        });
 
         if (!profile) return res.status(404).json({ success: false, message: 'User not found. Please sign up first.' });
+
+        // Get user_id for JWT and admin check - IMPORTANT: user_id should match user_roles table
+        let userId = profile.user_id;
+        
+        // If profile doesn't have user_id, try to find the auth user
+        if (!userId) {
+          console.log('[Auth] Profile missing user_id, looking up auth user by phone');
+          
+          // First, try to find existing auth user by phone
+          const { data: authUsers } = await supabase.auth.admin.listUsers();
+          const authUser = authUsers?.users?.find(u => {
+            const userPhone = u.phone?.replace(/\D/g, '');
+            const lookupPhone = formattedPhone.replace(/\D/g, '');
+            return userPhone === lookupPhone || userPhone?.endsWith(lookupPhone.slice(-10));
+          });
+          
+          if (authUser) {
+            userId = authUser.id;
+            console.log('[Auth] Found auth user:', userId);
+            
+            // Update profile with correct user_id
+            await supabase.from('profiles').update({ user_id: userId }).eq('id', profile.id);
+            console.log('[Auth] Updated profile with user_id');
+          } else {
+            // Fall back to profile.id
+            userId = profile.id;
+            console.log('[Auth] No auth user found, using profile.id:', userId);
+          }
+        }
+        
+        console.log('[Auth] Using userId for JWT:', userId, 'profile.user_id:', profile.user_id, 'profile.id:', profile.id);
 
         // Generate a Supabase-compatible JWT for the user
         let accessToken = null;
         
         try {
-          accessToken = generateSupabaseJWT(profile.id, formattedPhone, profile.email);
+          accessToken = generateSupabaseJWT(userId, formattedPhone, profile.email);
         } catch (jwtError) {
           console.error('[Auth] JWT generation failed:', jwtError);
           // Continue without token - user can still be returned
         }
 
-        safeLog('[Auth] User signed in', { id: profile.id, type: 'signin', hasToken: !!accessToken });
+        // Check if user is admin from user_roles table
+        let isAdmin = false;
+        try {
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', userId)
+            .eq('role', 'admin')
+            .maybeSingle();
+          isAdmin = !!roleData;
+        } catch (roleError) {
+          console.error('[Auth] Role check failed:', roleError);
+        }
 
-        const welcomeMessage = profile.name ? `Welcome back, ${profile.name}!` : 'Login successful!';
+        safeLog('[Auth] User signed in', { id: userId, type: 'signin', hasToken: !!accessToken, isAdmin });
+
+        const welcomeMessage = profile.full_name ? `Welcome back, ${profile.full_name}!` : 'Login successful!';
 
         return res.json({
           success: true,
           message: welcomeMessage,
           access_token: accessToken,
-          user: { id: profile.id, phone: profile.phone, name: profile.name, email: profile.email },
-          isNewUser: false
+          user: { 
+            id: userId, 
+            phone: profile.phone, 
+            fullName: profile.full_name, 
+            email: profile.email,
+            avatarUrl: profile.avatar_url,
+            isProfileComplete: profile.is_profile_complete,
+            authMethod: profile.auth_method || 'phone'
+          },
+          isNewUser: false,
+          isAdmin: isAdmin
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Login failed';

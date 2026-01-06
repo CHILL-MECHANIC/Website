@@ -22,11 +22,13 @@ export interface UserProfile {
   isProfileComplete: boolean;
   authMethod: 'phone' | 'email';
   isNewUser: boolean;
+  isAdmin?: boolean;
 }
 
 export interface SessionInfo {
   token: string;
   user: UserProfile;
+  isAdmin: boolean;
 }
 
 /**
@@ -60,6 +62,24 @@ async function findAuthUserByPhone(phone: string): Promise<string | null> {
  */
 function getProfileUserId(profile: any): string {
   return profile.user_id || profile.id;
+}
+
+/**
+ * Check if user has admin role in user_roles table
+ */
+async function checkIsAdmin(userId: string): Promise<boolean> {
+  try {
+    const { data: roleData } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('role', 'admin')
+      .maybeSingle();
+    return !!roleData;
+  } catch (error) {
+    console.error('[Session] Error checking admin role:', error);
+    return false;
+  }
 }
 
 /**
@@ -101,14 +121,19 @@ export async function createSessionForSignUp(phone: string): Promise<SessionInfo
   const userId = newUser.user.id;
   console.log('[Session] Auth user created:', userId);
 
-  // Step 2: Create profile - use user_id for original schema compatibility
+  // Step 2: Create profile - delete any existing profile first (from trigger or failed attempt)
+  // then insert a fresh one
+  await supabase.from('profiles').delete().eq('user_id', userId);
+  
   const { error: profileError } = await supabase
     .from('profiles')
     .insert({
       user_id: userId,
       phone: normalizedPhone,
       email: newUser.user.email || null,
-      full_name: null
+      full_name: null,
+      auth_method: 'phone',
+      is_profile_complete: false
     } as any)
     .select()
     .single();
@@ -141,8 +166,10 @@ export async function createSessionForSignUp(phone: string): Promise<SessionInfo
       avatarUrl: null,
       isProfileComplete: false,
       authMethod: 'phone',
-      isNewUser: true
-    }
+      isNewUser: true,
+      isAdmin: false
+    },
+    isAdmin: false
   };
 }
 
@@ -187,6 +214,10 @@ export async function createSessionForSignIn(phone: string): Promise<SessionInfo
 
     const token = jwt.sign(payload as object, JWT_SECRET, { expiresIn: JWT_EXPIRY } as jwt.SignOptions);
 
+    // Check if user is admin
+    const isAdmin = await checkIsAdmin(profileUserId);
+    console.log('[Session] Admin check for user:', profileUserId, 'isAdmin:', isAdmin);
+
     return {
       token,
       user: {
@@ -197,8 +228,10 @@ export async function createSessionForSignIn(phone: string): Promise<SessionInfo
         avatarUrl: (profileByPhone as any).avatar_url || null,
         isProfileComplete: (profileByPhone as any).is_profile_complete || false,
         authMethod: 'phone',
-        isNewUser: false
-      }
+        isNewUser: false,
+        isAdmin: isAdmin
+      },
+      isAdmin: isAdmin
     };
   }
 
@@ -241,6 +274,9 @@ export async function createSessionForSignIn(phone: string): Promise<SessionInfo
 
     const token = jwt.sign(payload as object, JWT_SECRET, { expiresIn: JWT_EXPIRY } as jwt.SignOptions);
 
+    // Check if user is admin
+    const isAdmin = await checkIsAdmin(existingUserId);
+
     return {
       token,
       user: {
@@ -251,8 +287,10 @@ export async function createSessionForSignIn(phone: string): Promise<SessionInfo
         avatarUrl: (profileById as any).avatar_url || null,
         isProfileComplete: (profileById as any).is_profile_complete || false,
         authMethod: 'phone',
-        isNewUser: false
-      }
+        isNewUser: false,
+        isAdmin: isAdmin
+      },
+      isAdmin: isAdmin
     };
   }
 
@@ -291,6 +329,9 @@ export async function createSessionForSignIn(phone: string): Promise<SessionInfo
 
         const token = jwt.sign(payload as object, JWT_SECRET, { expiresIn: JWT_EXPIRY } as jwt.SignOptions);
 
+        // Check if user is admin
+        const isAdmin = await checkIsAdmin(existingUserId);
+
         return {
           token,
           user: {
@@ -301,8 +342,10 @@ export async function createSessionForSignIn(phone: string): Promise<SessionInfo
             avatarUrl: (existingProfile as any).avatar_url || null,
             isProfileComplete: (existingProfile as any).is_profile_complete || false,
             authMethod: 'phone',
-            isNewUser: false
-          }
+            isNewUser: false,
+            isAdmin: isAdmin
+          },
+          isAdmin: isAdmin
         };
       }
     }
@@ -331,8 +374,10 @@ export async function createSessionForSignIn(phone: string): Promise<SessionInfo
       avatarUrl: null,
       isProfileComplete: false,
       authMethod: 'phone',
-      isNewUser: false
-    }
+      isNewUser: false,
+      isAdmin: false
+    },
+    isAdmin: false
   };
 }
 

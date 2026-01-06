@@ -321,7 +321,8 @@ router.post('/signin/verify-otp', asyncHandler(async (req: Request, res: Respons
       verified: true,
       message: welcomeMessage,
       token: session.token,
-      user: session.user
+      user: session.user,
+      isAdmin: session.isAdmin
     });
   } catch (error: any) {
     console.error('[AUTH] Sign In session error:', error);
