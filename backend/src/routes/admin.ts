@@ -52,7 +52,7 @@ router.get('/check', async (req: Request, res: Response) => {
 
     // Fallback: try has_role RPC function
     try {
-      const { data: hasRole } = await supabase
+      const { data: hasRole } = await (supabase as any)
         .rpc('has_role', { _user_id: userId, _role: 'admin' });
       
       if (hasRole === true) {

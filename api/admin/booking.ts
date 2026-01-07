@@ -100,12 +100,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         console.log('Activity log insert skipped (table may not exist):', logError);
       }
 
-      // Send SMS notification to customer
+      // Send SMS notification to customer about technician assignment
       if (booking.profiles?.phone) {
         try {
           const customerPhone = String(booking.profiles.phone).replace(/^\+?91/, '');
-          const serviceName = booking.booking_items?.[0]?.service_name || 'service';
-          const smsMessage = `Your booking for ${serviceName} has been assigned to ${technician.name}. They will arrive on ${booking.booking_date} at ${booking.booking_time}. For queries, call ${technician.phone}. - ChillMechanic`;
+          const smsMessage = `Dear Customer, A technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285. Regards, Chill Mechanic Team`;
 
           const smsApiKey = process.env.SMS_API_KEY;
           const smsSenderId = process.env.SMS_SENDER_ID || 'CHLMEH';
@@ -121,7 +120,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 sender: smsSenderId,
                 to: '91' + customerPhone,
                 text: smsMessage,
-                type: 'TXN',
+                type: 'TRANS',
+                template_id: '1007074801259726162',
               }),
             });
 

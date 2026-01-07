@@ -376,6 +376,66 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     console.log('[Booking] Created successfully:', booking.id, 'with', insertedItems?.length, 'items');
 
+    // ===== SEND BOOKING CONFIRMATION SMS =====
+    // Send SMS notification to customer about booking confirmation
+    try {
+      console.log('[SMS] Starting booking confirmation SMS...');
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('phone')
+        .eq('id', userId)
+        .single();
+
+      console.log('[SMS] Profile phone:', profile?.phone);
+
+      if (profile?.phone) {
+        const customerPhone = String(profile.phone).replace(/^\+?91/, '');
+        const smsMessage = `Dear Customer, Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed. Regards, Chill Mechanic Happy Appliances, Happier Homes`;
+
+        const smsApiKey = process.env.SMS_API_KEY;
+        const smsSenderId = process.env.SMS_SENDER_ID || 'CHLMEH';
+
+        console.log('[SMS] API Key exists:', !!smsApiKey);
+        console.log('[SMS] Sender ID:', smsSenderId);
+        console.log('[SMS] Customer phone (cleaned):', customerPhone);
+        console.log('[SMS] Message length:', smsMessage.length);
+
+        if (smsApiKey) {
+          console.log('[SMS] Sending to API...');
+          const smsResponse = await fetch('https://api.uniquedigitaloutreach.com/v1/sms', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': smsApiKey,
+            },
+            body: JSON.stringify({
+              sender: smsSenderId,
+              to: '91' + customerPhone,
+              text: smsMessage,
+              type: 'TRANS',
+              template_id: '1007913640137046123',
+            }),
+          });
+
+          console.log('[SMS] Response status:', smsResponse.status);
+
+          if (smsResponse.ok) {
+            console.log('[Booking] Confirmation SMS sent to customer:', customerPhone);
+          } else {
+            const errorText = await smsResponse.text();
+            console.error('[Booking] SMS send failed:', errorText);
+          }
+        } else {
+          console.log('[SMS] No API key configured');
+        }
+      } else {
+        console.log('[SMS] No phone found in profile');
+      }
+    } catch (smsError) {
+      console.error('[Booking] SMS notification error:', smsError);
+      // Don't fail the booking if SMS fails
+    }
+
     return res.json({
       success: true,
       message: 'Booking created successfully',
