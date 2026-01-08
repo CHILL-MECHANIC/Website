@@ -504,7 +504,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (phone && process.env.SMS_API_KEY) {
           try {
             const formattedPhone = phone.replace(/^\+?91/, '');
-            const smsMessage = `Payment of Rs.${payment.amount} received for ${payment.service_name || 'your booking'}. Thank you for choosing ChillMechanic!`;
+            const smsMessage = `Dear Customer, Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed. Regards, Chill Mechanic Happy Appliances, Happier Homes`;
             
             await axios.post(
               'https://api.uniquedigitaloutreach.com/v1/sms',
@@ -512,7 +512,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 sender: process.env.SMS_SENDER_ID || 'CHLMEH',
                 to: '91' + formattedPhone,
                 text: smsMessage,
-                type: 'TXN'
+                type: 'TRANS',
+                template_id: '1007913640137046123'
               },
               {
                 headers: {
@@ -522,7 +523,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 timeout: 30000
               }
             );
-            console.log('Payment confirmation SMS sent');
+            console.log('Booking confirmation SMS sent');
           } catch (smsError) {
             console.error('SMS sending failed:', smsError);
             // Don't fail the payment verification if SMS fails
@@ -635,31 +636,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         // Send SMS notification
-        if (phone && process.env.SMS_API_KEY) {
-          try {
-            const formattedPhone = phone.replace(/^\+?91/, '');
-            const smsMessage = `Refund of Rs.${refundAmountValue} initiated for ${payment.service_name || 'your booking'}. Amount will be credited within 5-7 business days. - ChillMechanic`;
-            
-            await axios.post(
-              'https://api.uniquedigitaloutreach.com/v1/sms',
-              {
-                sender: process.env.SMS_SENDER_ID || 'CHLMEH',
-                to: '91' + formattedPhone,
-                text: smsMessage,
-                type: 'TXN'
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'apikey': process.env.SMS_API_KEY
-                },
-                timeout: 30000
-              }
-            );
-          } catch (smsError) {
-            console.error('SMS sending failed:', smsError);
-          }
-        }
+        // NOTE: Refund SMS disabled - no DLT template registered for refund messages
+        // if (phone && process.env.SMS_API_KEY) {
+        //   try {
+        //     const formattedPhone = phone.replace(/^\+?91/, '');
+        //     const smsMessage = `Refund of Rs.${refundAmountValue} initiated for ${payment.service_name || 'your booking'}. Amount will be credited within 5-7 business days. - ChillMechanic`;
+        //     
+        //     await axios.post(
+        //       'https://api.uniquedigitaloutreach.com/v1/sms',
+        //       {
+        //         sender: process.env.SMS_SENDER_ID || 'CHLMEH',
+        //         to: '91' + formattedPhone,
+        //         text: smsMessage,
+        //         type: 'TRANS',
+        //         template_id: 'REFUND_TEMPLATE_ID_HERE'
+        //       },
+        //       {
+        //         headers: {
+        //           'Content-Type': 'application/json',
+        //           'apikey': process.env.SMS_API_KEY
+        //         },
+        //         timeout: 30000
+        //       }
+        //     );
+        //   } catch (smsError) {
+        //     console.error('SMS sending failed:', smsError);
+        //   }
+        // }
 
         return res.status(200).json({
           success: true,

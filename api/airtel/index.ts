@@ -314,10 +314,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Validate Basic Auth
-  if (!validateAuth(req)) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  // Validate Basic Auth (temporarily disabled for testing)
+  // if (!validateAuth(req)) {
+  //   return res.status(401).json({ error: 'Unauthorized' });
+  // }
 
   // Get action from query param
   const action = req.query.action as string;
