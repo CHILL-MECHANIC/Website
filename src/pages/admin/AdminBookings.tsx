@@ -1142,11 +1142,6 @@ export default function AdminBookings() {
                     ))}
                   </SelectContent>
                 </Select>
-                {newBooking.servicePrice > 0 && (
-                  <p className="text-sm text-green-600 mt-1">
-                    Service Price: ₹{newBooking.servicePrice} + ₹{Math.round(newBooking.servicePrice * 0.18)} GST = ₹{newBooking.servicePrice + Math.round(newBooking.servicePrice * 0.18)}
-                  </p>
-                )}
               </div>
 
               {/* Date & Time */}
