@@ -484,9 +484,9 @@ export default function AdminBookings() {
         }
       }
 
-      // Calculate amounts
-      const serviceTax = Math.round(newBooking.servicePrice * 0.18);
-      const finalAmount = newBooking.servicePrice + serviceTax;
+      
+      const serviceTax = 0;  
+      const finalAmount = newBooking.servicePrice;  
 
       // Build service address
       const serviceAddress = [

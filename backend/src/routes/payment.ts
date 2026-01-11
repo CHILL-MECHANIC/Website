@@ -291,8 +291,8 @@ router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
           sender: process.env.SMS_SENDER_ID || 'CHLMEH',
           to: '91' + formattedPhone,
           text: smsMessage,
-          type: 'TRANS',
-          template_id: '1007913640137046123'
+          type: 'OTP',
+          templateId: '1007913640137046123'
         },
         {
           headers: {

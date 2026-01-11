@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
+import axios from 'axios';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS headers
@@ -93,6 +94,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             booking_date: booking.booking_date,
             booking_time: booking.booking_time,
             service: booking.booking_items?.[0]?.service_name,
+            // Full address for technician app
+            service_address: booking.service_address,
+            address: booking.address,
+            city: booking.city,
+            pincode: booking.pincode,
+            landmark: booking.landmark,
+            customer_name: booking.profiles?.full_name,
+            customer_phone: booking.profiles?.phone,
           },
         });
       } catch (logError) {
@@ -101,40 +110,58 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       // Send SMS notification to customer about technician assignment
-      if (booking.profiles?.phone) {
+      console.log('[SMS] Checking SMS conditions:', {
+        hasPhone: !!booking.profiles?.phone,
+        phone: booking.profiles?.phone,
+        hasApiKey: !!process.env.SMS_API_KEY,
+        senderId: process.env.SMS_SENDER_ID
+      });
+
+      if (booking.profiles?.phone && process.env.SMS_API_KEY) {
         try {
-          const customerPhone = String(booking.profiles.phone).replace(/^\+?91/, '');
+          const formattedPhone = String(booking.profiles.phone).replace(/^\+?91/, '');
           const smsMessage = `Dear Customer, A technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285. Regards, Chill Mechanic Team`;
 
-          const smsApiKey = process.env.SMS_API_KEY;
-          const smsSenderId = process.env.SMS_SENDER_ID || 'CHLMEH';
+          console.log('[SMS] Sending technician assignment SMS:', {
+            to: '91' + formattedPhone,
+            templateId: '1007074801259726162'
+          });
 
-          if (smsApiKey) {
-            const smsResponse = await fetch('https://api.uniquedigitaloutreach.com/v1/sms', {
-              method: 'POST',
+          const smsResponse = await axios.post(
+            'https://api.uniquedigitaloutreach.com/v1/sms',
+            {
+              sender: process.env.SMS_SENDER_ID || 'CHLMEH',
+              to: '91' + formattedPhone,
+              text: smsMessage,
+              type: 'OTP',
+              templateId: '1007074801259726162'
+            },
+            {
               headers: {
                 'Content-Type': 'application/json',
-                'apikey': smsApiKey,
+                'apikey': process.env.SMS_API_KEY
               },
-              body: JSON.stringify({
-                sender: smsSenderId,
-                to: '91' + customerPhone,
-                text: smsMessage,
-                type: 'TRANS',
-                template_id: '1007074801259726162',
-              }),
-            });
-
-            if (smsResponse.ok) {
-              console.log('SMS sent to customer:', customerPhone);
-            } else {
-              console.error('SMS send failed:', await smsResponse.text());
+              timeout: 30000
             }
-          }
-        } catch (smsError) {
-          console.error('SMS notification error:', smsError);
+          );
+          console.log('[SMS] Technician assignment SMS sent successfully:', {
+            phone: formattedPhone,
+            status: smsResponse.status,
+            data: smsResponse.data
+          });
+        } catch (smsError: any) {
+          console.error('[SMS] Failed to send technician assignment SMS:', {
+            error: smsError.message,
+            response: smsError.response?.data,
+            status: smsError.response?.status
+          });
           // Don't fail the request if SMS fails
         }
+      } else {
+        console.log('[SMS] SMS not sent - missing requirements:', {
+          missingPhone: !booking.profiles?.phone,
+          missingApiKey: !process.env.SMS_API_KEY
+        });
       }
 
       return res.status(200).json({
@@ -147,6 +174,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             booking_date: booking.booking_date,
             booking_time: booking.booking_time,
             customer: booking.profiles?.full_name,
+            customer_phone: booking.profiles?.phone,
+            // Full address details for technician app
+            service_address: booking.service_address,
+            address: booking.address,
+            city: booking.city,
+            pincode: booking.pincode,
+            landmark: booking.landmark,
+            special_instructions: booking.special_instructions,
           },
           technician: {
             id: technician.id,

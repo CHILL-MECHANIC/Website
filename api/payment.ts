@@ -512,8 +512,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 sender: process.env.SMS_SENDER_ID || 'CHLMEH',
                 to: '91' + formattedPhone,
                 text: smsMessage,
-                type: 'TRANS',
-                template_id: '1007913640137046123'
+                type: 'OTP',
+                templateId: '1007913640137046123'
               },
               {
                 headers: {

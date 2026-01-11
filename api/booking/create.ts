@@ -298,15 +298,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Use provided total or calculated
     const bookingTotal = finalAmount || totalAmount || calculatedTotal;
 
+    // Admin-specific: remove GST from admin-created bookings
+    let isAdmin = false;
+    try {
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
+      isAdmin = !!roleData;
+    } catch (e) {
+      // If role lookup fails, default to non-admin
+      isAdmin = false;
+    }
+
+    const effectiveServiceTax = isAdmin ? 0 : (serviceTax || 0);
+    const effectiveFinalAmount = isAdmin 
+      ? (bookingTotal - (serviceTax || 0)) 
+      : bookingTotal;
+
     // ===== CREATE BOOKING =====
     const bookingData = {
       user_id: userId,
       booking_date: bookingDate,
       booking_time: finalBookingTime || null,
       total_amount: calculatedTotal,
-      service_tax: serviceTax || 0,
+      service_tax: effectiveServiceTax,
       travel_charges: travelCharges || 0,
-      final_amount: bookingTotal,
+      final_amount: effectiveFinalAmount,
       service_address: serviceAddress || fullAddress || finalAddress,
       address: finalAddress,
       city: finalCity,
@@ -412,8 +432,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               sender: smsSenderId,
               to: '91' + customerPhone,
               text: smsMessage,
-              type: 'TRANS',
-              template_id: '1007913640137046123',
+              type: 'OTP',
+              templateId: '1007913640137046123',
             }),
           });
 

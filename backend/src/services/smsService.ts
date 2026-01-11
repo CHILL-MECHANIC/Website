@@ -159,7 +159,7 @@ export async function sendSMS(
 
   // Add template support if provided
   if (request.templateId) {
-    payload.template_id = request.templateId;
+    payload.templateId = request.templateId;
     if (request.variables) {
       payload.variables = request.variables;
     }

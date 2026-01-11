@@ -61,6 +61,23 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
   const isPayLater = paymentMode === 'pay_later';
   const paymentStatus = isPayLater ? 'pay_later' : 'pending';
 
+  // Check if user is admin to skip GST
+  let isAdmin = false;
+  try {
+    const { data: roleData } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('role', 'admin')
+      .maybeSingle();
+    isAdmin = !!roleData;
+  } catch (e) {
+    isAdmin = false;
+  }
+
+  const effectiveServiceTax = isAdmin ? 0 : (serviceTax || 0);
+  const effectiveFinalAmount = isAdmin ? (finalAmount - (serviceTax || 0)) : finalAmount;
+
   // Create booking record
   const { data: booking, error: bookingError } = await supabase
     .from('bookings')
@@ -69,8 +86,8 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
       booking_date: bookingDate,
       booking_time: bookingTime,
       total_amount: totalAmount,
-      service_tax: serviceTax || 0,
-      final_amount: finalAmount,
+      service_tax: effectiveServiceTax,
+      final_amount: effectiveFinalAmount,
       status: 'pending',
       payment_status: paymentStatus,
       special_instructions: specialInstructions || null,

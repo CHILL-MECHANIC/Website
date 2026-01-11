@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
 
 // Support number fallback
-const SUPPORT_NUMBER = '7987376613';
+const SUPPORT_NUMBER = '9211970032';
 const SUPPORT_NAME = 'Support_Team';
 
 // ===== BASIC AUTH VALIDATION =====
