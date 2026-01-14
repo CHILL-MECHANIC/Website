@@ -8,7 +8,7 @@ const SUPPORT_NAME = 'Support_Team';
 // ===== BASIC AUTH VALIDATION =====
 function validateAuth(req: VercelRequest): boolean {
   const authHeader = req.headers.authorization;
-  
+
   if (!authHeader || !authHeader.startsWith('Basic ')) {
     console.log('[Airtel] Missing or invalid Authorization header');
     return false;
@@ -27,7 +27,7 @@ function validateAuth(req: VercelRequest): boolean {
   }
 
   const isValid = username === expectedUsername && password === expectedPassword;
-  
+
   if (!isValid) {
     console.log('[Airtel] Invalid credentials provided');
   }
@@ -36,16 +36,17 @@ function validateAuth(req: VercelRequest): boolean {
 }
 
 // ===== NORMALIZE PHONE NUMBER =====
+// Converts any phone format to 10-digit format (without country code)
 function normalizePhone(phone: string): string {
   // Remove all non-digits
   let cleaned = phone.replace(/\D/g, '');
-  
+
   // Remove leading 91 if 12 digits (Indian country code)
   if (cleaned.length === 12 && cleaned.startsWith('91')) {
     cleaned = cleaned.substring(2);
   }
-  
-  // Remove leading 0 if present
+
+  // Remove leading 0 if present (sometimes used in local format)
   if (cleaned.startsWith('0')) {
     cleaned = cleaned.substring(1);
   }
@@ -53,16 +54,28 @@ function normalizePhone(phone: string): string {
   return cleaned;
 }
 
+// ===== GENERATE ALL PHONE VARIANTS =====
+// Creates all possible formats that might be stored in the database
+function generatePhoneVariants(normalizedPhone: string): string[] {
+  // normalizedPhone is 10-digit format (e.g., "7987376613")
+  return [
+    normalizedPhone,              // "7987376613"
+    `0${normalizedPhone}`,        // "07987376613" (local format with leading 0)
+    `91${normalizedPhone}`,       // "917987376613" (with country code)
+    `+91${normalizedPhone}`,      // "+917987376613" (international format)
+  ];
+}
+
 // ===== SANITIZE PARTICIPANT NAME =====
 function sanitizeParticipantName(name: string | null | undefined): string {
   if (!name) return SUPPORT_NAME;
-  
+
   // Remove special characters, keep alphanumeric and spaces
   const cleaned = name.replace(/[^a-zA-Z0-9\s]/g, '').trim();
-  
+
   // Get first name only and prefix with "Tech_"
   const firstName = cleaned.split(' ')[0] || 'Technician';
-  
+
   return `Tech_${firstName}`;
 }
 
@@ -93,17 +106,26 @@ function buildAirtelResponse(
 async function handleInbound(req: VercelRequest, res: VercelResponse) {
   const { callingParticipant, callerId } = req.body || {};
 
-  console.log('[Airtel Inbound] Request:', { callingParticipant, callerId });
+  console.log('========================================');
+  console.log('[Airtel Inbound] NEW INBOUND CALL');
+  console.log('[Airtel Inbound] Raw Request:', JSON.stringify({ callingParticipant, callerId }));
 
   // Validate required fields
   if (!callingParticipant) {
-    console.log('[Airtel Inbound] Missing callingParticipant');
+    console.log('[Airtel Inbound] ERROR: Missing callingParticipant in request body');
     return res.status(400).json({ error: 'Missing callingParticipant' });
   }
 
-  // Normalize the customer phone number
-  const customerPhone = normalizePhone(String(callingParticipant));
-  console.log('[Airtel Inbound] Normalized phone:', customerPhone);
+  // ===== STEP 1: NORMALIZE INCOMING PHONE =====
+  const rawPhone = String(callingParticipant);
+  const customerPhone = normalizePhone(rawPhone);
+  console.log('[Airtel Inbound] STEP 1 - Phone Normalization:');
+  console.log('  - Raw phone:', rawPhone);
+  console.log('  - Normalized phone:', customerPhone);
+
+  // Generate all possible variants to search for in database
+  const phoneVariants = generatePhoneVariants(customerPhone);
+  console.log('  - Phone variants to search:', phoneVariants);
 
   // Default to support number
   let participantName = SUPPORT_NAME;
@@ -115,107 +137,209 @@ async function handleInbound(req: VercelRequest, res: VercelResponse) {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-      console.error('[Airtel Inbound] Missing Supabase configuration');
-      // Return support number on config error
+      console.error('[Airtel Inbound] ERROR: Missing Supabase configuration (SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY)');
       const response = buildAirtelResponse(participantName, participantAddress, callerId);
-      console.log('[Airtel Inbound] Returning support (config error):', response);
+      console.log('[Airtel Inbound] RESULT: Returning support (config error)');
+      console.log('========================================');
       return res.status(200).json(response);
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Query for active booking by customer phone
-    // Try multiple phone formats
-    const phoneVariants = [
-      customerPhone,
-      `91${customerPhone}`,
-      `+91${customerPhone}`,
-    ];
+    // ===== STEP 2: FIND CUSTOMER PROFILE =====
+    console.log('[Airtel Inbound] STEP 2 - Profile Lookup:');
+    console.log('  - Querying profiles table with phone variants...');
 
-    console.log('[Airtel Inbound] Searching for phone variants:', phoneVariants);
-
-    // First, find the user profile with this phone
-    const { data: profile, error: profileError } = await supabase
+    // Build OR condition properly for Supabase
+    // We need to check if the phone column exactly matches any of our variants
+    // Using .in() for exact matching across multiple values
+    const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id, phone')
-      .or(phoneVariants.map(p => `phone.ilike.%${p}`).join(','))
-      .limit(1)
-      .single();
+      .in('phone', phoneVariants);
 
-    if (profileError || !profile) {
-      console.log('[Airtel Inbound] No profile found for phone:', customerPhone);
+    // Log the query result
+    if (profileError) {
+      console.log('  - Profile query ERROR:', JSON.stringify(profileError, null, 2));
+      console.log('  - Error message:', profileError.message);
+      console.log('  - Error details:', profileError.details);
+      console.log('  - Error hint:', profileError.hint);
       const response = buildAirtelResponse(participantName, participantAddress, callerId);
-      console.log('[Airtel Inbound] Returning support (no profile):', response);
+      console.log('[Airtel Inbound] RESULT: Returning support (profile query error)');
+      console.log('========================================');
       return res.status(200).json(response);
     }
 
-    console.log('[Airtel Inbound] Found profile:', profile.id);
+    if (!profiles || profiles.length === 0) {
+      console.log('  - Profile query SUCCESS but NO MATCH found');
+      console.log('  - Searched for variants:', phoneVariants);
+      console.log('  - This means the customer phone is not in the profiles table');
+      const response = buildAirtelResponse(participantName, participantAddress, callerId);
+      console.log('[Airtel Inbound] RESULT: Returning support (no profile found)');
+      console.log('========================================');
+      return res.status(200).json(response);
+    }
 
-    // Find active booking for this user with assigned technician
-    const { data: booking, error: bookingError } = await supabase
+    // If multiple profiles found, use the first one
+    const profile = profiles[0];
+    console.log('  - Profile query SUCCESS');
+    console.log('  - Found profile ID:', profile.id);
+    console.log('  - Profile phone format in DB:', profile.phone);
+    if (profiles.length > 1) {
+      console.log('  - WARNING: Multiple profiles found for this phone (', profiles.length, ')');
+      console.log('  - Using first profile:', profile.id);
+    }
+
+    // ===== STEP 3: FIND ACTIVE BOOKING =====
+    console.log('[Airtel Inbound] STEP 3 - Booking Lookup:');
+    console.log('  - Querying bookings table for user_id:', profile.id);
+    console.log('  - Looking for status in: [confirmed, assigned, accepted, in_progress]');
+
+    const { data: bookings, error: bookingError } = await supabase
       .from('bookings')
       .select(`
         id,
         status,
         booking_date,
         booking_time,
-        technician_id
+        technician_id,
+        created_at
       `)
       .eq('user_id', profile.id)
       .in('status', ['confirmed', 'assigned', 'accepted', 'in_progress'])
       .order('booking_date', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+      .order('created_at', { ascending: false });
 
-    if (bookingError || !booking) {
-      console.log('[Airtel Inbound] No active booking found for user:', profile.id);
+    // Log the query result
+    if (bookingError) {
+      console.log('  - Booking query ERROR:', JSON.stringify(bookingError, null, 2));
+      console.log('  - Error message:', bookingError.message);
+      console.log('  - Error details:', bookingError.details);
+      console.log('  - Error hint:', bookingError.hint);
       const response = buildAirtelResponse(participantName, participantAddress, callerId);
-      console.log('[Airtel Inbound] Returning support (no booking):', response);
+      console.log('[Airtel Inbound] RESULT: Returning support (booking query error)');
+      console.log('========================================');
       return res.status(200).json(response);
     }
 
-    console.log('[Airtel Inbound] Found booking:', booking.id, 'Status:', booking.status);
+    if (!bookings || bookings.length === 0) {
+      console.log('  - Booking query SUCCESS but NO ACTIVE BOOKING found');
+      console.log('  - User has no bookings with status: confirmed, assigned, accepted, or in_progress');
+      const response = buildAirtelResponse(participantName, participantAddress, callerId);
+      console.log('[Airtel Inbound] RESULT: Returning support (no active booking)');
+      console.log('========================================');
+      return res.status(200).json(response);
+    }
 
-    // Check if technician is assigned
+    // Use the most recent booking
+    const booking = bookings[0];
+    console.log('  - Booking query SUCCESS');
+    console.log('  - Found', bookings.length, 'active booking(s)');
+    console.log('  - Using most recent booking ID:', booking.id);
+    console.log('  - Booking status:', booking.status);
+    console.log('  - Booking date:', booking.booking_date);
+    console.log('  - Booking time:', booking.booking_time);
+    console.log('  - Technician ID:', booking.technician_id || 'NULL');
+
+    // ===== STEP 4: CHECK TECHNICIAN ASSIGNMENT =====
+    console.log('[Airtel Inbound] STEP 4 - Technician Assignment Check:');
+
     if (!booking.technician_id) {
-      console.log('[Airtel Inbound] Booking has no technician assigned');
+      console.log('  - Booking has NO TECHNICIAN ASSIGNED (technician_id is null)');
       const response = buildAirtelResponse(participantName, participantAddress, callerId);
-      console.log('[Airtel Inbound] Returning support (no technician):', response);
+      console.log('[Airtel Inbound] RESULT: Returning support (no technician assigned)');
+      console.log('========================================');
       return res.status(200).json(response);
     }
 
-    // Fetch technician details
+    console.log('  - Booking HAS technician assigned, ID:', booking.technician_id);
+
+    // ===== STEP 5: FETCH TECHNICIAN DETAILS =====
+    console.log('[Airtel Inbound] STEP 5 - Technician Lookup:');
+    console.log('  - Querying technicians table for ID:', booking.technician_id);
+
     const { data: technician, error: techError } = await supabase
       .from('technicians')
       .select('id, name, phone')
       .eq('id', booking.technician_id)
       .single();
 
-    if (techError || !technician || !technician.phone) {
-      console.log('[Airtel Inbound] Technician not found or no phone:', booking.technician_id);
+    // Log the query result
+    if (techError) {
+      console.log('  - Technician query ERROR:', JSON.stringify(techError, null, 2));
+      console.log('  - Error message:', techError.message);
+      console.log('  - Error details:', techError.details);
+      console.log('  - Error hint:', techError.hint);
       const response = buildAirtelResponse(participantName, participantAddress, callerId);
-      console.log('[Airtel Inbound] Returning support (technician error):', response);
+      console.log('[Airtel Inbound] RESULT: Returning support (technician query error)');
+      console.log('========================================');
       return res.status(200).json(response);
     }
 
-    // Success - route to technician
-    participantName = sanitizeParticipantName(technician.name);
-    participantAddress = normalizePhone(String(technician.phone));
+    if (!technician) {
+      console.log('  - Technician query SUCCESS but TECHNICIAN NOT FOUND');
+      console.log('  - Technician ID', booking.technician_id, 'does not exist in technicians table');
+      const response = buildAirtelResponse(participantName, participantAddress, callerId);
+      console.log('[Airtel Inbound] RESULT: Returning support (technician not found)');
+      console.log('========================================');
+      return res.status(200).json(response);
+    }
 
-    console.log('[Airtel Inbound] Routing to technician:', {
-      name: participantName,
-      phone: participantAddress,
-      bookingId: booking.id
-    });
+    console.log('  - Technician query SUCCESS');
+    console.log('  - Technician ID:', technician.id);
+    console.log('  - Technician name:', technician.name);
+    console.log('  - Technician phone (raw):', technician.phone);
+
+    // ===== STEP 6: VALIDATE TECHNICIAN PHONE =====
+    console.log('[Airtel Inbound] STEP 6 - Technician Phone Validation:');
+
+    if (!technician.phone) {
+      console.log('  - ERROR: Technician phone is NULL or EMPTY');
+      const response = buildAirtelResponse(participantName, participantAddress, callerId);
+      console.log('[Airtel Inbound] RESULT: Returning support (technician has no phone)');
+      console.log('========================================');
+      return res.status(200).json(response);
+    }
+
+    const techPhone = normalizePhone(String(technician.phone));
+
+    if (techPhone.length !== 10) {
+      console.log('  - ERROR: Technician phone is invalid after normalization');
+      console.log('  - Raw:', technician.phone);
+      console.log('  - Normalized:', techPhone);
+      console.log('  - Length:', techPhone.length, '(expected 10)');
+      const response = buildAirtelResponse(participantName, participantAddress, callerId);
+      console.log('[Airtel Inbound] RESULT: Returning support (technician phone invalid)');
+      console.log('========================================');
+      return res.status(200).json(response);
+    }
+
+    console.log('  - Technician phone is VALID');
+    console.log('  - Normalized phone:', techPhone);
+
+    // ===== SUCCESS: ROUTE TO TECHNICIAN =====
+    participantName = sanitizeParticipantName(technician.name);
+    participantAddress = techPhone;
+
+    console.log('[Airtel Inbound] ✓ SUCCESS - ROUTING TO TECHNICIAN');
+    console.log('  - Technician name (sanitized):', participantName);
+    console.log('  - Technician phone:', participantAddress);
+    console.log('  - Booking ID:', booking.id);
+    console.log('  - Customer profile ID:', profile.id);
 
   } catch (error) {
-    console.error('[Airtel Inbound] Error:', error);
-    // On any error, fall back to support number
+    console.error('[Airtel Inbound] UNEXPECTED ERROR in try-catch block:');
+    console.error('  - Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('  - Error message:', error instanceof Error ? error.message : String(error));
+    console.error('  - Error stack:', error instanceof Error ? error.stack : 'N/A');
+    console.log('[Airtel Inbound] RESULT: Returning support (unexpected error)');
+    // On any unexpected error, fall back to support number
   }
 
+  // ===== FINAL RESPONSE =====
   const response = buildAirtelResponse(participantName, participantAddress, callerId);
-  console.log('[Airtel Inbound] Final response:', JSON.stringify(response));
+  console.log('[Airtel Inbound] FINAL RESPONSE:', JSON.stringify(response, null, 2));
+  console.log('========================================');
   return res.status(200).json(response);
 }
 

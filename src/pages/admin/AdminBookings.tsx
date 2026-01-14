@@ -392,6 +392,47 @@ export default function AdminBookings() {
       // Get technician name for toast
       const tech = technicians.find(t => t.id === selectedTechnician);
 
+      // Send technician assignment SMS to customer
+      try {
+        const customerPhone = selectedBooking.profiles?.phone;
+        if (customerPhone) {
+          const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3001'
+            : '';
+          
+          const formattedPhone = String(customerPhone).replace(/^\+?91/, '');
+          console.log('[Admin SMS] Sending technician assignment SMS to:', formattedPhone);
+          
+            const smsResponse = await fetch(`${apiBaseUrl}/api/sms/send`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                recipient: '91' + formattedPhone,
+                message: `Dear Customer,\n\nA technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285.\n\nRegards,\nChill Mechanic Team`,
+                type: 'OTP',
+                senderId: 'CHLMEH',
+                templateId: '1007074801259726162'
+              })
+            });
+          
+          const smsResult = await smsResponse.json();
+          console.log('[Admin SMS] Technician assignment SMS response:', smsResult);
+          
+          if (smsResult.success) {
+            console.log('[Admin SMS] Technician assignment SMS sent successfully');
+          } else {
+            console.error('[Admin SMS] Failed to send technician assignment SMS:', smsResult.error);
+          }
+        } else {
+          console.log('[Admin SMS] No customer phone found for technician assignment SMS');
+        }
+      } catch (smsError) {
+        console.error('[Admin SMS] Error sending technician assignment SMS:', smsError);
+        // Don't fail assignment if SMS fails
+      }
+
       toast({
         title: '✅ Technician Assigned',
         description: `${tech?.name || 'Technician'} has been assigned to this booking.`,
@@ -530,6 +571,42 @@ export default function AdminBookings() {
           price: newBooking.servicePrice,
           quantity: 1
         });
+
+      // Send booking confirmation SMS to customer
+      try {
+        const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://localhost:3001'
+          : '';
+        
+        const customerPhone = newBooking.customerPhone.replace(/^\+?91/, '');
+        console.log('[Admin SMS] Sending booking confirmation to:', customerPhone);
+        
+        const smsResponse = await fetch(`${apiBaseUrl}/api/sms/send`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            recipient: '91' + customerPhone,
+            message: `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`,
+            type: 'OTP',
+            senderId: 'CHLMEH',
+            templateId: '1007913640137046123'
+          })
+        });
+        
+        const smsResult = await smsResponse.json();
+        console.log('[Admin SMS] Response:', smsResult);
+        
+        if (smsResult.success) {
+          console.log('[Admin SMS] Booking confirmation SMS sent successfully');
+        } else {
+          console.error('[Admin SMS] Failed to send SMS:', smsResult.error);
+        }
+      } catch (smsError) {
+        console.error('[Admin SMS] Error sending booking confirmation:', smsError);
+        // Don't fail booking creation if SMS fails
+      }
 
       toast({
         title: '✅ Booking Created',

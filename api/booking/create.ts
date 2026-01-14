@@ -410,7 +410,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       if (profile?.phone) {
         const customerPhone = String(profile.phone).replace(/^\+?91/, '');
-        const smsMessage = `Dear Customer, Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed. Regards, Chill Mechanic Happy Appliances, Happier Homes`;
+        const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
 
         const smsApiKey = process.env.SMS_API_KEY;
         const smsSenderId = process.env.SMS_SENDER_ID || 'CHLMEH';
@@ -437,13 +437,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             }),
           });
 
+          const responseText = await smsResponse.text();
           console.log('[SMS] Response status:', smsResponse.status);
+          console.log('[SMS] Response body:', responseText);
 
           if (smsResponse.ok) {
             console.log('[Booking] Confirmation SMS sent to customer:', customerPhone);
           } else {
-            const errorText = await smsResponse.text();
-            console.error('[Booking] SMS send failed:', errorText);
+            console.error('[Booking] SMS send failed - Status:', smsResponse.status, 'Body:', responseText);
           }
         } else {
           console.log('[SMS] No API key configured');

@@ -58,67 +58,70 @@ router.post('/send', async (req: Request, res: Response, next: NextFunction) => 
     // Validate request body
     const validatedData = sendSMSSchema.parse(req.body);
 
-    // Create log entry
-    const log = await createSMSLog(
-      validatedData.recipient,
-      validatedData.message,
-      {
-        status: 'pending',
-        senderId: validatedData.senderId,
-        type: validatedData.type
-      }
-    );
-
+    // Try to create log entry (but don't fail if table doesn't exist)
+    let logId: number | null = null;
     try {
-      // Send SMS
-      const result = await sendSMS({
-        recipient: validatedData.recipient,
-        message: validatedData.message,
-        type: validatedData.type,
-        senderId: validatedData.senderId,
-        unicode: validatedData.unicode,
-        flash: validatedData.flash,
-        templateId: validatedData.templateId,
-        variables: validatedData.variables
-      });
+      const log = await createSMSLog(
+        validatedData.recipient,
+        validatedData.message,
+        {
+          status: 'pending',
+          senderId: validatedData.senderId,
+          type: validatedData.type
+        }
+      );
+      logId = log.id;
+    } catch (logError) {
+      console.warn('[SMS] Could not create SMS log (table may not exist):', logError);
+      // Continue without logging
+    }
 
-      // Update log with result
-      await updateSMSLog(log.id, {
-        status: result.success ? 'sent' : 'failed',
-        messageId: result.messageId,
-        apiResponse: result
-      });
+    // Send SMS regardless of log creation
+    const result = await sendSMS({
+      recipient: validatedData.recipient,
+      message: validatedData.message,
+      type: validatedData.type,
+      senderId: validatedData.senderId,
+      unicode: validatedData.unicode,
+      flash: validatedData.flash,
+      templateId: validatedData.templateId,
+      variables: validatedData.variables
+    });
 
-      if (result.success) {
-        res.status(200).json({
-          success: true,
-          message: 'SMS sent successfully',
-          data: {
-            logId: log.id,
-            messageId: result.messageId,
-            status: 'sent'
-          }
+    // Try to update log if it was created
+    if (logId) {
+      try {
+        await updateSMSLog(logId, {
+          status: result.success ? 'sent' : 'failed',
+          messageId: result.messageId,
+          apiResponse: result
         });
-      } else {
-        res.status(400).json({
-          success: false,
-          error: result.error || 'Failed to send SMS',
-          data: {
-            logId: log.id,
-            status: 'failed'
-          }
-        });
+      } catch (updateError) {
+        console.warn('[SMS] Could not update SMS log:', updateError);
       }
-    } catch (error) {
-      // Update log with error
-      await updateSMSLog(log.id, {
-        status: 'failed',
-        apiResponse: {
-          error: error instanceof Error ? error.message : 'Unknown error'
+    }
+
+    if (result.success) {
+      console.log('[SMS] Sent successfully to:', validatedData.recipient);
+      res.status(200).json({
+        success: true,
+        message: 'SMS sent successfully',
+        data: {
+          logId: logId,
+          messageId: result.messageId,
+          status: 'sent'
         }
       });
-
-      throw error;
+    } else {
+      console.error('[SMS] Failed to send:', result.error);
+      res.status(400).json({
+        success: false,
+        error: result.error || 'Failed to send SMS',
+        data: {
+          logId: logId,
+          status: 'failed'
+        }
+      });
     }
   } catch (error) {
     if (error instanceof z.ZodError) {

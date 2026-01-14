@@ -145,6 +145,65 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
 
   console.log('Booking items created successfully:', insertedItems?.length || 0);
 
+  // ===== SEND BOOKING CONFIRMATION SMS =====
+  try {
+    console.log('[SMS] Starting booking confirmation SMS...');
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('phone')
+      .eq('id', userId)
+      .single();
+
+    console.log('[SMS] Profile phone:', profile?.phone);
+
+    if (profile?.phone) {
+      const customerPhone = String(profile.phone).replace(/^\+?91/, '');
+      const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
+
+      const smsApiKey = process.env.SMS_API_KEY;
+      const smsSenderId = process.env.SMS_SENDER_ID || 'CHLMEH';
+
+      console.log('[SMS] API Key exists:', !!smsApiKey);
+      console.log('[SMS] Sender ID:', smsSenderId);
+      console.log('[SMS] Customer phone (cleaned):', customerPhone);
+
+      if (smsApiKey) {
+        console.log('[SMS] Sending to API...');
+        const smsResponse = await fetch('https://api.uniquedigitaloutreach.com/v1/sms', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': smsApiKey,
+          },
+          body: JSON.stringify({
+            sender: smsSenderId,
+            to: '91' + customerPhone,
+            text: smsMessage,
+            type: 'OTP',
+            templateId: '1007913640137046123',
+          }),
+        });
+
+        const responseText = await smsResponse.text();
+        console.log('[SMS] Response status:', smsResponse.status);
+        console.log('[SMS] Response body:', responseText);
+
+        if (smsResponse.ok) {
+          console.log('[SMS] Confirmation SMS sent to customer:', customerPhone);
+        } else {
+          console.error('[SMS] Send failed - Status:', smsResponse.status, 'Body:', responseText);
+        }
+      } else {
+        console.log('[SMS] No API key configured');
+      }
+    } else {
+      console.log('[SMS] No phone found in profile');
+    }
+  } catch (smsError) {
+    console.error('[SMS] Notification error:', smsError);
+    // Don't fail the booking if SMS fails
+  }
+
   return res.status(200).json({
     success: true,
     booking: {

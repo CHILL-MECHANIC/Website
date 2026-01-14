@@ -504,9 +504,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (phone && process.env.SMS_API_KEY) {
           try {
             const formattedPhone = phone.replace(/^\+?91/, '');
-            const smsMessage = `Dear Customer, Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed. Regards, Chill Mechanic Happy Appliances, Happier Homes`;
+            const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
             
-            await axios.post(
+            console.log('[SMS] Sending to:', '91' + formattedPhone);
+            const smsResponse = await axios.post(
               'https://api.uniquedigitaloutreach.com/v1/sms',
               {
                 sender: process.env.SMS_SENDER_ID || 'CHLMEH',
@@ -523,7 +524,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 timeout: 30000
               }
             );
-            console.log('Booking confirmation SMS sent');
+            console.log('[SMS] Response status:', smsResponse.status);
+            console.log('[SMS] Response data:', JSON.stringify(smsResponse.data));
+            console.log('Booking confirmation SMS sent to:', formattedPhone);
           } catch (smsError) {
             console.error('SMS sending failed:', smsError);
             // Don't fail the payment verification if SMS fails
