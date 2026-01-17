@@ -153,9 +153,10 @@ async function handleInbound(req: VercelRequest, res: VercelResponse) {
     // Build OR condition properly for Supabase
     // We need to check if the phone column exactly matches any of our variants
     // Using .in() for exact matching across multiple values
+    // IMPORTANT: Select user_id (not id) because bookings.user_id references profiles.user_id
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
-      .select('id, phone')
+      .select('id, user_id, phone')
       .in('phone', phoneVariants);
 
     // Log the query result
@@ -183,16 +184,31 @@ async function handleInbound(req: VercelRequest, res: VercelResponse) {
     // If multiple profiles found, use the first one
     const profile = profiles[0];
     console.log('  - Profile query SUCCESS');
-    console.log('  - Found profile ID:', profile.id);
+    console.log('  - Found profile.id:', profile.id);
+    console.log('  - Found profile.user_id:', profile.user_id);
     console.log('  - Profile phone format in DB:', profile.phone);
     if (profiles.length > 1) {
       console.log('  - WARNING: Multiple profiles found for this phone (', profiles.length, ')');
-      console.log('  - Using first profile:', profile.id);
+      console.log('  - Using first profile with user_id:', profile.user_id);
+    }
+
+    // CRITICAL: Use profile.user_id (not profile.id) because bookings.user_id references auth.users
+    // The profiles table has: id (profile's own UUID) and user_id (reference to auth.users)
+    // The bookings table has: user_id (reference to auth.users, matching profiles.user_id)
+    const profileUserId = profile.user_id;
+
+    if (!profileUserId) {
+      console.log('  - ERROR: Profile has no user_id set (profile.user_id is null/undefined)');
+      console.log('  - This profile may not be linked to an auth user');
+      const response = buildAirtelResponse(participantName, participantAddress, callerId);
+      console.log('[Airtel Inbound] RESULT: Returning support (profile missing user_id)');
+      console.log('========================================');
+      return res.status(200).json(response);
     }
 
     // ===== STEP 3: FIND ACTIVE BOOKING =====
     console.log('[Airtel Inbound] STEP 3 - Booking Lookup:');
-    console.log('  - Querying bookings table for user_id:', profile.id);
+    console.log('  - Querying bookings table for user_id:', profileUserId);
     console.log('  - Looking for status in: [confirmed, assigned, accepted, in_progress]');
 
     const { data: bookings, error: bookingError } = await supabase
@@ -205,7 +221,7 @@ async function handleInbound(req: VercelRequest, res: VercelResponse) {
         technician_id,
         created_at
       `)
-      .eq('user_id', profile.id)
+      .eq('user_id', profileUserId)
       .in('status', ['confirmed', 'assigned', 'accepted', 'in_progress'])
       .order('booking_date', { ascending: false })
       .order('created_at', { ascending: false });
@@ -325,7 +341,7 @@ async function handleInbound(req: VercelRequest, res: VercelResponse) {
     console.log('  - Technician name (sanitized):', participantName);
     console.log('  - Technician phone:', participantAddress);
     console.log('  - Booking ID:', booking.id);
-    console.log('  - Customer profile ID:', profile.id);
+    console.log('  - Customer user_id:', profileUserId);
 
   } catch (error) {
     console.error('[Airtel Inbound] UNEXPECTED ERROR in try-catch block:');
