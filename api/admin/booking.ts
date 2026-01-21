@@ -68,7 +68,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .select(`
           *,
           profiles:user_id (full_name, phone, email, address),
-          booking_items (service_name, price, quantity)
+          booking_items (service_id, service_name, service_type, price, quantity)
         `)
         .single();
 
@@ -93,7 +93,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             technician_phone: technician.phone,
             booking_date: booking.booking_date,
             booking_time: booking.booking_time,
-            service: booking.booking_items?.[0]?.service_name,
+            service_id: booking.booking_items?.[0]?.service_id,
+            service_name: booking.booking_items?.[0]?.service_name,
+            service_type: booking.booking_items?.[0]?.service_type,
             // Full address for technician app
             service_address: booking.service_address,
             address: booking.address,
@@ -102,6 +104,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             landmark: booking.landmark,
             customer_name: booking.profiles?.full_name,
             customer_phone: booking.profiles?.phone,
+            payment_status: booking.payment_status,
+            final_amount: booking.final_amount,
           },
         });
       } catch (logError) {
@@ -175,7 +179,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             booking_time: booking.booking_time,
             customer: booking.profiles?.full_name,
             customer_phone: booking.profiles?.phone,
-            // Full address details for technician app
+            // Payment information for technician app
+            payment_status: booking.payment_status,
+            final_amount: booking.final_amount,
+            total_amount: booking.total_amount,
+            // Service details for technician app
+            services: booking.booking_items?.map((item: any) => ({
+              service_id: item.service_id,
+              service_name: item.service_name,
+              service_type: item.service_type,
+              price: item.price,
+              quantity: item.quantity,
+            })) || [],
+            // Full address details for technician app (Google Maps)
             service_address: booking.service_address,
             address: booking.address,
             city: booking.city,

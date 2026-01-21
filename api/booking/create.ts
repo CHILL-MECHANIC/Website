@@ -207,7 +207,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('address, city, pincode, landmark')
-        .eq('id', userId)
+        .eq('user_id', userId)
         .single();
 
       if (profile?.address) {
@@ -403,7 +403,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('phone')
-        .eq('id', userId)
+        .eq('user_id', userId)
         .single();
 
       console.log('[SMS] Profile phone:', profile?.phone);

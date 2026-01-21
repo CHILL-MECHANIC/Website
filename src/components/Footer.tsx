@@ -140,7 +140,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; 2025 Chill Mechanic. Happy Appliance, Happier Homes. All rights reserved.</p>
+          <p>&copy; 2026 Chill Mechanic. Happy Appliance, Happier Homes. All rights reserved.</p>
         </div>
       </div>
     </footer>;
