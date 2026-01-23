@@ -472,7 +472,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           
           // First, try to find existing auth user by phone
           const { data: authUsers } = await supabase.auth.admin.listUsers();
-          const authUser = authUsers?.users?.find(u => {
+          const authUser = (authUsers?.users as { id: string; phone?: string }[] | undefined)?.find(u => {
             const userPhone = u.phone?.replace(/\D/g, '');
             const lookupPhone = formattedPhone.replace(/\D/g, '');
             return userPhone === lookupPhone || userPhone?.endsWith(lookupPhone.slice(-10));

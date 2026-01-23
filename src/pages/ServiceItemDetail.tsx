@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, X, Clock, Shield, DollarSign } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,8 @@ import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
 import washingMachineServiceImage2 from "@/assets/washing-machine-service-2.jpg";
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import microwaveServiceImage2 from "@/assets/microwave-service-2.jpg";
+import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
+import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
 
 const serviceItemDetails = {
   "ac-foam-1": {
@@ -815,7 +818,63 @@ const serviceItemDetails = {
       "Parts cost",
       "Installation services"
     ]
-  }
+  },
+  "wd-checkup": {
+    id: "wd-checkup",
+    name: "Check Up - Water Dispenser",
+    categoryTitle: "Water Dispenser Service & Repair",
+    images: [waterDispenserServiceImage, waterDispenserServiceImage],
+    price: 249,
+    duration: "1-2 hours",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up of water dispenser with cooling and heating system inspection.",
+    detailedDescription: "Comprehensive water dispenser inspection including cooling and heating performance, water filtration quality, temperature control, and system safety checks.",
+    included: [
+      "Complete diagnostic inspection",
+      "Cooling system performance test",
+      "Heating element check",
+      "Water filtration assessment",
+      "Temperature control inspection",
+      "Water quality basic check",
+      "Safety mechanism verification",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Filter replacement",
+      "Repairs or component replacement",
+      "Deep cleaning",
+      "Parts cost"
+    ]
+  },
+
+  "df-checkup": {
+    id: "df-checkup",
+    name: "Check Up - Deep Freezer",
+    categoryTitle: "Deep Freezer Service & Repair",
+    images: [deepFreezerServiceImage, deepFreezerServiceImage],
+    price: 249,
+    duration: "1-2 hours",
+    warranty: "15 days",
+    description: "Complete diagnostic check-up of deep freezer with temperature and cooling system inspection.",
+    detailedDescription: "Comprehensive deep freezer inspection including cooling performance, temperature control, compressor function, and overall system health assessment.",
+    included: [
+      "Complete diagnostic inspection",
+      "Temperature performance test",
+      "Cooling system assessment",
+      "Compressor functionality check",
+      "Thermostat inspection",
+      "Door seal and latch verification",
+      "Electrical connection check",
+      "15-day service warranty"
+    ],
+    notIncluded: [
+      "Repairs or component replacement",
+      "Defrosting service",
+      "Deep cleaning",
+      "Parts cost"
+    ]
+  },
+
 };
 
 export default function ServiceItemDetail() {
@@ -860,8 +919,9 @@ export default function ServiceItemDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header cartItemsCount={getCartItemsCount()} />
+    <>
+      <div className="min-h-screen bg-background">
+        <Header cartItemsCount={getCartItemsCount()} />
       
       <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
@@ -998,5 +1058,7 @@ export default function ServiceItemDetail() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }

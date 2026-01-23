@@ -135,6 +135,22 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       price: 249,
     },
   ],
+  "water-dispenser": [
+    {
+      id: "wd-checkup",
+      name: "Check Up - Water Dispenser",
+      description: ["Complete diagnostic inspection", "Cooling system check", "Heating element inspection", "Temperature control verification", "System functionality test"],
+      price: 249,
+    },
+  ],
+  "deep-freezer": [
+    {
+      id: "df-checkup",
+      name: "Check Up - Deep Freezer",
+      description: ["Complete diagnostic inspection", "Temperature check", "Cooling system assessment", "Compressor functionality test", "Overall system health assessment"],
+      price: 249,
+    },
+  ],
 };
 
 export default function ServiceSelectionModal({

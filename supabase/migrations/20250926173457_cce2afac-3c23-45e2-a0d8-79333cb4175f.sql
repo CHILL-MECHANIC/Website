@@ -14,7 +14,7 @@ CREATE TABLE public.profiles (
 );
 
 -- Create services table to store service definitions
-CREATE TABLE public.services (
+CREATE TABLE IF NOT EXISTS public.services (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT[],
@@ -165,4 +165,5 @@ INSERT INTO public.services (name, description, price, service_type) VALUES
 ('Geyser General Service', ARRAY['Element check', 'Tank cleaning', 'Safety valve inspection', '1 month warranty'], 350, 'geyser'),
 ('Geyser Element Replacement', ARRAY['Element replacement', 'Thermostat check', 'Safety inspection', '6 months warranty'], 800, 'geyser'),
 ('Washing Machine General', ARRAY['Drum cleaning', 'Filter cleaning', 'Performance check', '1 month warranty'], 400, 'washing-machine'),
-('Washing Machine Deep Clean', ARRAY['Deep drum cleaning', 'Pipe cleaning', 'Motor inspection', '2 months warranty'], 700, 'washing-machine');
+('Washing Machine Deep Clean', ARRAY['Deep drum cleaning', 'Pipe cleaning', 'Motor inspection', '2 months warranty'], 700, 'washing-machine')
+ON CONFLICT DO NOTHING;

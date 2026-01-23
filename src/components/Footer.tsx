@@ -4,7 +4,7 @@ import { SiInstagram, SiFacebook, SiWhatsapp, SiLinkedin, SiX } from "react-icon
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
 
 export default function Footer() {
-  return <footer className="bg-card border-t">
+  return <footer className="bg-card border-t hidden md:block">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -44,6 +44,16 @@ export default function Footer() {
               <li>
                 <Link to="/services/microwave" className="text-muted-foreground hover:text-primary transition-colors">
                   Microwave Services
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/water-dispenser" className="text-muted-foreground hover:text-primary transition-colors">
+                  Water Dispenser Service
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/deep-freezer" className="text-muted-foreground hover:text-primary transition-colors">
+                  Deep Freezer Service
                 </Link>
               </li>
             </ul>

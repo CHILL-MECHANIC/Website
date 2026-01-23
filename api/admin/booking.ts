@@ -298,9 +298,98 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // ACTION: updateAmount - Update final amount (typically by technician based on service changes)
+    if ((req.method === 'POST' || req.method === 'PUT') && action === 'updateAmount') {
+      const { bookingId, finalAmount } = req.body;
+
+      if (!bookingId || finalAmount === undefined || finalAmount === null) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Booking ID and final amount are required' 
+        });
+      }
+
+      // Validate amount is a number
+      const amount = Number(finalAmount);
+      if (isNaN(amount) || amount < 0) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Final amount must be a valid positive number' 
+        });
+      }
+
+      // Get current booking to log the change
+      const { data: currentBooking, error: fetchError } = await supabase
+        .from('bookings')
+        .select('final_amount, total_amount, technician_id')
+        .eq('id', bookingId)
+        .single();
+
+      if (fetchError || !currentBooking) {
+        return res.status(404).json({ 
+          success: false, 
+          message: 'Booking not found' 
+        });
+      }
+
+      // Update the final amount
+      const { data, error } = await supabase
+        .from('bookings')
+        .update({
+          final_amount: amount,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', bookingId)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Final amount update error:', error);
+        return res.status(500).json({ 
+          success: false, 
+          message: 'Failed to update final amount' 
+        });
+      }
+
+      // Log the amount change
+      try {
+        await supabase.from('activity_logs').insert({
+          user_type: 'technician',
+          user_id: currentBooking.technician_id || 'unknown',
+          action: 'final_amount_updated',
+          entity_type: 'booking',
+          entity_id: bookingId,
+          details: {
+            previous_amount: currentBooking.final_amount,
+            new_amount: amount,
+            difference: amount - currentBooking.final_amount,
+            total_amount: currentBooking.total_amount,
+            reason: 'Service modification by technician'
+          }
+        });
+      } catch (logError) {
+        console.log('Activity log insert skipped:', logError);
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Final amount updated successfully',
+        data: {
+          booking: {
+            id: data.id,
+            total_amount: data.total_amount,
+            final_amount: data.final_amount,
+            difference: data.final_amount - data.total_amount,
+            payment_status: data.payment_status,
+            updated_at: data.updated_at
+          }
+        }
+      });
+    }
+
     return res.status(400).json({ 
       success: false, 
-      message: 'Invalid action. Use ?action=assign or ?action=status' 
+      message: 'Invalid action. Use ?action=assign, ?action=status, or ?action=updateAmount' 
     });
 
   } catch (error: any) {

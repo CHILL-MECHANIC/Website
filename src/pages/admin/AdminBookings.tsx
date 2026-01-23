@@ -289,20 +289,22 @@ export default function AdminBookings() {
   };
 
   // Fetch services
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('services')
         .select('*')
         .order('service_type')
-        .order('name');
+        .order('name', { ascending: true });
 
       if (error) throw error;
-      setServices((data || []) as Service[]);
+      // Remove duplicates if any exist (keyed by id)
+      const uniqueServices = Array.from(new Map((data || []).map((s: Service) => [s.id, s])).values());
+      setServices(uniqueServices as Service[]);
     } catch (error) {
       console.error('Error fetching services:', error);
     }
-  };
+  }, []);
 
   // Fetch customers (profiles)
   const fetchCustomers = async () => {
@@ -394,7 +396,7 @@ export default function AdminBookings() {
 
       // Send technician assignment SMS to customer
       try {
-        const customerPhone = selectedBooking.profiles?.phone;
+        const customerPhone = selectedBooking.customer?.phone;
         if (customerPhone) {
           const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:3001'
@@ -924,9 +926,16 @@ export default function AdminBookings() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1 font-medium">
-                        <IndianRupee className="w-3 h-3" />
-                        {booking.final_amount}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1 font-medium text-gray-900">
+                          <IndianRupee className="w-3 h-3" />
+                          {booking.final_amount}
+                        </div>
+                        {booking.total_amount !== booking.final_amount && (
+                          <div className="text-xs text-gray-500">
+                            Initial: ₹{booking.total_amount}
+                          </div>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -1029,9 +1038,23 @@ export default function AdminBookings() {
                     <span className="text-gray-500">Date:</span>
                     <span>{selectedBooking.booking_date} at {selectedBooking.booking_time}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Amount:</span>
-                    <span className="font-medium">₹{selectedBooking.final_amount}</span>
+                  <div className="border-t pt-2 space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Initial Booking Amount:</span>
+                      <span className="font-medium">₹{selectedBooking.total_amount}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Final Amount (Paid):</span>
+                      <span className="font-medium text-green-700">₹{selectedBooking.final_amount}</span>
+                    </div>
+                    {selectedBooking.total_amount !== selectedBooking.final_amount && (
+                      <div className="flex justify-between pt-1">
+                        <span className="text-gray-500">Difference:</span>
+                        <span className="font-medium text-orange-600">
+                          {selectedBooking.final_amount > selectedBooking.total_amount ? '+' : '-'}₹{Math.abs(selectedBooking.final_amount - selectedBooking.total_amount)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   {selectedBooking.service_address && (
                     <div className="pt-2 border-t">

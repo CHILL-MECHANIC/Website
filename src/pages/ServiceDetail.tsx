@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
@@ -11,6 +12,8 @@ import roServiceImage from "@/assets/ro-service.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
+import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
+import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
 
 const serviceDetails = {
   ac: {
@@ -116,6 +119,32 @@ const serviceDetails = {
       { id: "microwave-checkup", name: "Check Up", price: 249, description: "Complete diagnostic check-up of microwave with functionality testing and safety inspection." },
     ],
   },
+  "water-dispenser": {
+    title: "Water Dispenser Service & Repair",
+    image: waterDispenserServiceImage,
+    description: "Professional water dispenser maintenance and diagnostics.",
+    longDescription: `
+      Our water dispenser services include comprehensive system diagnostics, 
+      cooling and heating system inspection, and complete functionality checks. 
+      We ensure your dispenser provides safe, cool drinking water for your family.
+    `,
+    services: [
+      { id: "wd-checkup", name: "Check Up - Water Dispenser", price: 249, description: "Complete diagnostic check-up of water dispenser with cooling and heating system inspection." },
+    ],
+  },
+  "deep-freezer": {
+    title: "Deep Freezer Service & Repair",
+    image: deepFreezerServiceImage,
+    description: "Expert deep freezer maintenance and diagnostics.",
+    longDescription: `
+      Our deep freezer services include comprehensive system diagnostics, 
+      cooling system inspection, temperature monitoring, and complete functionality checks. 
+      We ensure reliable food preservation and optimal freezer performance.
+    `,
+    services: [
+      { id: "df-checkup", name: "Check Up - Deep Freezer", price: 249, description: "Complete diagnostic check-up of deep freezer with temperature and cooling system inspection." },
+    ],
+  },
 };
 
 export default function ServiceDetail() {
@@ -160,8 +189,9 @@ export default function ServiceDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header cartItemsCount={getCartItemsCount()} />
+    <>
+      <div className="min-h-screen bg-background">
+        <Header cartItemsCount={getCartItemsCount()} />
       
       {/* Hero Section */}
       <section className="py-16">
@@ -239,5 +269,7 @@ export default function ServiceDetail() {
         </div>
       </section>
     </div>
+    <Footer />
+    </>
   );
 }

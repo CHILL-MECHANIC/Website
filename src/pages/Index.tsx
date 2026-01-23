@@ -16,6 +16,8 @@ import roServiceImage from "@/assets/ro-service.jpg";
 import geyserServiceImage from "@/assets/geyser-service.jpg";
 import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
+import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
+import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
 import heroBackground from "@/assets/hero-background.jpg";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
@@ -62,6 +64,20 @@ const services = [{
   image: microwaveServiceImage,
   price: "₹249",
   route: "/services/microwave"
+}, {
+  id: "water-dispenser",
+  title: "Water Dispenser Service",
+  description: "Professional water dispenser service and maintenance. Filter replacements, temperature control fixes, and complete system cleaning.",
+  image: waterDispenserServiceImage,
+  price: "₹249",
+  route: "/services/water-dispenser"
+}, {
+  id: "deep-freezer",
+  title: "Deep Freezer Service",
+  description: "Expert deep freezer repair services. Cooling issues, compressor repairs, and maintenance for optimal food preservation.",
+  image: deepFreezerServiceImage,
+  price: "₹249",
+  route: "/services/deep-freezer"
 }];
 const Index = () => {
   const [selectedServiceType, setSelectedServiceType] = useState<string>("");
