@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
 import { APIError, asyncHandler } from '../middleware/errorHandler';
 
 const router = Router();
@@ -148,16 +149,27 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
   // ===== SEND BOOKING CONFIRMATION SMS =====
   try {
     console.log('[SMS] Starting booking confirmation SMS...');
+    
+    // First try to get phone from profile, fallback to decoded token
+    let customerPhone: string | null = null;
+    
     const { data: profile } = await supabase
       .from('profiles')
       .select('phone')
-      .eq('id', userId)
+      .eq('user_id', userId)
       .single();
 
-    console.log('[SMS] Profile phone:', profile?.phone);
-
     if (profile?.phone) {
-      const customerPhone = String(profile.phone).replace(/^\+?91/, '');
+      customerPhone = String(profile.phone).replace(/^\+?91/, '');
+      console.log('[SMS] Phone from profile:', customerPhone);
+    } else if (decoded.phone) {
+      customerPhone = String(decoded.phone).replace(/^\+?91/, '');
+      console.log('[SMS] Phone from token:', customerPhone);
+    }
+
+    console.log('[SMS] Final customer phone:', customerPhone);
+
+    if (customerPhone && customerPhone.length >= 10) {
       const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
 
       const smsApiKey = process.env.SMS_API_KEY;
@@ -168,36 +180,40 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
       console.log('[SMS] Customer phone (cleaned):', customerPhone);
 
       if (smsApiKey) {
-        console.log('[SMS] Sending to API...');
-        const smsResponse = await fetch('https://api.uniquedigitaloutreach.com/v1/sms', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': smsApiKey,
-          },
-          body: JSON.stringify({
-            sender: smsSenderId,
-            to: '91' + customerPhone,
-            text: smsMessage,
-            type: 'OTP',
-            templateId: '1007913640137046123',
-          }),
-        });
-
-        const responseText = await smsResponse.text();
-        console.log('[SMS] Response status:', smsResponse.status);
-        console.log('[SMS] Response body:', responseText);
-
-        if (smsResponse.ok) {
+        console.log('[SMS] Sending to API using axios...');
+        try {
+          const smsResponse = await axios.post(
+            'https://api.uniquedigitaloutreach.com/v1/sms',
+            {
+              sender: smsSenderId,
+              to: '91' + customerPhone,
+              text: smsMessage,
+              type: 'OTP',
+              templateId: '1007913640137046123'
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': smsApiKey
+              },
+              timeout: 30000
+            }
+          );
+          console.log('[SMS] Response status:', smsResponse.status);
+          console.log('[SMS] Response data:', JSON.stringify(smsResponse.data));
           console.log('[SMS] Confirmation SMS sent to customer:', customerPhone);
-        } else {
-          console.error('[SMS] Send failed - Status:', smsResponse.status, 'Body:', responseText);
+        } catch (axiosError: any) {
+          console.error('[SMS] Axios error:', axiosError.message);
+          if (axiosError.response) {
+            console.error('[SMS] Response status:', axiosError.response.status);
+            console.error('[SMS] Response data:', axiosError.response.data);
+          }
         }
       } else {
-        console.log('[SMS] No API key configured');
+        console.log('[SMS] No API key configured - SMS_API_KEY environment variable is missing');
       }
     } else {
-      console.log('[SMS] No phone found in profile');
+      console.log('[SMS] No valid phone found - profile phone:', profile?.phone, 'token phone:', decoded.phone);
     }
   } catch (smsError) {
     console.error('[SMS] Notification error:', smsError);

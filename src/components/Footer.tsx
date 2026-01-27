@@ -4,7 +4,63 @@ import { SiInstagram, SiFacebook, SiWhatsapp, SiLinkedin, SiX } from "react-icon
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
 
 export default function Footer() {
-  return <footer className="bg-card border-t hidden md:block">
+  return (
+    <>
+      {/* Mobile Footer */}
+      <footer className="bg-card border-t md:hidden pb-20">
+        <div className="container mx-auto px-4 py-6">
+          {/* Logo */}
+          <div className="flex justify-center mb-4">
+            <img src={logo} alt="ChillMechanic Logo" className="h-16 w-16" />
+          </div>
+
+          {/* Quick Links */}
+          <div className="flex flex-wrap justify-center gap-4 text-sm mb-4">
+            <Link to="/about" className="text-muted-foreground hover:text-primary">About</Link>
+            <Link to="/contact" className="text-muted-foreground hover:text-primary">Contact</Link>
+            <Link to="/privacy" className="text-muted-foreground hover:text-primary">Privacy</Link>
+          </div>
+
+          {/* Contact Info */}
+          <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground mb-4">
+            <a href="tel:+919211970030" className="flex items-center gap-2 hover:text-primary">
+              <Phone className="h-4 w-4 text-primary" />
+              +91 9211970030
+            </a>
+            <a href="mailto:support@chillmechanic.com" className="flex items-center gap-2 hover:text-primary">
+              <Mail className="h-4 w-4 text-primary" />
+              support@chillmechanic.com
+            </a>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex justify-center gap-4 mb-4">
+            <a href="https://www.facebook.com/share/17c6FYTJ9H/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <SiFacebook size={22} className="text-foreground hover:text-[#1877F2] transition-colors" />
+            </a>
+            <a href="https://www.instagram.com/p/DQ8e6tjkxCK/?igsh=MXN6M244cGJ2NnZ6aA==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <SiInstagram size={22} className="text-foreground hover:text-[#E4405F] transition-colors" />
+            </a>
+            <a href="https://x.com/chill_mechanic?s=21" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <SiX size={22} className="text-foreground hover:text-[#000000] transition-colors" />
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <SiLinkedin size={22} className="text-foreground hover:text-[#0A66C2] transition-colors" />
+            </a>
+            <a href="https://wa.me/message/SGJEOWC7BT4QA1" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <SiWhatsapp size={22} className="text-foreground hover:text-[#25D366] transition-colors" />
+            </a>
+          </div>
+
+          {/* Copyright */}
+          <div className="text-center text-xs text-muted-foreground">
+            <p>&copy; 2026 Chill Mechanic. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Desktop Footer */}
+      <footer className="bg-card border-t hidden md:block">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -153,5 +209,7 @@ export default function Footer() {
           <p>&copy; 2026 Chill Mechanic. Happy Appliance, Happier Homes. All rights reserved.</p>
         </div>
       </div>
-    </footer>;
+      </footer>
+    </>
+  );
 }
