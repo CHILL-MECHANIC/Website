@@ -379,33 +379,32 @@ export default function AdminBookings() {
 
     setAssigning(true);
     try {
-      // Update booking directly via Supabase
-      const { error: bookingError } = await supabase
-        .from('bookings')
-        .update({
-          technician_id: selectedTechnician,
-          status: 'assigned',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', selectedBooking.id);
+      // For local development, update directly via Supabase since Vercel functions aren't available
+      // In production, this will be replaced by calling the Vercel function
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      if (isLocalhost) {
+        // Local: Update via Supabase + send SMS via backend
+        const { error: bookingError } = await supabase
+          .from('bookings')
+          .update({
+            technician_id: selectedTechnician,
+            status: 'assigned',
+            assigned_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', selectedBooking.id);
 
-      if (bookingError) throw bookingError;
+        if (bookingError) throw bookingError;
 
-      // Get technician name for toast
-      const tech = technicians.find(t => t.id === selectedTechnician);
-
-      // Send technician assignment SMS to customer
-      try {
-        const customerPhone = selectedBooking.customer?.phone;
-        if (customerPhone) {
-          const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:3001'
-            : '';
-          
-          const formattedPhone = String(customerPhone).replace(/^\+?91/, '');
-          console.log('[Admin SMS] Sending technician assignment SMS to:', formattedPhone);
-          
-            const smsResponse = await fetch(`${apiBaseUrl}/api/sms/send`, {
+        // Send SMS via backend Express server
+        try {
+          const customerPhone = selectedBooking.customer?.phone;
+          if (customerPhone) {
+            const formattedPhone = String(customerPhone).replace(/^\+?91/, '');
+            const apiBaseUrl = 'http://localhost:3001';
+            
+            await fetch(`${apiBaseUrl}/api/sms/send`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -418,22 +417,34 @@ export default function AdminBookings() {
                 templateId: '1007074801259726162'
               })
             });
-          
-          const smsResult = await smsResponse.json();
-          console.log('[Admin SMS] Technician assignment SMS response:', smsResult);
-          
-          if (smsResult.success) {
-            console.log('[Admin SMS] Technician assignment SMS sent successfully');
-          } else {
-            console.error('[Admin SMS] Failed to send technician assignment SMS:', smsResult.error);
           }
-        } else {
-          console.log('[Admin SMS] No customer phone found for technician assignment SMS');
+        } catch (smsError) {
+          console.warn('[SMS] Failed to send SMS (non-critical):', smsError);
         }
-      } catch (smsError) {
-        console.error('[Admin SMS] Error sending technician assignment SMS:', smsError);
-        // Don't fail assignment if SMS fails
+      } else {
+        // Production: Use Vercel function that handles both assignment and SMS
+        const response = await fetch('/api/admin/booking?action=assign', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            bookingId: selectedBooking.id,
+            technicianId: selectedTechnician
+          })
+        });
+
+          const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.message || 'Failed to assign technician');
+        }
+
+        console.log('[Admin] Technician assigned successfully:', result);
       }
+
+      // Get technician name for toast
+      const tech = technicians.find(t => t.id === selectedTechnician);
 
       toast({
         title: '✅ Technician Assigned',
