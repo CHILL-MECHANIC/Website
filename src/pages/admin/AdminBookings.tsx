@@ -552,22 +552,29 @@ export default function AdminBookings() {
       ].filter(Boolean).join(', ');
 
       // Create booking
+      const bookingPayload: any = {
+        user_id: userId,
+        booking_date: newBooking.bookingDate,
+        booking_time: newBooking.bookingTime,
+        total_amount: newBooking.servicePrice,
+        service_tax: serviceTax,
+        travel_charges: 0,
+        final_amount: finalAmount,
+        status: newBooking.technicianId ? 'assigned' : 'pending',
+        payment_status: newBooking.paymentMode,
+        special_instructions: newBooking.specialInstructions || null,
+        technician_id: newBooking.technicianId || null,
+        service_address: serviceAddress
+      };
+
+      // Set assigned_at timestamp if technician is selected
+      if (newBooking.technicianId) {
+        bookingPayload.assigned_at = new Date().toISOString();
+      }
+
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
-        .insert({
-          user_id: userId,
-          booking_date: newBooking.bookingDate,
-          booking_time: newBooking.bookingTime,
-          total_amount: newBooking.servicePrice,
-          service_tax: serviceTax,
-          travel_charges: 0,
-          final_amount: finalAmount,
-          status: newBooking.technicianId ? 'assigned' : 'pending',
-          payment_status: newBooking.paymentMode,
-          special_instructions: newBooking.specialInstructions || null,
-          technician_id: newBooking.technicianId || null,
-          service_address: serviceAddress
-        })
+        .insert(bookingPayload)
         .select()
         .single();
 
@@ -1297,9 +1304,14 @@ export default function AdminBookings() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">None - Assign Later</SelectItem>
-                    {technicians.filter(t => t.status === 'available').map((tech) => (
+                    {technicians.map((tech) => (
                       <SelectItem key={tech.id} value={tech.id}>
-                        {tech.name} (Available)
+                        <div className="flex items-center gap-2">
+                          <span>{tech.name}</span>
+                          <Badge variant={tech.status === 'available' ? 'default' : 'secondary'} className="text-xs">
+                            {tech.status}
+                          </Badge>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
