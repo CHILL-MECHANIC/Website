@@ -66,9 +66,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .update(updateData)
         .eq('id', bookingId)
         .select(`
-          *,
-          profiles:user_id (full_name, phone, email, address),
-          booking_items (service_id, service_name, service_type, price, quantity)
+          id,
+          user_id,
+          booking_date,
+          booking_time,
+          total_amount,
+          service_tax,
+          travel_charges,
+          final_amount,
+          status,
+          payment_status,
+          special_instructions,
+          service_address,
+          address,
+          city,
+          pincode,
+          landmark,
+          assigned_at,
+          updated_at
         `)
         .single();
 
@@ -79,6 +94,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           message: 'Failed to assign technician to booking' 
         });
       }
+
+      // Fetch profiles and booking items separately to avoid join issues
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, phone, email, address')
+        .eq('user_id', booking.user_id)
+        .maybeSingle();
+
+      const { data: items } = await supabase
+        .from('booking_items')
+        .select('id, service_name, service_description, price, quantity')
+        .eq('booking_id', bookingId);
 
       // Log the assignment activity
       try {
@@ -93,17 +120,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             technician_phone: technician.phone,
             booking_date: booking.booking_date,
             booking_time: booking.booking_time,
-            service_id: booking.booking_items?.[0]?.service_id,
-            service_name: booking.booking_items?.[0]?.service_name,
-            service_type: booking.booking_items?.[0]?.service_type,
+            service_name: items?.[0]?.service_name,
             // Full address for technician app
             service_address: booking.service_address,
             address: booking.address,
             city: booking.city,
             pincode: booking.pincode,
             landmark: booking.landmark,
-            customer_name: booking.profiles?.full_name,
-            customer_phone: booking.profiles?.phone,
+            customer_name: profile?.full_name,
+            customer_phone: profile?.phone,
             payment_status: booking.payment_status,
             final_amount: booking.final_amount,
           },
@@ -115,15 +140,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // Send SMS notification to customer about technician assignment
       console.log('[SMS] Checking SMS conditions:', {
-        hasPhone: !!booking.profiles?.phone,
-        phone: booking.profiles?.phone,
+        hasPhone: !!profile?.phone,
+        phone: profile?.phone,
         hasApiKey: !!process.env.SMS_API_KEY,
         senderId: process.env.SMS_SENDER_ID
       });
 
-      if (booking.profiles?.phone && process.env.SMS_API_KEY) {
+      if (profile?.phone && process.env.SMS_API_KEY) {
         try {
-          const formattedPhone = String(booking.profiles.phone).replace(/^\+?91/, '');
+          const formattedPhone = String(profile.phone).replace(/^\+?91/, '');
           const smsMessage = `Dear Customer, A technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285. Regards, Chill Mechanic Team`;
 
           console.log('[SMS] Sending technician assignment SMS:', {
@@ -163,7 +188,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       } else {
         console.log('[SMS] SMS not sent - missing requirements:', {
-          missingPhone: !booking.profiles?.phone,
+          missingPhone: !profile?.phone,
           missingApiKey: !process.env.SMS_API_KEY
         });
       }
@@ -177,17 +202,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             status: booking.status,
             booking_date: booking.booking_date,
             booking_time: booking.booking_time,
-            customer: booking.profiles?.full_name,
-            customer_phone: booking.profiles?.phone,
+            customer: profile?.full_name,
+            customer_phone: profile?.phone,
             // Payment information for technician app
             payment_status: booking.payment_status,
             final_amount: booking.final_amount,
             total_amount: booking.total_amount,
             // Service details for technician app
-            services: booking.booking_items?.map((item: any) => ({
-              service_id: item.service_id,
+            services: items?.map((item: any) => ({
               service_name: item.service_name,
-              service_type: item.service_type,
+              service_description: item.service_description,
               price: item.price,
               quantity: item.quantity,
             })) || [],
