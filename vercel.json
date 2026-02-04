@@ -36,10 +36,16 @@
     }
   },
   "rewrites": [
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/services/ac", "destination": "/services/ac.html" },
+    { "source": "/services/refrigerator", "destination": "/services/refrigerator.html" },
+    { "source": "/services/ro", "destination": "/services/ro.html" },
+    { "source": "/services/geyser", "destination": "/services/geyser.html" },
+    { "source": "/services/washing-machine", "destination": "/services/washing-machine.html" },
+    { "source": "/services/microwave", "destination": "/services/microwave.html" },
+    { "source": "/services/water-dispenser", "destination": "/services/water-dispenser.html" },
+    { "source": "/services/deep-freezer", "destination": "/services/deep-freezer.html" },
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!services/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
