@@ -31,10 +31,10 @@ const serviceItemDetails = {
     name: "Foam Power Jet Service-1 AC",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
-    price: 549,
+    price: 799,
     duration: "2-3 hours",
     warranty: "30 days",
-    description: "Basic foam cleaning and filter cleaning for single AC unit.",
+    description: "Premium foam cleaning and filter cleaning for single AC unit.",
     detailedDescription: "Our foam power jet service uses advanced cleaning technology to deeply clean your AC unit, removing dirt, bacteria, and allergens for improved air quality and cooling efficiency.",
     included: [
       "Foam jet cleaning of indoor unit",
@@ -56,10 +56,10 @@ const serviceItemDetails = {
     name: "Foam Power Jet Service-2 AC",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
-    price: 949,
+    price: 1499,
     duration: "3-4 hours",
     warranty: "30 days",
-    description: "Deep foam cleaning with filter service and basic maintenance.",
+    description: "Deep foam cleaning with filter service and basic maintenance for 2 ACs.",
     detailedDescription: "Complete foam power jet cleaning for two AC units, providing thorough maintenance and improved air quality throughout your space.",
     included: [
       "Deep foam jet cleaning of 2 indoor units",
@@ -81,10 +81,10 @@ const serviceItemDetails = {
     name: "Foam Power Jet Service-3 AC",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
-    price: 1399,
+    price: 2249,
     duration: "4-5 hours",
     warranty: "30 days",
-    description: "Deep foam cleaning with complete filter service and coil cleaning.",
+    description: "Deep foam cleaning with complete filter service and coil cleaning for 3 ACs.",
     detailedDescription: "Comprehensive foam power jet service for three AC units, ensuring optimal performance and air quality across multiple rooms.",
     included: [
       "Deep foam jet cleaning of 3 indoor units",
@@ -106,10 +106,10 @@ const serviceItemDetails = {
     name: "Foam Power Jet Service-4 AC",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
-    price: 1949,
+    price: 2999,
     duration: "5-6 hours",
     warranty: "30 days",
-    description: "Premium foam cleaning with complete servicing and performance check.",
+    description: "Premium foam cleaning with complete servicing and performance check for 4 ACs.",
     detailedDescription: "Complete foam power jet maintenance for four AC units, providing comprehensive cleaning and performance optimization for larger spaces.",
     included: [
       "Premium foam jet cleaning of 4 indoor units",
@@ -131,10 +131,10 @@ const serviceItemDetails = {
     name: "Foam Power Jet Service-5 AC",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
-    price: 2449,
+    price: 3749,
     duration: "6-7 hours",
     warranty: "30 days",
-    description: "Ultimate foam cleaning with complete deep service and full inspection.",
+    description: "Ultimate foam cleaning with complete deep service and full inspection for 5 ACs.",
     detailedDescription: "Premium foam power jet service for five AC units, delivering complete maintenance and optimization for commercial or large residential spaces.",
     included: [
       "Ultimate foam jet cleaning of 5 indoor units",
@@ -149,6 +149,106 @@ const serviceItemDetails = {
       "Component replacement",
       "Electrical repairs",
       "Installation services"
+    ]
+  },
+  "ac-power-jet-1": {
+    id: "ac-power-jet-1",
+    name: "Power Jet Service-1 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 599,
+    duration: "1-2 hours",
+    warranty: "30 days",
+    description: "Power jet cleaning for single AC unit.",
+    detailedDescription: "Professional power jet cleaning service that uses high-pressure water jets to thoroughly clean your AC unit, removing dust, dirt, and debris for improved cooling performance.",
+    included: [
+      "Power jet cleaning of indoor unit",
+      "Filter cleaning",
+      "Outdoor unit cleaning",
+      "Cooling performance check",
+      "Drainage system check",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Foam cleaning",
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs"
+    ]
+  },
+  "ac-power-jet-2": {
+    id: "ac-power-jet-2",
+    name: "Power Jet Service-2 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 1099,
+    duration: "2-3 hours",
+    warranty: "30 days",
+    description: "Power jet cleaning with filter service for 2 ACs.",
+    detailedDescription: "Complete power jet cleaning for two AC units, providing thorough cleaning and improved cooling efficiency throughout your space.",
+    included: [
+      "Power jet cleaning of 2 indoor units",
+      "Filter cleaning for both units",
+      "Outdoor unit cleaning for both",
+      "Cooling performance check",
+      "Drainage system cleaning",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Foam cleaning",
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs"
+    ]
+  },
+  "ac-power-jet-3": {
+    id: "ac-power-jet-3",
+    name: "Power Jet Service-3 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 1649,
+    duration: "3-4 hours",
+    warranty: "30 days",
+    description: "Power jet cleaning with complete filter service for 3 ACs.",
+    detailedDescription: "Comprehensive power jet cleaning service for three AC units, ensuring optimal cooling performance across multiple rooms.",
+    included: [
+      "Power jet cleaning of 3 indoor units",
+      "Filter cleaning for all units",
+      "Outdoor unit cleaning for all",
+      "Complete system performance check",
+      "Drainage system cleaning",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Foam cleaning",
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs"
+    ]
+  },
+  "ac-power-jet-4": {
+    id: "ac-power-jet-4",
+    name: "Power Jet Service-4 AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 2199,
+    duration: "4-5 hours",
+    warranty: "30 days",
+    description: "Power jet cleaning with complete servicing for 4 ACs.",
+    detailedDescription: "Complete power jet cleaning and maintenance for four AC units, providing comprehensive cleaning and performance optimization for larger spaces.",
+    included: [
+      "Power jet cleaning of 4 indoor units",
+      "Filter cleaning for all units",
+      "Outdoor unit cleaning for all",
+      "Thorough system inspection",
+      "Drainage system cleaning",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Foam cleaning",
+      "Gas refilling",
+      "Component replacement",
+      "Electrical repairs"
     ]
   },
   "ac-not-cooling": {
@@ -256,7 +356,7 @@ const serviceItemDetails = {
     name: "Gas Refill & Check Up",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
-    price: 2399,
+    price: 2499,
     duration: "2-3 hours",
     warranty: "60 days",
     description: "Complete refrigerant gas refill service with comprehensive system check.",
@@ -281,7 +381,7 @@ const serviceItemDetails = {
     name: "Split AC Installation",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2],
-    price: 1449,
+    price: 1499,
     duration: "3-4 hours",
     warranty: "30 days",
     description: "Professional installation of split AC units with proper setup and testing.",
@@ -308,7 +408,7 @@ const serviceItemDetails = {
     name: "Split AC Uninstallation",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage3],
-    price: 1299,
+    price: 799,
     duration: "2-3 hours",
     warranty: "15 days",
     description: "Safe and careful uninstallation of split AC units.",
@@ -333,7 +433,7 @@ const serviceItemDetails = {
     name: "Window AC Installation",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2],
-    price: 1049,
+    price: 599,
     duration: "2-3 hours",
     warranty: "30 days",
     description: "Professional installation of window AC units with secure mounting.",
@@ -358,7 +458,7 @@ const serviceItemDetails = {
     name: "Window AC Uninstallation",
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage3],
-    price: 949,
+    price: 499,
     duration: "1-2 hours",
     warranty: "15 days",
     description: "Safe removal and uninstallation of window AC units.",
