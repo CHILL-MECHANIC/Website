@@ -13,6 +13,7 @@ interface HeaderProps {
 export default function Header({
   cartItemsCount = 0
 }: HeaderProps) {
+  const appStoreUrl = "https://play.google.com/store/apps/details?id=com.connoissuerbeta.ChillMechanic";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
     profile,
@@ -119,7 +120,7 @@ export default function Header({
             </DropdownMenu>
             
             <Button variant="default" className="hidden md:inline-flex" asChild>
-              <Link to="/get-the-app">Get The App</Link>
+              <a href={appStoreUrl} target="_blank" rel="noopener noreferrer">Get The App</a>
             </Button>
 
             {/* Mobile menu button */}
@@ -163,9 +164,9 @@ export default function Header({
                 </Link>}
               
               <Button variant="default" className="w-full mt-4" asChild>
-                <Link to="/get-the-app" onClick={() => setIsMenuOpen(false)}>
+                <a href={appStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsMenuOpen(false)}>
                   Get The App
-                </Link>
+                </a>
               </Button>
             </div>
           </nav>}
