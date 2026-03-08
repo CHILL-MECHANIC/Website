@@ -1,10 +1,15 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
+import TrustBadgeBar from "@/components/TrustBadgeBar";
+import FaqAccordion from "@/components/FaqAccordion";
+import { serviceFaqMap } from "@/data/faqs";
+import { generateFaqSchema } from "@/utils/faqSchema";
 
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
@@ -14,6 +19,17 @@ import washingMachineServiceImage from "@/assets/washing-machine-service.jpg";
 import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
 import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
+
+const SERVICE_SEO: Record<string, { title: string; description: string; price: string }> = {
+  ac: { title: 'AC Repair Gurgaon | AC Service Near Me | Starting Rs. 599 | Chill Mechanic', description: 'Professional AC repair & service in Gurgaon. Foam jet cleaning, gas refilling, cooling issues fixed. Same day service. Book online or call 9211970030', price: '599' },
+  refrigerator: { title: 'Fridge Repair Gurgaon | Refrigerator Service Near Me | Rs. 249', description: 'Expert refrigerator repair in Gurgaon. Cooling issues, compressor problems, door seal replacement. All brands serviced. Same day repair available.', price: '249' },
+  'washing-machine': { title: 'Washing Machine Repair Gurgaon | WM Service Near Me | Chill Mechanic', description: 'Washing machine repair in Gurgaon. Motor repair, drum cleaning, belt replacement. Top load & front load experts. Book service online.', price: '249' },
+  ro: { title: 'RO Repair Gurgaon | Water Purifier Service Near Me | Chill Mechanic', description: 'RO water purifier service in Gurgaon. Filter replacement, membrane cleaning, installation. All brands Kent, Aquaguard, Pureit. Book now!', price: '249' },
+  geyser: { title: 'Geyser Repair Gurgaon | Water Heater Service Near Me | Chill Mechanic', description: 'Geyser repair & installation in Gurgaon. Heating element replacement, thermostat issues, safety checks. Same day service. Call 9211970030', price: '249' },
+  microwave: { title: 'Microwave Repair Gurgaon | Microwave Service Near Me | Chill Mechanic', description: 'Microwave oven repair in Gurgaon. Heating issues, door problems, electrical faults. All brands repaired. Genuine parts guaranteed.', price: '249' },
+  'water-dispenser': { title: 'Water Dispenser Repair Gurgaon | Dispenser Service Near Me', description: 'Water dispenser service in Gurgaon. Filter replacement, temperature control, cleaning. Commercial & residential. Same day repair.', price: '249' },
+  'deep-freezer': { title: 'Deep Freezer Repair Gurgaon | Commercial Freezer Service', description: 'Deep freezer repair in Gurgaon. Cooling issues, compressor repair, maintenance. Restaurant & commercial freezer experts. Call now!', price: '249' },
+};
 
 const serviceDetails = {
   ac: {
@@ -192,11 +208,37 @@ export default function ServiceDetail() {
     navigate("/cart");
   };
 
+  const seo = serviceType ? SERVICE_SEO[serviceType] : null;
+  const faqs = serviceType ? serviceFaqMap[serviceType] : undefined;
+
   return (
     <>
       <div className="min-h-screen bg-background">
+        {seo && (
+          <Helmet>
+            <title>{seo.title}</title>
+            <meta name="description" content={seo.description} />
+            <link rel="canonical" href={`https://chillmechanic.com/services/${serviceType}`} />
+          </Helmet>
+        )}
+        {seo && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: service.title,
+            provider: { '@type': 'LocalBusiness', name: 'Chill Mechanic' },
+            areaServed: 'Gurgaon',
+            offers: { '@type': 'Offer', price: seo.price, priceCurrency: 'INR' },
+          }) }} />
+        )}
+        {faqs && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateFaqSchema(faqs)) }} />
+        )}
         <Header cartItemsCount={getCartItemsCount()} />
       
+      {/* Trust Badges */}
+      <TrustBadgeBar />
+
       {/* Hero Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
@@ -225,7 +267,7 @@ export default function ServiceDetail() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-16 bg-muted/20">
+      <section className="py-16 bg-muted/20" data-services-grid>
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Available Services</h2>
@@ -269,6 +311,28 @@ export default function ServiceDetail() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      {faqs && <FaqAccordion faqs={faqs} />}
+
+      {/* Final CTA */}
+      <section className="bg-primary text-primary-foreground py-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-lg font-semibold mb-2">⚡ Limited slots available today</p>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Book Your {service.title} Now</h2>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button size="lg" variant="secondary" onClick={() => {
+              const grid = document.querySelector('[data-services-grid]');
+              grid?.scrollIntoView({ behavior: 'smooth' });
+            }}>
+              Book Now
+            </Button>
+            <Button size="lg" variant="outline" className="border-primary-foreground text-secondary-foreground hover:text-primary-foreground hover:bg-secondary-foreground/10" asChild>
+              <a href="tel:9211970030">Call 9211970030</a>
+            </Button>
           </div>
         </div>
       </section>

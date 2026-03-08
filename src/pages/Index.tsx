@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceCard from "@/components/ServiceCard";
@@ -10,6 +11,16 @@ import { toast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Phone, Sparkles, Star } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
+import TrustBadgeBar from "@/components/TrustBadgeBar";
+import HowItWorks from "@/components/HowItWorks";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import BrandsCarousel from "@/components/BrandsCarousel";
+import ServiceAreas from "@/components/ServiceAreas";
+import BlogPreview from "@/components/BlogPreview";
+import FaqAccordion from "@/components/FaqAccordion";
+import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import { homepageFaqs } from "@/data/faqs";
+import { generateFaqSchema } from "@/utils/faqSchema";
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
@@ -116,6 +127,13 @@ const Index = () => {
     }
   };
   return <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>AC & Appliance Repair Gurgaon | Same Day Service | Chill Mechanic</title>
+        <meta name="description" content="Expert AC, refrigerator & washing machine repair in Gurgaon. Same day service, certified technicians, upfront pricing. Book now! Call 9211970030" />
+        <link rel="canonical" href="https://chillmechanic.com/" />
+      </Helmet>
+      <LocalBusinessSchema />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateFaqSchema(homepageFaqs)) }} />
       <Header cartItemsCount={getCartItemsCount()} />
       
       {/* Hero Section */}
@@ -181,6 +199,9 @@ const Index = () => {
       </section>
 
 
+      {/* Trust Badges */}
+      <TrustBadgeBar />
+
       {/* Services Section */}
       <section className="py-16" data-services-section>
         <div className="container mx-auto px-4">
@@ -197,6 +218,24 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Why Choose Us */}
+      <WhyChooseUs />
+
+      {/* Brands We Service */}
+      <BrandsCarousel />
+
+      {/* Service Areas */}
+      <ServiceAreas />
+
+      {/* Blog Preview */}
+      <BlogPreview />
+
+      {/* Homepage FAQ */}
+      <FaqAccordion faqs={homepageFaqs} />
 
       {/* Customer Reviews Section */}
       <section className="py-16 bg-muted/30">

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,11 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>About Chill Mechanic | 50 Years of Appliance Repair Excellence</title>
+        <meta name="description" content="Chill Mechanic - 50 years of trusted appliance repair in Gurgaon. Family legacy, certified technicians, customer-first approach. Learn our story." />
+        <link rel="canonical" href="https://chillmechanic.com/about" />
+      </Helmet>
       <Header cartItemsCount={getCartItemsCount()} />
       
       <div className="container mx-auto px-4 py-16">

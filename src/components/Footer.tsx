@@ -18,6 +18,8 @@ export default function Footer() {
           <div className="flex flex-wrap justify-center gap-4 text-sm mb-4">
             <Link to="/about" className="text-muted-foreground hover:text-primary">About</Link>
             <Link to="/contact" className="text-muted-foreground hover:text-primary">Contact</Link>
+            <Link to="/blog" className="text-muted-foreground hover:text-primary">Blog</Link>
+            <Link to="/gallery" className="text-muted-foreground hover:text-primary">Gallery</Link>
             <Link to="/privacy" className="text-muted-foreground hover:text-primary">Privacy</Link>
           </div>
 
@@ -125,6 +127,21 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog" className="text-muted-foreground hover:text-primary transition-colors">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link to="/gallery" className="text-muted-foreground hover:text-primary transition-colors">
+                  Gallery
+                </Link>
+              </li>
+              <li>
                 <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
@@ -132,11 +149,6 @@ export default function Footer() {
               <li>
                 <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
                   Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contact Us
                 </Link>
               </li>
             </ul>

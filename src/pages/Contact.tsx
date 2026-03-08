@@ -1,5 +1,7 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -46,6 +48,12 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Contact Chill Mechanic | Appliance Repair Gurgaon | 9211970030</title>
+        <meta name="description" content="Contact Chill Mechanic for appliance repair in Gurgaon. Phone: 9211970030, Email: support@chillmechanic.com. 24/7 emergency service available." />
+        <link rel="canonical" href="https://chillmechanic.com/contact" />
+      </Helmet>
+      <LocalBusinessSchema />
       <Header cartItemsCount={getCartItemsCount()} />
       
       <div className="container mx-auto px-4 py-16">
