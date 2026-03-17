@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import { useState, useEffect } from 'react';
 import {
   SiLg,
   SiSamsung,
@@ -9,6 +10,7 @@ import {
   SiHavells,
   SiPanasonic,
 } from '@icons-pack/react-simple-icons';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 type IconProps = { size?: number | string; color?: string; title?: string };
 
@@ -56,37 +58,42 @@ export default function BrandsCarousel() {
         <p className="text-muted-foreground">Trusted repairs across all major appliance brands</p>
       </div>
 
-      {/* Infinite scrolling marquee */}
-      <div className="relative w-full overflow-hidden">
-        {/* Gradient fades */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
-
-        <div className="flex animate-[brand-scroll_40s_linear_infinite]">
-          {[...ALL_BRANDS, ...ALL_BRANDS].map((brand, i) => (
-            <div
-              key={`${brand.name}-${i}`}
-              className="flex-shrink-0 mx-4 flex items-center justify-center h-16 w-44 px-4 rounded-lg border border-border bg-white/90 hover:shadow-sm transition-shadow"
-            >
-              {brand.Icon ? (
-                <div className="flex items-center gap-2">
-                  <brand.Icon size={30} color={brand.color} title={brand.name} />
-                  <span className="text-sm font-semibold text-foreground">{brand.name}</span>
+      {/* Draggable Carousel */}
+      <div className="relative w-full">
+        <Carousel
+          opts={{
+            align: 'start',
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {ALL_BRANDS.map((brand, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+                <div className="flex items-center justify-center h-24 px-4 rounded-lg border border-border bg-white/90 hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing">
+                  {brand.Icon ? (
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <brand.Icon size={32} color={brand.color} title={brand.name} />
+                      <span className="text-xs md:text-sm font-semibold text-foreground">{brand.name}</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <span
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-md text-xs font-bold text-white"
+                        style={{ backgroundColor: brand.color }}
+                      >
+                        {brand.short}
+                      </span>
+                      <span className="text-xs md:text-sm font-semibold text-foreground">{brand.name}</span>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <span
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[10px] font-bold text-white"
-                    style={{ backgroundColor: brand.color }}
-                  >
-                    {brand.short}
-                  </span>
-                  <span className="text-sm font-semibold text-foreground">{brand.name}</span>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 md:-translate-x-16" />
+          <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 md:translate-x-16" />
+        </Carousel>
       </div>
     </section>
   );

@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
+import TechnicianReviews from "@/components/TechnicianReviews";
+import RealImagesCarousel from "@/components/RealImagesCarousel";
 
 import acServiceImage from "@/assets/ac-service.jpg";
 import acServiceImage2 from "@/assets/ac-service-2.jpg";
@@ -1036,22 +1038,32 @@ export default function ServiceItemDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Service Image Carousel */}
-          <div className="relative">
-            <Carousel className="w-full">
-              <CarouselContent>
-                {serviceItem.images.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <img
-                      src={image}
-                      alt={`${serviceItem.name} - Image ${index + 1}`}
-                      className="w-full h-96 object-cover rounded-lg shadow-lg"
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-4" />
-              <CarouselNext className="right-4" />
-            </Carousel>
+          <div>
+            <div className="relative mb-8">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {serviceItem.images.map((image, index) => (
+                    <CarouselItem key={index}>
+                      <img
+                        src={image}
+                        alt={`${serviceItem.name} - Image ${index + 1}`}
+                        className="w-full h-96 object-cover rounded-lg shadow-lg"
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-4" />
+                <CarouselNext className="right-4" />
+              </Carousel>
+            </div>
+            
+            {/* Real Images Section - Only show if there are multiple service images */}
+            {serviceItem.images && serviceItem.images.length > 1 && (
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Service in Action</h3>
+                <RealImagesCarousel images={serviceItem.images} serviceName={serviceItem.categoryTitle} />
+              </div>
+            )}
           </div>
 
           {/* Service Details */}
@@ -1155,6 +1167,11 @@ export default function ServiceItemDetail() {
               </ul>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Technician Reviews Section */}
+        <div className="mt-16">
+          <TechnicianReviews serviceType={serviceType} />
         </div>
       </div>
     </div>
