@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => ({
         '/services/ro', '/services/geyser', '/services/microwave',
         '/services/water-dispenser', '/services/deep-freezer',
       ],
+      outDir: 'public',
     }),
   ].filter(Boolean),
   resolve: {
