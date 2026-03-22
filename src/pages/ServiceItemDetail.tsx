@@ -8,8 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
-import TechnicianReviews from "@/components/TechnicianReviews";
-import RealImagesCarousel from "@/components/RealImagesCarousel";
+import CustomerReviews from "@/components/CustomerReviews";
 
 import acServiceImage from "@/assets/ac-service.jpg";
 import acServiceImage2 from "@/assets/ac-service-2.jpg";
@@ -1057,13 +1056,6 @@ export default function ServiceItemDetail() {
               </Carousel>
             </div>
             
-            {/* Real Images Section - Only show if there are multiple service images */}
-            {serviceItem.images && serviceItem.images.length > 1 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Service in Action</h3>
-                <RealImagesCarousel images={serviceItem.images} serviceName={serviceItem.categoryTitle} />
-              </div>
-            )}
           </div>
 
           {/* Service Details */}
@@ -1169,10 +1161,7 @@ export default function ServiceItemDetail() {
           </Card>
         </div>
 
-        {/* Technician Reviews Section */}
-        <div className="mt-16">
-          <TechnicianReviews serviceType={serviceType} />
-        </div>
+        <CustomerReviews />
       </div>
     </div>
     <Footer />
