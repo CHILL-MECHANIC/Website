@@ -5,17 +5,20 @@ import { useCart } from '@/contexts/CartContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Play, Users, MessageSquare, MapPin, Star, Briefcase, BadgeCheck } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 /* ------------------------------------------------------------------ */
 /*  Section 1 — Our Work (video placeholders)                         */
 /* ------------------------------------------------------------------ */
+const supabaseUrl = (filename: string, bucket: string) =>
+  supabase.storage.from(bucket).getPublicUrl(filename).data.publicUrl;
+
 const VIDEOS = [
-  { id: 1, title: 'AC Deep Cleaning Service', serviceType: 'AC' },
-  { id: 2, title: 'Refrigerator Compressor Repair', serviceType: 'Refrigerator' },
-  { id: 3, title: 'RO Membrane Replacement', serviceType: 'RO' },
-  { id: 4, title: 'Washing Machine Drum Clean', serviceType: 'Washing Machine' },
-  { id: 5, title: 'Geyser Element Replacement', serviceType: 'Geyser' },
-  { id: 6, title: 'Microwave Magnetron Fix', serviceType: 'Microwave' },
+  { id: 1, title: 'AC Deep Cleaning Service',      videoUrl: supabaseUrl('MainVD1.mp4', 'gallery-videos'), serviceType: 'AC' },
+  { id: 2, title: 'Appliance Repair in Action',    videoUrl: supabaseUrl('MainVD2.mp4', 'gallery-videos'), serviceType: 'AC' },
+  { id: 3, title: 'Refrigerator Repair',           videoUrl: supabaseUrl('Video2.mp4',  'gallery-videos'), serviceType: 'Refrigerator' },
+  { id: 4, title: 'Washing Machine Service',       videoUrl: supabaseUrl('Video3.mp4',  'gallery-videos'), serviceType: 'Washing Machine' },
+  { id: 5, title: 'Geyser & Appliance Repair',     videoUrl: supabaseUrl('Video4.mp4',  'gallery-videos'), serviceType: 'Geyser' },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -102,15 +105,14 @@ export default function GalleryPage() {
             <CarouselContent>
               {VIDEOS.map((v) => (
                 <CarouselItem key={v.id} className="basis-[82%] sm:basis-1/2 lg:basis-1/3">
-                  <div className="rounded-2xl overflow-hidden border bg-muted/20 aspect-[9/16] flex items-center justify-center relative">
-                    <div className="text-center p-4">
-                      <Play className="h-12 w-12 text-secondary mx-auto mb-3 opacity-60" />
-                      <p className="font-semibold">{v.title}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{v.serviceType}</p>
-                      <p className="text-xs text-muted-foreground mt-3">
-                        Upload video to Supabase Storage and add URL here
-                      </p>
-                    </div>
+                  <div className="rounded-2xl overflow-hidden border bg-black aspect-[9/16]">
+                    <video
+                      src={v.videoUrl}
+                      preload="none"
+                      playsInline
+                      controls
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </CarouselItem>
               ))}
