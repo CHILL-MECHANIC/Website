@@ -8,6 +8,7 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 import TrustBadgeBar from "@/components/TrustBadgeBar";
 import FaqAccordion from "@/components/FaqAccordion";
+import CustomerReviews from "@/components/CustomerReviews";
 import { serviceFaqMap } from "@/data/faqs";
 import { generateFaqSchema } from "@/utils/faqSchema";
 
@@ -188,7 +189,7 @@ export default function ServiceDetail() {
     );
   }
 
-  const handleAddToCart = (serviceItem: any) => {
+  const handleAddToCart = (serviceItem: { id: string; name: string; description: string; price: number }) => {
     const cartService = {
       id: serviceItem.id,
       name: serviceItem.name,
@@ -203,7 +204,7 @@ export default function ServiceDetail() {
     });
   };
 
-  const handleBookNow = (serviceItem: any) => {
+  const handleBookNow = (serviceItem: { id: string; name: string; description: string; price: number }) => {
     handleAddToCart(serviceItem);
     navigate("/cart");
   };
@@ -317,6 +318,8 @@ export default function ServiceDetail() {
 
       {/* FAQ Section */}
       {faqs && <FaqAccordion faqs={faqs} />}
+
+      <CustomerReviews />
 
       {/* Final CTA */}
       <section className="bg-primary text-primary-foreground py-12">
