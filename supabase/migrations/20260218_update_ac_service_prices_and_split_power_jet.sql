@@ -10,33 +10,48 @@
 -- ============================================================
 -- Step 1: Update Foam Power Jet Service prices
 -- ============================================================
-UPDATE public.services SET price = 799
+UPDATE public.services SET price = 599
 WHERE name ILIKE '%Foam Power Jet Service%1 AC%' AND service_type = 'ac';
 
-UPDATE public.services SET price = 1499
+UPDATE public.services SET price = 1149
 WHERE name ILIKE '%Foam Power Jet Service%2 AC%' AND service_type = 'ac';
 
-UPDATE public.services SET price = 2249
+UPDATE public.services SET price = 1649
 WHERE name ILIKE '%Foam Power Jet Service%3 AC%' AND service_type = 'ac';
 
-UPDATE public.services SET price = 2999
+UPDATE public.services SET price = 2199
 WHERE name ILIKE '%Foam Power Jet Service%4 AC%' AND service_type = 'ac';
 
-UPDATE public.services SET price = 3749
+UPDATE public.services SET price = 2499
 WHERE name ILIKE '%Foam Power Jet Service%5 AC%' AND service_type = 'ac';
 
 -- ============================================================
--- Step 2: Insert new separate Power Jet Service entries
+-- Step 2: Update existing Power Jet Service prices
+-- ============================================================
+UPDATE public.services SET price = 499
+WHERE name ILIKE '%Power Jet Service%1 AC%' AND service_type = 'ac';
+
+UPDATE public.services SET price = 949
+WHERE name ILIKE '%Power Jet Service%2 AC%' AND service_type = 'ac';
+
+UPDATE public.services SET price = 1349
+WHERE name ILIKE '%Power Jet Service%3 AC%' AND service_type = 'ac';
+
+UPDATE public.services SET price = 1799
+WHERE name ILIKE '%Power Jet Service%4 AC%' AND service_type = 'ac';
+
+-- ============================================================
+-- Step 3: Insert new separate Power Jet Service entries
 -- ============================================================
 INSERT INTO public.services (name, description, price, service_type) VALUES
-('Power Jet Service - 1 AC', ARRAY['Power jet cleaning of indoor unit', 'Filter cleaning', 'Outdoor unit cleaning', 'Cooling performance check', '30 days warranty'], 599, 'ac'),
-('Power Jet Service - 2 AC', ARRAY['Power jet cleaning of 2 indoor units', 'Filter cleaning for both units', 'Outdoor unit cleaning for both', 'Cooling performance check', '30 days warranty'], 1099, 'ac'),
-('Power Jet Service - 3 AC', ARRAY['Power jet cleaning of 3 indoor units', 'Filter cleaning for all units', 'Outdoor unit cleaning for all', 'Cooling performance check', '30 days warranty'], 1649, 'ac'),
-('Power Jet Service - 4 AC', ARRAY['Power jet cleaning of 4 indoor units', 'Filter cleaning for all units', 'Outdoor unit cleaning for all', 'Cooling performance check', '30 days warranty'], 2199, 'ac')
+('Power Jet Service - 1 AC', ARRAY['Power jet cleaning of indoor unit', 'Filter cleaning', 'Outdoor unit cleaning', 'Cooling performance check', '30 days warranty'], 499, 'ac'),
+('Power Jet Service - 2 AC', ARRAY['Power jet cleaning of 2 indoor units', 'Filter cleaning for both units', 'Outdoor unit cleaning for both', 'Cooling performance check', '30 days warranty'], 949, 'ac'),
+('Power Jet Service - 3 AC', ARRAY['Power jet cleaning of 3 indoor units', 'Filter cleaning for all units', 'Outdoor unit cleaning for all', 'Cooling performance check', '30 days warranty'], 1349, 'ac'),
+('Power Jet Service - 4 AC', ARRAY['Power jet cleaning of 4 indoor units', 'Filter cleaning for all units', 'Outdoor unit cleaning for all', 'Cooling performance check', '30 days warranty'], 1799, 'ac')
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
--- Step 3: Update Gas Refill & Check Up price
+-- Step 4: Update Gas Refill & Check Up price
 -- ============================================================
 UPDATE public.services SET price = 2499
 WHERE name ILIKE '%Gas Refill%Check Up%' AND service_type = 'ac';
@@ -46,7 +61,7 @@ UPDATE public.services SET price = 2499
 WHERE name ILIKE 'AC Gas Refill' AND service_type = 'ac';
 
 -- ============================================================
--- Step 4: Update Split AC Installation / Uninstallation prices
+-- Step 5: Update Split AC Installation / Uninstallation prices
 -- ============================================================
 UPDATE public.services SET price = 1499
 WHERE name ILIKE '%Split AC Installation%' AND service_type = 'ac';
@@ -55,7 +70,7 @@ UPDATE public.services SET price = 799
 WHERE name ILIKE '%Split AC Uninstallation%' AND service_type = 'ac';
 
 -- ============================================================
--- Step 5: Update Window AC Installation / Uninstallation prices
+-- Step 6: Update Window AC Installation / Uninstallation prices
 -- ============================================================
 UPDATE public.services SET price = 599
 WHERE name ILIKE '%Window AC Installation%' AND service_type = 'ac';
@@ -64,7 +79,7 @@ UPDATE public.services SET price = 499
 WHERE name ILIKE '%Window AC Uninstallation%' AND service_type = 'ac';
 
 -- ============================================================
--- Step 6: Insert missing services that may not exist yet
+-- Step 7: Insert missing services that may not exist yet
 -- (Gas Refill, Split/Window install/uninstall in old schema)
 -- ============================================================
 INSERT INTO public.services (name, description, price, service_type) VALUES
