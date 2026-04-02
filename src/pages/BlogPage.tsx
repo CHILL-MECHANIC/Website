@@ -63,9 +63,9 @@ const ARTICLES = [
     category: 'AC Tips',
     readTime: '5 min read',
     excerpt:
-      "Power jet cleaning starts at ₹499, foam jet at ₹599, and gas refilling at ₹2,499. Get a full breakdown of AC service costs in Gurgaon and tips to get the best value.",
+      "Power jet cleaning starts at ₹499, foam jet at ₹599, and gas refilling at ₹1,999. Get a full breakdown of AC service costs in Gurgaon and tips to get the best value.",
     fullArticle:
-      'Typical pricing in Gurgaon: power jet service from ₹499, foam service from ₹599, issue diagnostics from ₹249, and gas refill around ₹2,499 depending on tonnage and leakage condition. Always ask what is included: coil cleaning depth, drain line cleaning, electrical checks, and post-service cooling validation. Upfront estimates avoid hidden charges later.',
+      'Typical pricing in Gurgaon: power jet service from ₹499, foam service from ₹599, issue diagnostics from ₹249, and gas refill around ₹1,999 depending on tonnage and leakage condition. Always ask what is included: coil cleaning depth, drain line cleaning, electrical checks, and post-service cooling validation. Upfront estimates avoid hidden charges later.',
   },
   {
     id: 7,

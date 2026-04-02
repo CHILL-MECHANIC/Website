@@ -92,7 +92,7 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       id: "ac-gas-refill",
       name: "Gas Refill & Check Up",
       description: ["Gas leak detection", "Complete gas refill", "Pressure testing", "System performance check"],
-      price: 2499,
+      price: 1999,
     },
     {
       id: "ac-split-installation",
@@ -110,7 +110,7 @@ const serviceOptions: { [key: string]: ServiceOption[] } = {
       id: "ac-window-installation",
       name: "Window AC Installation",
       description: ["Window bracket installation", "AC unit mounting and leveling", "Weatherproofing and sealing", "Electrical connection", "Performance testing"],
-      price: 599,
+      price: 699,
     },
     {
       id: "ac-window-uninstall",

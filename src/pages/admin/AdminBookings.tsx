@@ -24,7 +24,7 @@ import { Label } from '@/components/ui/label';
 import { 
   Loader2, RefreshCw, UserPlus, Bell, Search, 
   Calendar, Clock, IndianRupee, Phone,
-  CheckCircle, XCircle, Play, AlertCircle, Plus
+  CheckCircle, XCircle, Play, AlertCircle, Plus, CheckSquare
 } from 'lucide-react';
 
 interface Booking {
@@ -668,6 +668,59 @@ export default function AdminBookings() {
     }
   };
 
+  // Close booking: mark as completed and send SMS to customer
+  const closeBooking = async (booking: BookingWithDetails) => {
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', booking.id);
+
+      if (error) throw error;
+
+      // Send completion SMS to customer
+      const customerPhone = booking.customer?.phone;
+      if (customerPhone) {
+        try {
+          const formattedPhone = String(customerPhone).replace(/^\+?91/, '');
+          const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const apiBaseUrl = isLocalhost ? 'http://localhost:3001' : '';
+
+          await fetch(`${apiBaseUrl}/api/sms/send`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              recipient: '91' + formattedPhone,
+              message: `Dear Customer, \n\nYour service request has been successfully completed by the Chill Mechanic team. We appreciate your trust in our services. Should you require any further assistance, please feel free to contact us. \n\nThank you for choosing Chill Mechanic.`,
+              type: 'OTP',
+              senderId: 'CHLMEH',
+              templateId: '1007732141749715637'
+            })
+          });
+        } catch (smsError) {
+          console.warn('[SMS] Failed to send booking completion SMS (non-critical):', smsError);
+        }
+      }
+
+      toast({
+        title: '✅ Booking Closed',
+        description: 'Booking marked as completed and SMS sent to customer.',
+      });
+
+      fetchBookings();
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to close booking',
+        variant: 'destructive'
+      });
+    }
+  };
+
   // Update booking status directly
   const updateBookingStatus = async (bookingId: string, newStatus: string) => {
     try {
@@ -1009,6 +1062,19 @@ export default function AdminBookings() {
                             title="Mark Complete"
                           >
                             <CheckCircle className="w-4 h-4" />
+                          </Button>
+                        )}
+
+                        {booking.status !== 'completed' && booking.status !== 'cancelled' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-green-600 text-green-700 hover:bg-green-50"
+                            onClick={() => closeBooking(booking)}
+                            title="Close Booking & Notify Customer"
+                          >
+                            <CheckSquare className="w-4 h-4 mr-1" />
+                            Close
                           </Button>
                         )}
                       </div>
