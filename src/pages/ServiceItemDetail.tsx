@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, X, Clock, Shield, DollarSign } from "lucide-react";
+import { useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { ArrowLeft, Check, X, Clock, Shield, DollarSign, Star, ShieldCheck, Wrench, Gauge, ClipboardCheck, Handshake, Rocket } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -358,14 +360,65 @@ const serviceItemDetails = {
     categoryTitle: "AC Service & Repair",
     images: [acServiceImage, acServiceImage2, acServiceImage3],
     price: 1999,
+    duration: "1-3 hours",
+    warranty: "60 days",
+    description: "Gas charging service with leak detection and pressure check. Choose your AC tonnage and charging type.",
+    detailedDescription: "Professional gas charging service for all AC tonnages. Choose between a gas top-up for minor cooling improvements or full gas charging for complete refrigerant replacement with vacuum testing and system optimization.",
+    included: [
+      "Leak detection",
+      "Pressure testing",
+      "Gas charging (top-up or full)",
+      "System performance optimization",
+      "Cooling performance check",
+      "60-day service warranty"
+    ],
+    notIncluded: [
+      "Compressor replacement",
+      "Major leak repairs",
+      "Coil replacement",
+      "Pipe replacement"
+    ]
+  },
+  "ac-gas-1ton-topup": {
+    id: "ac-gas-1ton-topup",
+    name: "Gas Top Up - 1 Ton AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 1999,
+    duration: "1-2 hours",
+    warranty: "60 days",
+    description: "Gas top-up with leak detection and pressure check for 1 Ton AC.",
+    detailedDescription: "Professional gas top-up service for 1 Ton AC units. Includes leak detection, pressure testing, and refrigerant top-up to restore optimal cooling performance.",
+    included: [
+      "Leak detection",
+      "Gas top-up to optimal level",
+      "Pressure testing",
+      "Cooling performance check",
+      "System optimization",
+      "60-day service warranty"
+    ],
+    notIncluded: [
+      "Compressor replacement",
+      "Major leak repairs",
+      "Coil replacement",
+      "Full gas evacuation"
+    ]
+  },
+  "ac-gas-1ton-full": {
+    id: "ac-gas-1ton-full",
+    name: "Full Gas Charging - 1 Ton AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 2999,
     duration: "2-3 hours",
     warranty: "60 days",
-    description: "Complete refrigerant gas refill service with comprehensive system check.",
-    detailedDescription: "Professional refrigerant gas refilling service including leak detection, pressure testing, and complete system optimization for maximum cooling efficiency.",
+    description: "Complete gas evacuation, fresh gas charging with leak detection for 1 Ton AC.",
+    detailedDescription: "Complete gas charging service for 1 Ton AC units. Includes full evacuation of old gas, vacuum testing, fresh refrigerant charging, and comprehensive system check.",
     included: [
-      "Leak detection and repair",
       "Complete gas evacuation",
-      "Fresh refrigerant gas filling",
+      "Vacuum testing",
+      "Fresh refrigerant gas charging",
+      "Leak detection and repair",
       "Pressure testing",
       "System performance optimization",
       "60-day service warranty"
@@ -374,7 +427,109 @@ const serviceItemDetails = {
       "Compressor replacement",
       "Major leak repairs",
       "Coil replacement",
-      "Additional gas top-ups"
+      "Pipe replacement"
+    ]
+  },
+  "ac-gas-1.5ton-topup": {
+    id: "ac-gas-1.5ton-topup",
+    name: "Gas Top Up - 1.5 Ton AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 2499,
+    duration: "1-2 hours",
+    warranty: "60 days",
+    description: "Gas top-up with leak detection and pressure check for 1.5 Ton AC.",
+    detailedDescription: "Professional gas top-up service for 1.5 Ton AC units. Includes leak detection, pressure testing, and refrigerant top-up to restore optimal cooling performance.",
+    included: [
+      "Leak detection",
+      "Gas top-up to optimal level",
+      "Pressure testing",
+      "Cooling performance check",
+      "System optimization",
+      "60-day service warranty"
+    ],
+    notIncluded: [
+      "Compressor replacement",
+      "Major leak repairs",
+      "Coil replacement",
+      "Full gas evacuation"
+    ]
+  },
+  "ac-gas-1.5ton-full": {
+    id: "ac-gas-1.5ton-full",
+    name: "Full Gas Charging - 1.5 Ton AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 3499,
+    duration: "2-3 hours",
+    warranty: "60 days",
+    description: "Complete gas evacuation, fresh gas charging with leak detection for 1.5 Ton AC.",
+    detailedDescription: "Complete gas charging service for 1.5 Ton AC units. Includes full evacuation of old gas, vacuum testing, fresh refrigerant charging, and comprehensive system check.",
+    included: [
+      "Complete gas evacuation",
+      "Vacuum testing",
+      "Fresh refrigerant gas charging",
+      "Leak detection and repair",
+      "Pressure testing",
+      "System performance optimization",
+      "60-day service warranty"
+    ],
+    notIncluded: [
+      "Compressor replacement",
+      "Major leak repairs",
+      "Coil replacement",
+      "Pipe replacement"
+    ]
+  },
+  "ac-gas-2ton-topup": {
+    id: "ac-gas-2ton-topup",
+    name: "Gas Top Up - 2 Ton AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 2999,
+    duration: "1-2 hours",
+    warranty: "60 days",
+    description: "Gas top-up with leak detection and pressure check for 2 Ton AC.",
+    detailedDescription: "Professional gas top-up service for 2 Ton AC units. Includes leak detection, pressure testing, and refrigerant top-up to restore optimal cooling performance.",
+    included: [
+      "Leak detection",
+      "Gas top-up to optimal level",
+      "Pressure testing",
+      "Cooling performance check",
+      "System optimization",
+      "60-day service warranty"
+    ],
+    notIncluded: [
+      "Compressor replacement",
+      "Major leak repairs",
+      "Coil replacement",
+      "Full gas evacuation"
+    ]
+  },
+  "ac-gas-2ton-full": {
+    id: "ac-gas-2ton-full",
+    name: "Full Gas Charging - 2 Ton AC",
+    categoryTitle: "AC Service & Repair",
+    images: [acServiceImage, acServiceImage2, acServiceImage3],
+    price: 3999,
+    duration: "2-3 hours",
+    warranty: "60 days",
+    description: "Complete gas evacuation, fresh gas charging with leak detection for 2 Ton AC.",
+    detailedDescription: "Complete gas charging service for 2 Ton AC units. Includes full evacuation of old gas, vacuum testing, fresh refrigerant charging, and comprehensive system check.",
+    included: [
+      "Complete gas evacuation",
+      "Vacuum testing",
+      "Fresh refrigerant gas charging",
+      "Leak detection and repair",
+      "Pressure testing",
+      "System performance optimization",
+      "60-day service warranty"
+    ],
+    notIncluded: [
+      "Compressor replacement",
+      "Major leak repairs",
+      "Coil replacement",
+      "Pipe replacement"
     ]
   },
   "ac-split-installation": {
@@ -924,7 +1079,7 @@ const serviceItemDetails = {
     id: "wd-checkup",
     name: "Check Up - Water Dispenser",
     categoryTitle: "Water Dispenser Service & Repair",
-    images: [waterDispenserServiceImage, waterDispenserServiceImage],
+    images: [waterDispenserServiceImage],
     price: 249,
     duration: "1-2 hours",
     warranty: "15 days",
@@ -952,7 +1107,7 @@ const serviceItemDetails = {
     id: "df-checkup",
     name: "Check Up - Deep Freezer",
     categoryTitle: "Deep Freezer Service & Repair",
-    images: [deepFreezerServiceImage, deepFreezerServiceImage],
+    images: [deepFreezerServiceImage],
     price: 249,
     duration: "1-2 hours",
     warranty: "15 days",
@@ -978,11 +1133,30 @@ const serviceItemDetails = {
 
 };
 
+const gasChargingOptions = [
+  {
+    tonnage: "1 Ton",
+    topUp: { id: "ac-gas-1ton-topup", name: "Gas Top Up - 1 Ton AC", price: 1999, description: "Gas top-up with leak detection and pressure check for 1 Ton AC." },
+    fullCharge: { id: "ac-gas-1ton-full", name: "Full Gas Charging - 1 Ton AC", price: 2999, description: "Complete gas evacuation, fresh gas charging with leak detection for 1 Ton AC." },
+  },
+  {
+    tonnage: "1.5 Ton",
+    topUp: { id: "ac-gas-1.5ton-topup", name: "Gas Top Up - 1.5 Ton AC", price: 2499, description: "Gas top-up with leak detection and pressure check for 1.5 Ton AC." },
+    fullCharge: { id: "ac-gas-1.5ton-full", name: "Full Gas Charging - 1.5 Ton AC", price: 3499, description: "Complete gas evacuation, fresh gas charging with leak detection for 1.5 Ton AC." },
+  },
+  {
+    tonnage: "2 Ton",
+    topUp: { id: "ac-gas-2ton-topup", name: "Gas Top Up - 2 Ton AC", price: 2999, description: "Gas top-up with leak detection and pressure check for 2 Ton AC." },
+    fullCharge: { id: "ac-gas-2ton-full", name: "Full Gas Charging - 2 Ton AC", price: 3999, description: "Complete gas evacuation, fresh gas charging with leak detection for 2 Ton AC." },
+  },
+];
+
 export default function ServiceItemDetail() {
   const { serviceType, serviceId } = useParams<{ serviceType: string; serviceId: string }>();
   const navigate = useNavigate();
   const { addToCart, getCartItemsCount } = useCart();
   
+  const isGasRefill = serviceId === "ac-gas-refill";
   const serviceItem = serviceId ? serviceItemDetails[serviceId as keyof typeof serviceItemDetails] : null;
 
   if (!serviceItem) {
@@ -1019,8 +1193,85 @@ export default function ServiceItemDetail() {
     navigate("/cart");
   };
 
+  const handleGasAddToCart = (option: { id: string; name: string; price: number; description: string }) => {
+    addToCart([{
+      id: option.id,
+      name: option.name,
+      description: [option.description],
+      price: option.price,
+    }]);
+    toast({
+      title: "Added to cart",
+      description: `${option.name} (₹${option.price}) has been added to your cart.`,
+    });
+  };
+
+  const handleGasBookNow = (option: { id: string; name: string; price: number; description: string }) => {
+    handleGasAddToCart(option);
+    navigate("/cart");
+  };
+
+  const GasRefillInfoSection = ({ className = "" }: { className?: string }) => (
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle className="text-xl flex items-center gap-2">
+          <Star className="h-5 w-5 text-amber-500" />
+          Highlights
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <ul className="space-y-3">
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Accurate gas level diagnosis using advanced tools</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Gas refilling done only if required and approved by customer</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Suitable for Split and Window ACs</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Complete leakage detection and repair support</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Ensures better cooling and energy efficiency</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Transparent pricing with no hidden charges</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Skilled and experienced technicians</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>Quick service with same-day availability</span></li>
+          <li className="flex items-start gap-3"><Check className="h-4 w-4 mt-1 text-primary" /><span>3 months warranty on gas charging (our work)</span></li>
+        </ul>
+
+        <div>
+          <h4 className="font-semibold text-base mb-3 flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-emerald-600" />
+            Why Choose Us
+          </h4>
+          <ul className="space-y-2 text-muted-foreground">
+            <li className="flex items-start gap-2"><Wrench className="h-4 w-4 mt-1 text-primary" /><span>Professional inspection before refilling</span></li>
+            <li className="flex items-start gap-2"><Gauge className="h-4 w-4 mt-1 text-primary" /><span>Proper pressure and performance testing</span></li>
+            <li className="flex items-start gap-2"><ClipboardCheck className="h-4 w-4 mt-1 text-primary" /><span>End-to-end service (checkup to repair to refill)</span></li>
+            <li className="flex items-start gap-2"><Handshake className="h-4 w-4 mt-1 text-primary" /><span>Customer approval before any extra work</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-base mb-3 flex items-center gap-2">
+            <Rocket className="h-5 w-5 text-orange-600" />
+            Service Promise
+          </h4>
+          <ul className="space-y-2 text-muted-foreground">
+            <li className="flex items-start gap-2"><Check className="h-4 w-4 mt-1 text-primary" /><span>No unnecessary gas refilling</span></li>
+            <li className="flex items-start gap-2"><Check className="h-4 w-4 mt-1 text-primary" /><span>Clean and hassle-free service</span></li>
+            <li className="flex items-start gap-2"><Check className="h-4 w-4 mt-1 text-primary" /><span>Reliable after-service support</span></li>
+          </ul>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <>
+      {isGasRefill && (
+        <Helmet>
+          <title>AC Gas Refill & Charging Gurgaon | 1T, 1.5T, 2T | Top Up & Full Charging | Chill Mechanic</title>
+          <meta name="description" content="Professional AC gas refill & charging in Gurgaon. Top up from ₹1999, full gas charging from ₹2999. Covers 1, 1.5 & 2 Ton ACs. Leak detection included. 3-month warranty. Same-day service. Book now!" />
+          <link rel="canonical" href="https://chillmechanic.com/services/ac/ac-gas-refill" />
+          <meta property="og:title" content="AC Gas Refill & Charging Gurgaon | Chill Mechanic" />
+          <meta property="og:description" content="Expert AC gas refill service in Gurgaon. Top up or full charging for 1T, 1.5T & 2T ACs. Transparent pricing, no hidden charges. 3-month warranty." />
+          <meta property="og:url" content="https://chillmechanic.com/services/ac/ac-gas-refill" />
+        </Helmet>
+      )}
       <div className="min-h-screen bg-background">
         <Header cartItemsCount={getCartItemsCount()} />
       
@@ -1035,44 +1286,43 @@ export default function ServiceItemDetail() {
           Back to {serviceItem.categoryTitle}
         </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Service Image Carousel */}
-          <div>
-            <div className="relative mb-8">
-              <Carousel className="w-full">
-                <CarouselContent>
-                  {serviceItem.images.map((image, index) => (
-                    <CarouselItem key={index}>
-                      <img
-                        src={image}
-                        alt={`${serviceItem.name} - Image ${index + 1}`}
-                        className="w-full h-96 object-cover rounded-lg shadow-lg"
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-4" />
-                <CarouselNext className="right-4" />
-              </Carousel>
-            </div>
-            
+          <div className="flex flex-col gap-6">
+            <Carousel className="w-full">
+              <CarouselContent>
+                {serviceItem.images.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <img
+                      src={image}
+                      alt={`${serviceItem.name} - Image ${index + 1}`}
+                      className="w-full h-96 object-cover rounded-lg shadow-lg"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-4" />
+              <CarouselNext className="right-4" />
+            </Carousel>
+
+            {isGasRefill && <GasRefillInfoSection className="hidden lg:block" />}
           </div>
 
           {/* Service Details */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-3">
               <Badge variant="secondary">{serviceItem.categoryTitle}</Badge>
             </div>
-            
-            <h1 className="text-4xl font-bold mb-4">{serviceItem.name}</h1>
-            
-            <div className="grid grid-cols-3 gap-4 mb-6">
+
+            <h1 className="text-4xl font-bold">{serviceItem.name}</h1>
+
+            <div className="grid grid-cols-3 gap-4">
               <Card className="p-4">
                 <div className="flex items-center justify-center mb-2">
                   <DollarSign className="h-5 w-5 text-primary" />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">₹{serviceItem.price}</div>
+                  <div className="text-2xl font-bold text-primary">{isGasRefill ? "From " : ""}₹{serviceItem.price}</div>
                   <div className="text-sm text-muted-foreground">Price</div>
                 </div>
               </Card>
@@ -1096,7 +1346,7 @@ export default function ServiceItemDetail() {
               </Card>
             </div>
 
-            <Card className="p-6 mb-6">
+            <Card className="p-6">
               <CardHeader className="px-0 pt-0">
                 <CardTitle className="text-xl">Service Description</CardTitle>
               </CardHeader>
@@ -1107,14 +1357,56 @@ export default function ServiceItemDetail() {
               </CardContent>
             </Card>
 
-            <div className="flex gap-3 mb-8">
-              <Button onClick={handleBookNow} size="lg" className="flex-1">
-                Book Now
-              </Button>
-              <Button onClick={handleAddToCart} variant="outline" size="lg" className="flex-1">
-                Add to Cart
-              </Button>
-            </div>
+            {isGasRefill ? (
+              /* Gas Refill Tonnage Selection Cards */
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold">Select AC Tonnage & Charging Type</h3>
+                {gasChargingOptions.map((option) => (
+                  <Card key={option.tonnage} className="p-5 border-2 hover:border-primary/50 transition-colors">
+                    <h4 className="text-lg font-bold mb-4 text-center">{option.tonnage} AC</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Top Up Option */}
+                      <div className="border rounded-lg p-4 text-center">
+                        <p className="text-sm text-muted-foreground mb-1">Top Up</p>
+                        <p className="text-2xl font-bold text-primary mb-3">₹{option.topUp.price}</p>
+                        <div className="flex flex-col gap-2">
+                          <Button size="sm" onClick={() => handleGasBookNow(option.topUp)} className="w-full">
+                            Book Now
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => handleGasAddToCart(option.topUp)} className="w-full">
+                            Add to Cart
+                          </Button>
+                        </div>
+                      </div>
+                      {/* Full Gas Charging Option */}
+                      <div className="border rounded-lg p-4 text-center">
+                        <p className="text-sm text-muted-foreground mb-1">Full Gas Charging</p>
+                        <p className="text-2xl font-bold text-primary mb-3">₹{option.fullCharge.price}</p>
+                        <div className="flex flex-col gap-2">
+                          <Button size="sm" onClick={() => handleGasBookNow(option.fullCharge)} className="w-full">
+                            Book Now
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => handleGasAddToCart(option.fullCharge)} className="w-full">
+                            Add to Cart
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-3">
+                <Button onClick={handleBookNow} size="lg" className="flex-1">
+                  Book Now
+                </Button>
+                <Button onClick={handleAddToCart} variant="outline" size="lg" className="flex-1">
+                  Add to Cart
+                </Button>
+              </div>
+            )}
+
+            {isGasRefill && <GasRefillInfoSection className="lg:hidden" />}
           </div>
         </div>
 

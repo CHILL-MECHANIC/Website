@@ -8,6 +8,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { createOrder, verifyPayment, openRazorpayCheckout } from "@/services/paymentClient";
+import { createBooking as apiCreateBooking } from "@/services/bookingClient";
 import { Loader2, Lock, ShieldCheck, CreditCard, Smartphone, Building2, Clock, MapPin } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -18,19 +19,6 @@ interface BookingData {
   instructions: string;
   serviceAddress?: string;
 }
-
-// Helper to get API base URL
-const getApiBaseUrl = (): string => {
-  // In development: use Express backend on localhost:3001
-  // In production: use relative URLs for Vercel serverless functions
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:3001';
-    }
-  }
-  return ''; // Production: relative URLs for Vercel
-};
 
 export default function Payment() {
   const navigate = useNavigate();
@@ -60,64 +48,22 @@ export default function Payment() {
 
   // Create booking via API
   const createBooking = async (isPayLater: boolean = false) => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) throw new Error('Not authenticated');
-
-    const apiBase = getApiBaseUrl();
-    const url = `${apiBase}/api/booking/create`;
-    
-    if (import.meta.env.DEV) {
-      console.log('[Payment] Creating booking:', url);
-    }
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        bookingDate: bookingData.date,
-        bookingTime: bookingData.time,
-        totalAmount: subtotal,
-        serviceTax: 0,
-        finalAmount: total,
-        specialInstructions: bookingData.instructions || '',
-        serviceAddress: bookingData.serviceAddress || '',
-        paymentMode: isPayLater ? 'pay_later' : 'pay_now',
-        items: Array.from(cartItems).map(item => ({
-          name: item.name,
-          description: Array.isArray(item.description) ? item.description.join(', ') : item.description,
-          price: item.price,
-          quantity: item.quantity
-        }))
-      })
+    return apiCreateBooking({
+      bookingDate: bookingData.date,
+      bookingTime: bookingData.time,
+      totalAmount: subtotal,
+      serviceTax: 0,
+      finalAmount: total,
+      specialInstructions: bookingData.instructions || '',
+      serviceAddress: bookingData.serviceAddress || '',
+      paymentMode: isPayLater ? 'pay_later' : 'pay_now',
+      items: Array.from(cartItems).map(item => ({
+        name: item.name,
+        description: Array.isArray(item.description) ? item.description.join(', ') : item.description,
+        price: item.price,
+        quantity: item.quantity,
+      })),
     });
-
-    // Check if response is OK before parsing JSON
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[Payment] Booking API error:', response.status, errorText);
-      
-      // Try to parse as JSON if possible
-      let errorMessage = `Failed to create booking (${response.status})`;
-      try {
-        const errorJson = JSON.parse(errorText);
-        errorMessage = errorJson.message || errorMessage;
-      } catch {
-        // If not JSON, use the text or status
-        errorMessage = errorText || errorMessage;
-      }
-      
-      throw new Error(errorMessage);
-    }
-
-    // Parse JSON only if response is OK
-    const result = await response.json();
-    if (!result.success) {
-      throw new Error(result.message || 'Failed to create booking');
-    }
-    return result.booking;
   };
 
   // Process Pay Later - just create booking without payment

@@ -143,10 +143,8 @@ const Index = () => {
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px]"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl mb-4 text-white text-center font-bold md:text-7xl animate-fade-in drop-shadow-2xl [text-shadow:_2px_2px_8px_rgba(0,0,0,0.8)]">
-            HAPPY APPLIANCES,
-          </h1>
-          <h1 className="text-4xl mb-4 text-white text-center font-bold md:text-7xl animate-fade-in drop-shadow-2xl [text-shadow:_2px_2px_8px_rgba(0,0,0,0.8)]">
-            HAPPIER HOMES
+            <span className="block">HAPPY APPLIANCES,</span>
+            <span className="block">HAPPIER HOMES</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-white/90 animate-fade-in [animation-delay:200ms] drop-shadow-lg [text-shadow:_1px_1px_4px_rgba(0,0,0,0.7)]">
           Reliable, efficient, and affordable solutions for all your home appliance needs because your comfort deserves the best.
@@ -175,7 +173,7 @@ const Index = () => {
             <div className="flex items-center gap-8 px-8">
               <span className="text-sm font-semibold flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
-                GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10
+                GET 5% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP OR WEBSITE USE CODE - APP5
               </span>
             </div>
           </div>
@@ -183,7 +181,7 @@ const Index = () => {
             <div className="flex items-center gap-8 px-8">
               <span className="text-sm font-semibold flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
-                GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10
+                GET 5% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP OR WEBSITE USE CODE - APP5
               </span>
             </div>
           </div>
@@ -191,7 +189,7 @@ const Index = () => {
             <div className="flex items-center gap-8 px-8">
               <span className="text-sm font-semibold flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
-                GET 10% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP USE CODE - APP10
+                GET 5% OFF ON SERVICE PARTS BOOKED VIA MOBILE APP OR WEBSITE USE CODE - APP5
               </span>
             </div>
           </div>
@@ -276,7 +274,7 @@ const Index = () => {
                       ))}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      "I recently used Chill Mechanic for some home repairs, and l was very impressed. Their prices are really reasonable which made it easy for me to get the help I needed without breaking the bank. The quality of their work was excellent too. They were professional and quick. Highly recommend Chill Mechanic for any one looking for affordable and reliable home repair services!"
+                      "I recently used Chill Mechanic for some home repairs, and I was very impressed. Their prices are really reasonable which made it easy for me to get the help I needed without breaking the bank. The quality of their work was excellent too. They were professional and quick. Highly recommend Chill Mechanic for any one looking for affordable and reliable home repair services!"
                     </p>
                     <div>
                       <p className="font-semibold">Shashi</p>
@@ -312,7 +310,7 @@ const Index = () => {
                       ))}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and┬ádid┬áa┬ágood┬ájob."
+                      "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and did a good job."
                     </p>
                     <div>
                       <p className="font-semibold">Nitin</p>
