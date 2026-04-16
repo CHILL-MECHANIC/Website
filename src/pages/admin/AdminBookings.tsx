@@ -190,13 +190,16 @@ export default function AdminBookings() {
       const technicianIds = [...new Set(bookingsData.map(b => b.technician_id).filter(Boolean))] as string[];
       const bookingIds = bookingsData.map(b => b.id);
 
-      // Fetch profiles
-      const { data: profilesData } = userIds.length > 0
-        ? await supabase
-            .from('profiles')
-            .select('user_id, full_name, phone, email, address')
-            .in('user_id', userIds)
-        : { data: [] };
+      // Fetch profiles in batches to avoid URL length limits
+      let profilesData: any[] = [];
+      for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
+        const batch = userIds.slice(i, i + BATCH_SIZE);
+        const { data } = await supabase
+          .from('profiles')
+          .select('user_id, full_name, phone, email, address')
+          .in('user_id', batch);
+        if (data) profilesData = profilesData.concat(data);
+      }
 
       // Fetch booking items in batches to avoid URL length limits
       const BATCH_SIZE = 50;
