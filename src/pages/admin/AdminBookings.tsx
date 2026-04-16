@@ -198,11 +198,17 @@ export default function AdminBookings() {
             .in('user_id', userIds)
         : { data: [] };
 
-      // Fetch booking items
-      const { data: itemsData } = await supabase
-        .from('booking_items')
-        .select('*')
-        .in('booking_id', bookingIds);
+      // Fetch booking items in batches to avoid URL length limits
+      const BATCH_SIZE = 50;
+      let itemsData: any[] = [];
+      for (let i = 0; i < bookingIds.length; i += BATCH_SIZE) {
+        const batch = bookingIds.slice(i, i + BATCH_SIZE);
+        const { data } = await supabase
+          .from('booking_items')
+          .select('*')
+          .in('booking_id', batch);
+        if (data) itemsData = itemsData.concat(data);
+      }
 
       // Fetch technicians
       let techniciansData: Technician[] = [];
