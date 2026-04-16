@@ -190,37 +190,52 @@ export default function AdminBookings() {
       const technicianIds = [...new Set(bookingsData.map(b => b.technician_id).filter(Boolean))] as string[];
       const bookingIds = bookingsData.map(b => b.id);
 
+      // Batch size for all queries to avoid URL length limits
+      const BATCH_SIZE = 50;
+
       // Fetch profiles in batches to avoid URL length limits
-      let profilesData: any[] = [];
+      let profilesData: Profile[] = [];
       for (let i = 0; i < userIds.length; i += BATCH_SIZE) {
         const batch = userIds.slice(i, i + BATCH_SIZE);
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from('profiles')
           .select('user_id, full_name, phone, email, address')
           .in('user_id', batch);
-        if (data) profilesData = profilesData.concat(data);
+        if (error) {
+          console.error('Profiles batch fetch error:', error);
+          throw error;
+        }
+        if (data) profilesData = profilesData.concat(data as Profile[]);
       }
 
       // Fetch booking items in batches to avoid URL length limits
-      const BATCH_SIZE = 50;
-      let itemsData: any[] = [];
+      let itemsData: BookingItem[] = [];
       for (let i = 0; i < bookingIds.length; i += BATCH_SIZE) {
         const batch = bookingIds.slice(i, i + BATCH_SIZE);
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from('booking_items')
           .select('*')
           .in('booking_id', batch);
-        if (data) itemsData = itemsData.concat(data);
+        if (error) {
+          console.error('Booking items batch fetch error:', error);
+          throw error;
+        }
+        if (data) itemsData = itemsData.concat(data as BookingItem[]);
       }
 
-      // Fetch technicians
+      // Fetch technicians in batches to avoid URL length limits
       let techniciansData: Technician[] = [];
-      if (technicianIds.length > 0) {
-        const { data } = await supabase
+      for (let i = 0; i < technicianIds.length; i += BATCH_SIZE) {
+        const batch = technicianIds.slice(i, i + BATCH_SIZE);
+        const { data, error } = await supabase
           .from('technicians')
           .select('*')
-          .in('id', technicianIds);
-        techniciansData = (data || []) as Technician[];
+          .in('id', batch);
+        if (error) {
+          console.error('Technicians batch fetch error:', error);
+          throw error;
+        }
+        if (data) techniciansData = techniciansData.concat(data as Technician[]);
       }
 
       // Step 3: Combine data
