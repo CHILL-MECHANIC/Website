@@ -9,6 +9,8 @@ import { toast } from "@/hooks/use-toast";
 import TrustBadgeBar from "@/components/TrustBadgeBar";
 import FaqAccordion from "@/components/FaqAccordion";
 import CustomerReviews from "@/components/CustomerReviews";
+import BrandsCarousel from "@/components/BrandsCarousel";
+import ServiceAreas from "@/components/ServiceAreas";
 import { serviceFaqMap } from "@/data/faqs";
 import { generateFaqSchema } from "@/utils/faqSchema";
 
@@ -281,19 +283,21 @@ export default function ServiceDetail() {
             {service.services.map((serviceItem) => (
               <Card key={serviceItem.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <h3 className="text-xl font-semibold">{serviceItem.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-semibold">{serviceItem.name}</h3>
+                    {serviceItem.name.toLowerCase().includes('foam') && (
+                      <span className="ml-2 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">Free gas check</span>
+                    )}
+                  </div>
                 </CardHeader>
-                
                 <CardContent>
                   <p className="text-muted-foreground mb-4">
                     {serviceItem.description}
                   </p>
-                  
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm text-muted-foreground">Starting from</span>
                     <span className="text-2xl font-bold text-primary">₹{serviceItem.price}</span>
                   </div>
-                  
                   <div className="flex gap-3">
                     <Button 
                       onClick={() => navigate(`/services/${serviceType}/${serviceItem.id}`)}
@@ -339,6 +343,8 @@ export default function ServiceDetail() {
           </div>
         </div>
       </section>
+      <BrandsCarousel />
+      <ServiceAreas />
     </div>
     <Footer />
     </>

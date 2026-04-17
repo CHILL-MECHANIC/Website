@@ -11,6 +11,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 import CustomerReviews from "@/components/CustomerReviews";
+import BrandsCarousel from "@/components/BrandsCarousel";
+import ServiceAreas from "@/components/ServiceAreas";
 
 import acServiceImage from "@/assets/ac-service.jpg";
 import acServiceImage2 from "@/assets/ac-service-2.jpg";
@@ -1053,7 +1055,7 @@ const serviceItemDetails = {
     id: "microwave-checkup",
     name: "Check Up",
     categoryTitle: "Microwave Service & Repair",
-    images: [microwaveServiceImage, microwaveServiceImage2],
+    images: [microwaveServiceImage],
     price: 249,
     duration: "1 hour",
     warranty: "15 days",
@@ -1315,6 +1317,9 @@ export default function ServiceItemDetail() {
             </div>
 
             <h1 className="text-4xl font-bold">{serviceItem.name}</h1>
+            {serviceItem.name.toLowerCase().includes('foam') && (
+              <span className="inline-block ml-3 align-middle bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">Free gas check</span>
+            )}
 
             <div className="grid grid-cols-3 gap-4">
               <Card className="p-4">
@@ -1455,6 +1460,8 @@ export default function ServiceItemDetail() {
 
         <CustomerReviews />
       </div>
+      <BrandsCarousel />
+      <ServiceAreas />
     </div>
     <Footer />
     </>

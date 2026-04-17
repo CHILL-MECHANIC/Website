@@ -12,6 +12,16 @@ import {
 } from '@icons-pack/react-simple-icons';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
+// Import brand logos from assets
+import daikinLogo from '@/assets/daikin-logo-1-.svg';
+import whirlpoolLogo from '@/assets/whirlpool-corporation-logo-as-of-2017-.svg';
+import bajajLogo from '@/assets/bajaj-auto-logo.svg';
+import cromptonLogo from '@/assets/crompton-logo.svg';
+import vguardLogo from '@/assets/v-guard.svg';
+import godrejLogoSvg from '@/assets/Godrej_Logo.svg';
+import bluestarLogoSvg from '@/assets/blue-star-limited-logo-vector.svg';
+
+
 type IconProps = { size?: number | string; color?: string; title?: string };
 
 type Brand = {
@@ -19,35 +29,17 @@ type Brand = {
   color: string;
   short: string;
   Icon?: ComponentType<IconProps>;
+  image?: string;
 };
 
 const ALL_BRANDS: Brand[] = [
-  { name: 'LG', Icon: SiLg, color: '#a50034', short: 'LG' },
-  { name: 'Samsung', Icon: SiSamsung, color: '#1428a0', short: 'SS' },
-  { name: 'Daikin', color: '#00a0df', short: 'DK' },
-  { name: 'Voltas', color: '#005baa', short: 'VT' },
-  { name: 'Blue Star', color: '#0d4da1', short: 'BS' },
-  { name: 'Hitachi', Icon: SiHitachi, color: '#e60012', short: 'HT' },
-  { name: 'Carrier', color: '#1f4e8c', short: 'CR' },
-  { name: 'O General', Icon: SiFujitsu, color: '#d71920', short: 'OG' },
-  { name: 'Lloyd', color: '#0f6ab4', short: 'LL' },
-  { name: 'Whirlpool', color: '#003da5', short: 'WP' },
-  { name: 'Godrej', color: '#0067b8', short: 'GJ' },
-  { name: 'Haier', color: '#00529c', short: 'HR' },
-  { name: 'Bosch', Icon: SiBosch, color: '#ea0016', short: 'BH' },
-  { name: 'Siemens', Icon: SiSiemens, color: '#009999', short: 'SM' },
-  { name: 'IFB', color: '#005baa', short: 'IFB' },
-  { name: 'Kent', color: '#e31e24', short: 'KT' },
-  { name: 'Aquaguard', color: '#0070ba', short: 'AQ' },
-  { name: 'Pureit', color: '#1f5dbb', short: 'PT' },
-  { name: 'Livpure', color: '#00a3e0', short: 'LP' },
-  { name: 'AO Smith', color: '#e2231a', short: 'AO' },
-  { name: 'Bajaj', color: '#003ca6', short: 'BJ' },
-  { name: 'Havells', Icon: SiHavells, color: '#e31c24', short: 'HV' },
-  { name: 'Crompton', color: '#00a0e3', short: 'CP' },
-  { name: 'V-Guard', color: '#ef4123', short: 'VG' },
-  { name: 'Racold', color: '#f58220', short: 'RC' },
-  { name: 'Panasonic', Icon: SiPanasonic, color: '#0046be', short: 'PN' },
+  { name: 'Daikin', image: daikinLogo, color: '#00a0df', short: 'DK' },
+  { name: 'Blue Star', image: bluestarLogoSvg, color: '#0d4da1', short: 'BS' },
+  { name: 'Whirlpool', image: whirlpoolLogo, color: '#003da5', short: 'WP' },
+  { name: 'Godrej', image: godrejLogoSvg, color: '#0067b8', short: 'GJ' },
+  { name: 'Bajaj', image: bajajLogo, color: '#003ca6', short: 'BJ' },
+  { name: 'Crompton', image: cromptonLogo, color: '#00a0e3', short: 'CP' },
+  { name: 'V-Guard', image: vguardLogo, color: '#ef4123', short: 'VG' },
 ];
 
 export default function BrandsCarousel() {
@@ -70,23 +62,16 @@ export default function BrandsCarousel() {
           <CarouselContent className="-ml-2 md:-ml-4">
             {ALL_BRANDS.map((brand, index) => (
               <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
-                <div className="flex items-center justify-center h-24 px-4 rounded-lg border border-border bg-white/90 hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing">
-                  {brand.Icon ? (
-                    <div className="flex flex-col items-center gap-2 text-center">
-                      <brand.Icon size={32} color={brand.color} title={brand.name} />
-                      <span className="text-xs md:text-sm font-semibold text-foreground">{brand.name}</span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center gap-2 text-center">
-                      <span
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-md text-xs font-bold text-white"
-                        style={{ backgroundColor: brand.color }}
-                      >
-                        {brand.short}
-                      </span>
-                      <span className="text-xs md:text-sm font-semibold text-foreground">{brand.name}</span>
-                    </div>
-                  )}
+                <div className="flex items-center justify-center h-24 px-4 bg-white/90 cursor-grab active:cursor-grabbing">
+                  <img
+                    src={brand.image}
+                    alt={brand.name}
+                    className={
+                      brand.name === 'Blue Star'
+                        ? 'h-20 w-auto object-contain scale-125'
+                        : 'h-12 w-auto object-contain'
+                    }
+                  />
                 </div>
               </CarouselItem>
             ))}
