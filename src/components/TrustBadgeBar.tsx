@@ -3,7 +3,7 @@ import { Award, Users, Star, Zap, BadgeCheck, Settings2 } from 'lucide-react';
 const BADGES = [
   { Icon: Award, text: '50+ Years Experience' },
   { Icon: Users, text: '10,000+ Happy Customers' },
-  { Icon: Star, text: '4.8/5 Google Rating' },
+  { Icon: Star, text: '5/5 Google Rating' },
   { Icon: Zap, text: 'Same Day Service' },
   { Icon: BadgeCheck, text: 'Certified Technicians' },
   { Icon: Settings2, text: 'Genuine Parts' },

@@ -169,7 +169,7 @@ export default function GalleryPage() {
           </div>
           <p className="text-center text-muted-foreground mb-1">10,000+ happy customers across Gurgaon</p>
           <p className="text-center text-sm mb-10">
-            <Star className="inline h-4 w-4 fill-yellow-400 text-yellow-400 -mt-0.5" /> 4.8/5 on Google
+            <Star className="inline h-4 w-4 fill-yellow-400 text-yellow-400 -mt-0.5" /> 5/5 on Google
           </p>
 
           <Carousel opts={{ align: 'start', loop: true }} className="w-full max-w-6xl mx-auto">
