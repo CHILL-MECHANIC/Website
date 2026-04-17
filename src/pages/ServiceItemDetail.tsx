@@ -363,7 +363,7 @@ const serviceItemDetails = {
     images: [acServiceImage, acServiceImage2, acServiceImage3],
     price: 1999,
     duration: "1-3 hours",
-    warranty: "60 days",
+    warranty: "90 days",
     description: "Gas charging service with leak detection and pressure check. Choose your AC tonnage and charging type.",
     detailedDescription: "Professional gas charging service for all AC tonnages. Choose between a gas top-up for minor cooling improvements or full gas charging for complete refrigerant replacement with vacuum testing and system optimization.",
     included: [
@@ -372,7 +372,7 @@ const serviceItemDetails = {
       "Gas charging (top-up or full)",
       "System performance optimization",
       "Cooling performance check",
-      "60-day service warranty"
+      "90-day service warranty"
     ],
     notIncluded: [
       "Compressor replacement",

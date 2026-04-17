@@ -39,7 +39,7 @@ export default function CustomerReviews() {
             {[1,2,3,4,5].map(i => (
               <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
             ))}
-            <span className="text-sm font-medium ml-1">4.8/5 on Google</span>
+            <span className="text-sm font-medium ml-1">5/5 on Google</span>
           </div>
         </div>
 
