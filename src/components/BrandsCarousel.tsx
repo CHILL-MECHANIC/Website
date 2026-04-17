@@ -40,6 +40,14 @@ const ALL_BRANDS: Brand[] = [
   { name: 'Bajaj', image: bajajLogo, color: '#003ca6', short: 'BJ' },
   { name: 'Crompton', image: cromptonLogo, color: '#00a0e3', short: 'CP' },
   { name: 'V-Guard', image: vguardLogo, color: '#ef4123', short: 'VG' },
+  { name: 'LG', Icon: SiLg, color: '#d32f2f', short: 'LG' },
+  { name: 'Samsung', Icon: SiSamsung, color: '#1428a0', short: 'SM' },
+  { name: 'Panasonic', Icon: SiPanasonic, color: '#003087', short: 'PN' },
+  { name: 'Hitachi', Icon: SiHitachi, color: '#d40000', short: 'HT' },
+  { name: 'Fujitsu', Icon: SiFujitsu, color: '#e4002b', short: 'FJ' },
+  { name: 'Bosch', Icon: SiBosch, color: '#ea001b', short: 'BS' },
+  { name: 'Siemens', Icon: SiSiemens, color: '#009999', short: 'SN' },
+  { name: 'Havells', Icon: SiHavells, color: '#ff6600', short: 'HV' },
 ];
 
 export default function BrandsCarousel() {
@@ -62,16 +70,20 @@ export default function BrandsCarousel() {
           <CarouselContent className="-ml-2 md:-ml-4">
             {ALL_BRANDS.map((brand, index) => (
               <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
-                <div className="flex items-center justify-center h-24 px-4 bg-white/90 cursor-grab active:cursor-grabbing">
-                  <img
-                    src={brand.image}
-                    alt={brand.name}
-                    className={
-                      brand.name === 'Blue Star'
-                        ? 'h-20 w-auto object-contain scale-125'
-                        : 'h-12 w-auto object-contain'
-                    }
-                  />
+                <div className="flex items-center justify-center h-24 px-4 bg-white/90 cursor-grab active:cursor-grabbing hover:bg-white/95 transition-colors">
+                  {brand.image ? (
+                    <img
+                      src={brand.image}
+                      alt={brand.name}
+                      className={
+                        brand.name === 'Blue Star'
+                          ? 'h-20 w-auto object-contain scale-125'
+                          : 'h-12 w-auto object-contain'
+                      }
+                    />
+                  ) : brand.Icon ? (
+                    <brand.Icon size={48} color={brand.color} title={brand.name} />
+                  ) : null}
                 </div>
               </CarouselItem>
             ))}
