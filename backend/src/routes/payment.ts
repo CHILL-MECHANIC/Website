@@ -282,27 +282,39 @@ router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
   // Send SMS confirmation
   if (phone && process.env.SMS_API_KEY) {
     try {
-      const formattedPhone = phone.replace(/^\+?91/, '');
-      const smsMessage = `Dear Customer, Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed. Regards, Chill Mechanic Happy Appliances, Happier Homes`;
+      // Clean phone: remove all non-digits, then handle format
+      let formattedPhone = String(phone).replace(/\D/g, '');
+      if (formattedPhone.length === 12 && formattedPhone.startsWith('91')) {
+        formattedPhone = formattedPhone.substring(2);
+      } else if (formattedPhone.length === 11 && formattedPhone.startsWith('0')) {
+        formattedPhone = formattedPhone.substring(1);
+      }
       
-      await axios.post(
-        'https://api.uniquedigitaloutreach.com/v1/sms',
-        {
-          sender: process.env.SMS_SENDER_ID || 'CHLMEH',
-          to: '91' + formattedPhone,
-          text: smsMessage,
-          type: 'OTP',
-          templateId: '1007913640137046123'
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': process.env.SMS_API_KEY
+      // Skip if invalid
+      if (formattedPhone.length === 10 && /^\d{10}$/.test(formattedPhone)) {
+        const smsMessage = `Dear Customer, Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed. Regards, Chill Mechanic Happy Appliances, Happier Homes`;
+        
+        await axios.post(
+          'https://api.uniquedigitaloutreach.com/v1/sms',
+          {
+            sender: process.env.SMS_SENDER_ID || 'CHLMEH',
+            to: '91' + formattedPhone,
+            text: smsMessage,
+            type: 'OTP',
+            templateId: '1007913640137046123'
           },
-          timeout: 30000
-        }
-      );
-      console.log('Booking confirmation SMS sent');
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': process.env.SMS_API_KEY
+            },
+            timeout: 30000
+          }
+        );
+        console.log('Booking confirmation SMS sent');
+      } else {
+        console.warn('[SMS] Invalid phone after cleaning:', formattedPhone, 'original:', phone);
+      }
     } catch (smsError) {
       console.error('SMS sending failed:', smsError);
       // Don't fail the payment verification if SMS fails
@@ -555,6 +567,126 @@ router.post('/refund', asyncHandler(async (req: Request, res: Response) => {
       status: refund.status,
       paymentId: payment.razorpay_payment_id
     }
+  });
+}));
+
+/**
+ * Cancel a pending booking within the 1-hour window.
+ * Automatically refunds if payment was captured.
+ * POST /api/payment/cancel-booking
+ */
+router.post('/cancel-booking', asyncHandler(async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw new APIError(401, 'Authorization required');
+  }
+
+  const token = authHeader.split(' ')[1];
+  let decoded: any;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET!);
+  } catch {
+    throw new APIError(401, 'Invalid or expired token');
+  }
+
+  const userId = decoded.userId || decoded.sub;
+  const { bookingId } = req.body || {};
+
+  if (!bookingId) {
+    throw new APIError(400, 'Booking ID required');
+  }
+
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { data: booking, error: fetchError } = await supabase
+    .from('bookings')
+    .select('id, user_id, status, payment_status, created_at')
+    .eq('id', bookingId)
+    .eq('user_id', userId)
+    .single();
+
+  if (fetchError || !booking) {
+    throw new APIError(404, 'Booking not found');
+  }
+
+  if (booking.status === 'cancelled') {
+    throw new APIError(400, 'Booking is already cancelled');
+  }
+
+  if (booking.status !== 'pending') {
+    throw new APIError(400, 'Only pending bookings can be cancelled');
+  }
+
+  const msElapsed = Date.now() - new Date(booking.created_at).getTime();
+  if (msElapsed > 60 * 60 * 1000) {
+    throw new APIError(400, 'Cancellation window has expired (1 hour from booking time)');
+  }
+
+  const { error: cancelError } = await supabase
+    .from('bookings')
+    .update({
+      status: 'cancelled',
+      cancelled_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', bookingId);
+
+  if (cancelError) {
+    console.error('Cancel booking error:', cancelError);
+    throw new APIError(500, 'Failed to cancel booking');
+  }
+
+  let refundResult: { id: string; amount: number } | null = null;
+  if (booking.payment_status === 'paid') {
+    const { data: payment } = await supabase
+      .from('payments')
+      .select('*')
+      .eq('booking_id', bookingId)
+      .eq('status', 'paid')
+      .maybeSingle();
+
+    if (payment?.razorpay_payment_id) {
+      try {
+        const razorpayValidation = validateRazorpayConfig();
+        if (razorpayValidation.valid) {
+          const razorpay = createRazorpayInstance();
+          const refund = await razorpay.payments.refund(payment.razorpay_payment_id, {
+            amount: payment.amount * 100,
+            notes: { reason: 'Customer cancellation', bookingId }
+          });
+
+          await supabase
+            .from('payments')
+            .update({
+              status: 'refunded',
+              refund_id: refund.id,
+              refund_amount: payment.amount,
+              refund_status: 'processed',
+              refund_reason: 'Customer cancellation',
+              refunded_at: new Date().toISOString()
+            })
+            .eq('id', payment.id);
+
+          await supabase
+            .from('bookings')
+            .update({ payment_status: 'refunded' })
+            .eq('id', bookingId);
+
+          refundResult = { id: refund.id, amount: payment.amount };
+        }
+      } catch (refundError: any) {
+        console.error('Refund during cancellation failed:', refundError.message);
+      }
+    }
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: 'Booking cancelled successfully',
+    refund: refundResult
   });
 }));
 

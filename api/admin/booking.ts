@@ -148,36 +148,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       if (profile?.phone && process.env.SMS_API_KEY) {
         try {
-          const formattedPhone = String(profile.phone).replace(/^\+?91/, '');
-          const smsMessage = `Dear Customer, A technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285. Regards, Chill Mechanic Team`;
+          // Clean phone: remove all non-digits, then handle format
+          let formattedPhone = String(profile.phone).replace(/\D/g, '');
+          if (formattedPhone.length === 12 && formattedPhone.startsWith('91')) {
+            formattedPhone = formattedPhone.substring(2);
+          } else if (formattedPhone.length === 11 && formattedPhone.startsWith('0')) {
+            formattedPhone = formattedPhone.substring(1);
+          }
+          
+          // Skip if invalid
+          if (formattedPhone.length !== 10 || !/^\d{10}$/.test(formattedPhone)) {
+            console.warn('[SMS] Invalid phone after cleaning:', formattedPhone, 'original:', profile.phone);
+          } else {
+            const smsMessage = `Dear Customer, A technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285. Regards, Chill Mechanic Team`;
 
-          console.log('[SMS] Sending technician assignment SMS:', {
-            to: '91' + formattedPhone,
-            templateId: '1007074801259726162'
-          });
-
-          const smsResponse = await axios.post(
-            'https://api.uniquedigitaloutreach.com/v1/sms',
-            {
-              sender: process.env.SMS_SENDER_ID || 'CHLMEH',
+            console.log('[SMS] Sending technician assignment SMS:', {
               to: '91' + formattedPhone,
-              text: smsMessage,
-              type: 'OTP',
               templateId: '1007074801259726162'
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': process.env.SMS_API_KEY
+            });
+
+            const smsResponse = await axios.post(
+              'https://api.uniquedigitaloutreach.com/v1/sms',
+              {
+                sender: process.env.SMS_SENDER_ID || 'CHLMEH',
+                to: '91' + formattedPhone,
+                text: smsMessage,
+                type: 'OTP',
+                templateId: '1007074801259726162'
               },
-              timeout: 30000
-            }
-          );
-          console.log('[SMS] Technician assignment SMS sent successfully:', {
-            phone: formattedPhone,
-            status: smsResponse.status,
-            data: smsResponse.data
-          });
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'apikey': process.env.SMS_API_KEY
+                },
+                timeout: 30000
+              }
+            );
+            console.log('[SMS] Technician assignment SMS sent successfully:', {
+              phone: formattedPhone,
+              status: smsResponse.status,
+              data: smsResponse.data
+            });
+          }
         } catch (smsError: any) {
           console.error('[SMS] Failed to send technician assignment SMS:', {
             error: smsError.message,

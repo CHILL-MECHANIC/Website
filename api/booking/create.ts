@@ -413,11 +413,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .single();
 
       if (profile?.phone) {
-        customerPhone = String(profile.phone).replace(/^\+?91/, '');
+        customerPhone = String(profile.phone).replace(/\D/g, '');
+        // Handle format: remove 91 if 12 digits, or 0 if 11 digits
+        if (customerPhone.length === 12 && customerPhone.startsWith('91')) {
+          customerPhone = customerPhone.substring(2);
+        } else if (customerPhone.length === 11 && customerPhone.startsWith('0')) {
+          customerPhone = customerPhone.substring(1);
+        }
         console.log('[SMS] Phone from profile:', customerPhone);
       } else if (user.phone) {
         // Fallback to phone from JWT token
-        customerPhone = String(user.phone).replace(/^\+?91/, '');
+        customerPhone = String(user.phone).replace(/\D/g, '');
+        // Handle format: remove 91 if 12 digits, or 0 if 11 digits
+        if (customerPhone.length === 12 && customerPhone.startsWith('91')) {
+          customerPhone = customerPhone.substring(2);
+        } else if (customerPhone.length === 11 && customerPhone.startsWith('0')) {
+          customerPhone = customerPhone.substring(1);
+        }
         console.log('[SMS] Phone from token:', customerPhone);
       }
 

@@ -16,6 +16,9 @@
     "api/booking/create.ts": {
       "maxDuration": 10
     },
+    "api/booking/cancel.ts": {
+      "maxDuration": 10
+    },
     "api/admin/booking.ts": {
       "maxDuration": 10
     },

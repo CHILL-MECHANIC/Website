@@ -251,27 +251,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.status(500).json({ success: false, message: 'Failed to fetch payment history' });
         }
 
+        // Fetch booking status and created_at so the frontend can show the cancel window
+        const bookingIds = (payments || []).map((p: any) => p.booking_id).filter(Boolean);
+        const bookingsMap = new Map<string, { status: string; created_at: string }>();
+
+        if (bookingIds.length > 0) {
+          const { data: bookingData } = await supabase
+            .from('bookings')
+            .select('id, status, created_at')
+            .in('id', bookingIds);
+
+          (bookingData || []).forEach((b: any) => {
+            bookingsMap.set(b.id, { status: b.status, created_at: b.created_at });
+          });
+        }
+
         return res.status(200).json({
           success: true,
-          payments: (payments || []).map(p => ({
-            id: p.id,
-            orderId: p.razorpay_order_id,
-            paymentId: p.razorpay_payment_id,
-            amount: p.amount,
-            currency: p.currency,
-            status: p.status,
-            serviceName: p.service_name,
-            serviceType: p.service_type,
-            bookingId: p.booking_id,
-            bookingDate: p.booking_date,
-            bookingTimeSlot: p.booking_time_slot,
-            createdAt: p.created_at,
-            paidAt: p.paid_at,
-            refundId: p.refund_id,
-            refundStatus: p.refund_status,
-            refundAmount: p.refund_amount,
-            refundedAt: p.refunded_at
-          })),
+          payments: (payments || []).map((p: any) => {
+            const bookingInfo = p.booking_id ? bookingsMap.get(p.booking_id) : undefined;
+            return {
+              id: p.id,
+              orderId: p.razorpay_order_id,
+              paymentId: p.razorpay_payment_id,
+              amount: p.amount,
+              currency: p.currency,
+              status: p.status,
+              serviceName: p.service_name,
+              serviceType: p.service_type,
+              bookingId: p.booking_id,
+              bookingDate: p.booking_date,
+              bookingTimeSlot: p.booking_time_slot,
+              bookingStatus: bookingInfo?.status,
+              bookingCreatedAt: bookingInfo?.created_at,
+              createdAt: p.created_at,
+              paidAt: p.paid_at,
+              refundId: p.refund_id,
+              refundStatus: p.refund_status,
+              refundAmount: p.refund_amount,
+              refundedAt: p.refunded_at
+            };
+          }),
           pagination: {
             page,
             limit,
@@ -503,30 +523,42 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Send SMS confirmation
         if (phone && process.env.SMS_API_KEY) {
           try {
-            const formattedPhone = phone.replace(/^\+?91/, '');
-            const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
+            // Clean phone: remove all non-digits, then handle format
+            let formattedPhone = String(phone).replace(/\D/g, '');
+            if (formattedPhone.length === 12 && formattedPhone.startsWith('91')) {
+              formattedPhone = formattedPhone.substring(2);
+            } else if (formattedPhone.length === 11 && formattedPhone.startsWith('0')) {
+              formattedPhone = formattedPhone.substring(1);
+            }
             
-            console.log('[SMS] Sending to:', '91' + formattedPhone);
-            const smsResponse = await axios.post(
-              'https://api.uniquedigitaloutreach.com/v1/sms',
-              {
-                sender: process.env.SMS_SENDER_ID || 'CHLMEH',
-                to: '91' + formattedPhone,
-                text: smsMessage,
-                type: 'OTP',
-                templateId: '1007913640137046123'
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'apikey': process.env.SMS_API_KEY
+            // Skip if invalid
+            if (formattedPhone.length !== 10 || !/^\d{10}$/.test(formattedPhone)) {
+              console.warn('[SMS] Invalid phone after cleaning:', formattedPhone, 'original:', phone);
+            } else {
+              const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
+              
+              console.log('[SMS] Sending to:', '91' + formattedPhone);
+              const smsResponse = await axios.post(
+                'https://api.uniquedigitaloutreach.com/v1/sms',
+                {
+                  sender: process.env.SMS_SENDER_ID || 'CHLMEH',
+                  to: '91' + formattedPhone,
+                  text: smsMessage,
+                  type: 'OTP',
+                  templateId: '1007913640137046123'
                 },
-                timeout: 30000
-              }
-            );
-            console.log('[SMS] Response status:', smsResponse.status);
-            console.log('[SMS] Response data:', JSON.stringify(smsResponse.data));
-            console.log('Booking confirmation SMS sent to:', formattedPhone);
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': process.env.SMS_API_KEY
+                  },
+                  timeout: 30000
+                }
+              );
+              console.log('[SMS] Response status:', smsResponse.status);
+              console.log('[SMS] Response data:', JSON.stringify(smsResponse.data));
+              console.log('Booking confirmation SMS sent to:', formattedPhone);
+            }
           } catch (smsError) {
             console.error('SMS sending failed:', smsError);
             // Don't fail the payment verification if SMS fails
@@ -676,6 +708,110 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             status: refund.status,
             paymentId: payment.razorpay_payment_id
           }
+        });
+      }
+
+      // ACTION: cancel-booking — customer cancels a pending booking within 1 hour
+      if (action === 'cancel-booking') {
+        const { bookingId } = req.body || {};
+
+        if (!bookingId) {
+          return res.status(400).json({ success: false, message: 'Booking ID required' });
+        }
+
+        const supabase = createSupabaseAdmin();
+
+        // Fetch booking and verify ownership in one query
+        const { data: booking, error: fetchError } = await supabase
+          .from('bookings')
+          .select('id, user_id, status, payment_status, created_at')
+          .eq('id', bookingId)
+          .eq('user_id', userId)
+          .single();
+
+        if (fetchError || !booking) {
+          return res.status(404).json({ success: false, message: 'Booking not found' });
+        }
+
+        if (booking.status === 'cancelled') {
+          return res.status(400).json({ success: false, message: 'Booking is already cancelled' });
+        }
+
+        if (booking.status !== 'pending') {
+          return res.status(400).json({ success: false, message: 'Only pending bookings can be cancelled' });
+        }
+
+        // Enforce 1-hour cancellation window from booking.created_at
+        const msElapsed = Date.now() - new Date(booking.created_at).getTime();
+        if (msElapsed > 60 * 60 * 1000) {
+          return res.status(400).json({ success: false, message: 'Cancellation window has expired (1 hour from booking time)' });
+        }
+
+        // Cancel the booking
+        const { error: cancelError } = await supabase
+          .from('bookings')
+          .update({
+            status: 'cancelled',
+            cancelled_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', bookingId);
+
+        if (cancelError) {
+          console.error('Cancel booking error:', cancelError);
+          return res.status(500).json({ success: false, message: 'Failed to cancel booking' });
+        }
+
+        // If payment was made, process full refund automatically
+        let refundResult = null;
+        if (booking.payment_status === 'paid') {
+          const { data: payment } = await supabase
+            .from('payments')
+            .select('*')
+            .eq('booking_id', bookingId)
+            .eq('status', 'paid')
+            .maybeSingle();
+
+          if (payment?.razorpay_payment_id) {
+            try {
+              const razorpayValidation = validateRazorpayConfig();
+              if (razorpayValidation.valid) {
+                const razorpay = createRazorpayInstance();
+                const refund = await razorpay.payments.refund(payment.razorpay_payment_id, {
+                  amount: payment.amount * 100,
+                  notes: { reason: 'Customer cancellation', bookingId }
+                });
+
+                await supabase
+                  .from('payments')
+                  .update({
+                    status: 'refunded',
+                    refund_id: refund.id,
+                    refund_amount: payment.amount,
+                    refund_status: 'processed',
+                    refund_reason: 'Customer cancellation',
+                    refunded_at: new Date().toISOString()
+                  })
+                  .eq('id', payment.id);
+
+                await supabase
+                  .from('bookings')
+                  .update({ payment_status: 'refunded' })
+                  .eq('id', bookingId);
+
+                refundResult = { id: refund.id, amount: payment.amount };
+              }
+            } catch (refundError: any) {
+              console.error('Refund during cancellation failed:', refundError.message);
+              // Booking is still cancelled even if automatic refund fails
+            }
+          }
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: 'Booking cancelled successfully',
+          refund: refundResult
         });
       }
 

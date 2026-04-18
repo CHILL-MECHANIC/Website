@@ -21,10 +21,13 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  Loader2, RefreshCw, UserPlus, Bell, Search, 
+import {
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
+} from '@/components/ui/tooltip';
+import {
+  Loader2, RefreshCw, UserPlus, Bell, Search,
   Calendar, Clock, IndianRupee, Phone,
-  CheckCircle, XCircle, Play, AlertCircle, Plus, CheckSquare
+  CheckCircle, XCircle, Play, AlertCircle, Plus, CheckSquare, RotateCcw
 } from 'lucide-react';
 
 interface Booking {
@@ -44,6 +47,7 @@ interface Booking {
   created_at: string;
   assigned_at: string | null;
   service_address: string | null;
+  is_recomplaint?: boolean;
 }
 
 interface Profile {
@@ -135,6 +139,11 @@ export default function AdminBookings() {
   // Real-time state
   const [newBookingAlert, setNewBookingAlert] = useState(false);
   const [newBookingsCount, setNewBookingsCount] = useState(0);
+
+  // Recomplaint modal state
+  const [recomplaintModalOpen, setRecomplaintModalOpen] = useState(false);
+  const [recomplaintBooking, setRecomplaintBooking] = useState<BookingWithDetails | null>(null);
+  const [recomplaining, setRecomplaining] = useState(false);
 
   // Stats
   const [stats, setStats] = useState({
@@ -425,22 +434,39 @@ export default function AdminBookings() {
         try {
           const customerPhone = selectedBooking.customer?.phone;
           if (customerPhone) {
-            const formattedPhone = String(customerPhone).replace(/^\+?91/, '');
-            const apiBaseUrl = 'http://localhost:3001';
+            // Clean phone: remove all non-digits
+            let cleanedPhone = String(customerPhone).replace(/\D/g, '');
             
-            await fetch(`${apiBaseUrl}/api/sms/send`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                recipient: '91' + formattedPhone,
+            // Handle different phone formats:
+            // 1. If 12 digits starting with 91 → remove country code
+            // 2. If 11 digits starting with 0 → remove leading 0
+            // 3. If already 10 digits → use as-is
+            if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
+              cleanedPhone = cleanedPhone.substring(2);
+            } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
+              cleanedPhone = cleanedPhone.substring(1);
+            }
+            
+            // Validate: must be 10 digits
+            if (cleanedPhone.length === 10 && /^\d{10}$/.test(cleanedPhone)) {
+              const apiBaseUrl = 'http://localhost:3001';
+              
+              await fetch(`${apiBaseUrl}/api/sms/send`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  recipient: '91' + cleanedPhone,
                 message: `Dear Customer,\n\nA technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285.\n\nRegards,\nChill Mechanic Team`,
                 type: 'OTP',
                 senderId: 'CHLMEH',
-                templateId: '1007074801259726162'
-              })
-            });
+                  templateId: '1007074801259726162'
+                })
+              });
+            } else {
+              console.warn('[SMS] Invalid phone number after cleaning:', cleanedPhone, 'original:', customerPhone);
+            }
           }
         } catch (smsError) {
           console.warn('[SMS] Failed to send SMS (non-critical):', smsError);
@@ -618,35 +644,69 @@ export default function AdminBookings() {
 
       // Send booking confirmation SMS to customer
       try {
-        const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-          ? 'http://localhost:3001'
-          : '';
-        
-        const customerPhone = newBooking.customerPhone.replace(/^\+?91/, '');
-        console.log('[Admin SMS] Sending booking confirmation to:', customerPhone);
-        
-        const smsResponse = await fetch(`${apiBaseUrl}/api/sms/send`, {
+        // Validate phone number
+        if (!newBooking.customerPhone || newBooking.customerPhone.trim() === '') {
+          console.warn('[Admin SMS] No customer phone provided, skipping SMS');
+        } else {
+          const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3001'
+            : '';
+          
+          // Clean phone: remove all non-digits
+          let cleanedPhone = newBooking.customerPhone.replace(/\D/g, '');
+          
+          // Handle different phone formats:
+          // 1. If 12 digits starting with 91 → remove country code (91XXXXXXXXXX → XXXXXXXXXX)
+          // 2. If 11 digits starting with 0 → remove leading 0 (0XXXXXXXXXX → XXXXXXXXXX)
+          // 3. If already 10 digits → use as-is
+          if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
+            cleanedPhone = cleanedPhone.substring(2);
+          } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
+            cleanedPhone = cleanedPhone.substring(1);
+          }
+          
+          // Validate: must be 10 digits after cleaning
+          if (cleanedPhone.length !== 10 || !/^\d{10}$/.test(cleanedPhone)) {
+            console.error('[Admin SMS] Invalid phone after cleaning:', cleanedPhone, 'original:', newBooking.customerPhone);
+          } else {
+            console.log('[Admin SMS] Sending booking confirmation to:', cleanedPhone);
+            
+            const smsResponse = await fetch(`${apiBaseUrl}/api/sms/send`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            recipient: '91' + customerPhone,
-            message: `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`,
-            type: 'OTP',
-            senderId: 'CHLMEH',
-            templateId: '1007913640137046123'
-          })
-        });
-        
-        const smsResult = await smsResponse.json();
-        console.log('[Admin SMS] Response:', smsResult);
-        
-        if (smsResult.success) {
-          console.log('[Admin SMS] Booking confirmation SMS sent successfully');
-        } else {
-          console.error('[Admin SMS] Failed to send SMS:', smsResult.error);
-        }
+              body: JSON.stringify({
+                recipient: '91' + cleanedPhone,
+                message: `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`,
+                type: 'OTP',
+                senderId: 'CHLMEH',
+                templateId: '1007913640137046123'
+              })
+            });
+            
+            // Check if response is ok before parsing JSON
+            if (!smsResponse.ok) {
+              console.error('[Admin SMS] SMS API returned error:', smsResponse.status, smsResponse.statusText);
+              // Try to parse error message from response
+              try {
+                const errorData = await smsResponse.json();
+                console.error('[Admin SMS] Error details:', errorData);
+              } catch {
+                console.error('[Admin SMS] Could not parse error response');
+              }
+            } else {
+              const smsResult = await smsResponse.json();
+              console.log('[Admin SMS] Response:', smsResult);
+              
+              if (smsResult.success) {
+                console.log('[Admin SMS] Booking confirmation SMS sent successfully');
+              } else {
+                console.error('[Admin SMS] Failed to send SMS:', smsResult.error);
+              }
+            }
+          }
+      }
       } catch (smsError) {
         console.error('[Admin SMS] Error sending booking confirmation:', smsError);
         // Don't fail booking creation if SMS fails
@@ -710,21 +770,38 @@ export default function AdminBookings() {
       const customerPhone = booking.customer?.phone;
       if (customerPhone) {
         try {
-          const formattedPhone = String(customerPhone).replace(/^\+?91/, '');
-          const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          const apiBaseUrl = isLocalhost ? 'http://localhost:3001' : '';
+          // Clean phone: remove all non-digits
+          let cleanedPhone = String(customerPhone).replace(/\D/g, '');
+          
+          // Handle different phone formats:
+          // 1. If 12 digits starting with 91 → remove country code
+          // 2. If 11 digits starting with 0 → remove leading 0
+          // 3. If already 10 digits → use as-is
+          if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
+            cleanedPhone = cleanedPhone.substring(2);
+          } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
+            cleanedPhone = cleanedPhone.substring(1);
+          }
+          
+          // Validate: must be 10 digits
+          if (cleanedPhone.length === 10 && /^\d{10}$/.test(cleanedPhone)) {
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const apiBaseUrl = isLocalhost ? 'http://localhost:3001' : '';
 
-          await fetch(`${apiBaseUrl}/api/sms/send`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              recipient: '91' + formattedPhone,
+            await fetch(`${apiBaseUrl}/api/sms/send`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                recipient: '91' + cleanedPhone,
               message: `Dear Customer, \n\nYour service request has been successfully completed by the Chill Mechanic team. We appreciate your trust in our services. Should you require any further assistance, please feel free to contact us. \n\nThank you for choosing Chill Mechanic.`,
               type: 'OTP',
               senderId: 'CHLMEH',
               templateId: '1007732141749715637'
             })
           });
+          } else {
+            console.warn('[SMS] Invalid phone number for completion SMS after cleaning:', cleanedPhone, 'original:', customerPhone);
+          }
         } catch (smsError) {
           console.warn('[SMS] Failed to send booking completion SMS (non-critical):', smsError);
         }
@@ -748,12 +825,24 @@ export default function AdminBookings() {
   // Update booking status directly
   const updateBookingStatus = async (bookingId: string, newStatus: string) => {
     try {
+      const updateData: any = {
+        status: newStatus,
+        updated_at: new Date().toISOString()
+      };
+
+      // Set cancelled_at timestamp if cancelling
+      if (newStatus === 'cancelled') {
+        updateData.cancelled_at = new Date().toISOString();
+      }
+
+      // Clear cancelled_at if un-cancelling
+      if (newStatus !== 'cancelled' && newStatus !== 'completed') {
+        updateData.cancelled_at = null;
+      }
+
       const { error } = await supabase
         .from('bookings')
-        .update({
-          status: newStatus,
-          updated_at: new Date().toISOString()
-        })
+        .update(updateData)
         .eq('id', bookingId);
 
       if (error) throw error;
@@ -805,6 +894,49 @@ export default function AdminBookings() {
           customerPhone: customer.phone || ''
         }));
       }
+    }
+  };
+
+  // Returns true if current time is within 10 days of the given timestamp
+  const isWithin10Days = (createdAt: string): boolean => {
+    const msElapsed = Date.now() - new Date(createdAt).getTime();
+    return msElapsed <= 10 * 24 * 60 * 60 * 1000;
+  };
+
+  // Re-assign a completed booking to the same technician (recomplaint)
+  const handleRecomplaint = async () => {
+    if (!recomplaintBooking) return;
+
+    setRecomplaining(true);
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({
+          status: 'assigned',
+          is_recomplaint: true,
+          assigned_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', recomplaintBooking.id);
+
+      if (error) throw error;
+
+      toast({
+        title: '🔄 Recomplaint Registered',
+        description: 'Booking re-assigned to the same technician.',
+      });
+
+      setRecomplaintModalOpen(false);
+      setRecomplaintBooking(null);
+      fetchBookings();
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to process recomplaint',
+        variant: 'destructive'
+      });
+    } finally {
+      setRecomplaining(false);
     }
   };
 
@@ -1101,6 +1233,39 @@ export default function AdminBookings() {
                             Close
                           </Button>
                         )}
+
+                        {booking.status === 'completed' && (() => {
+                          const withinWindow = isWithin10Days(booking.created_at);
+                          return (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className={withinWindow
+                                        ? 'border-orange-400 text-orange-600 hover:bg-orange-50'
+                                        : 'opacity-50 cursor-not-allowed'
+                                      }
+                                      onClick={() => {
+                                        if (!withinWindow) return;
+                                        setRecomplaintBooking(booking);
+                                        setRecomplaintModalOpen(true);
+                                      }}
+                                      disabled={!withinWindow}
+                                    >
+                                      <RotateCcw className="w-4 h-4" />
+                                    </Button>
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{withinWindow ? 'Register Recomplaint' : 'Recomplaint window expired'}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          );
+                        })()}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -1380,6 +1545,9 @@ export default function AdminBookings() {
                       <SelectItem value="04:00 PM">04:00 PM</SelectItem>
                       <SelectItem value="05:00 PM">05:00 PM</SelectItem>
                       <SelectItem value="06:00 PM">06:00 PM</SelectItem>
+                      <SelectItem value="07:00 PM">07:00 PM</SelectItem>
+                      <SelectItem value="08:00 PM">08:00 PM</SelectItem>
+                      <SelectItem value="09:00 PM">09:00 PM</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1461,6 +1629,58 @@ export default function AdminBookings() {
             </div>
           </DialogContent>
         </Dialog>
+        {/* Recomplaint Confirmation Dialog */}
+        <Dialog open={recomplaintModalOpen} onOpenChange={setRecomplaintModalOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Register Recomplaint</DialogTitle>
+              <DialogDescription>
+                This will re-assign the booking to the same technician and send it back to their dashboard.
+              </DialogDescription>
+            </DialogHeader>
+
+            {recomplaintBooking && (
+              <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Customer:</span>
+                  <span className="font-medium">{recomplaintBooking.customer?.full_name || 'Unknown'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Service:</span>
+                  <span className="font-medium">{recomplaintBooking.items?.[0]?.service_name || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Booking ID:</span>
+                  <span className="font-mono text-xs">{recomplaintBooking.id.slice(0, 8)}...</span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => setRecomplaintModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleRecomplaint}
+                disabled={recomplaining}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                {recomplaining ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Confirm Recomplaint
+                  </>
+                )}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
       </main>
     </div>
   );

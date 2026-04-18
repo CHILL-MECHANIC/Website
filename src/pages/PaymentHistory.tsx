@@ -3,23 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
+} from '@/components/ui/dialog';
+import {
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
+} from '@/components/ui/tooltip';
 import { useAuth } from '@/contexts/AuthContext';
-import { getPaymentHistory, requestRefund, type Payment } from '@/services/paymentClient';
+import { getPaymentHistory, requestRefund, cancelBooking, type Payment } from '@/services/paymentClient';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Loader2, 
-  ArrowLeft, 
-  RefreshCw, 
-  IndianRupee, 
-  Calendar, 
+import {
+  Loader2,
+  ArrowLeft,
+  RefreshCw,
+  IndianRupee,
+  Calendar,
   CheckCircle2,
   XCircle,
   Clock,
   AlertCircle,
   Receipt,
   ChevronRight,
-  Bell
+  Bell,
+  Ban
 } from 'lucide-react';
 
 export default function PaymentHistory() {
@@ -34,6 +41,9 @@ export default function PaymentHistory() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [newPaymentAlert, setNewPaymentAlert] = useState(false);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
+  const [bookingToCancel, setBookingToCancel] = useState<{ bookingId: string; hasPaidPayment: boolean } | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -106,6 +116,17 @@ export default function PaymentHistory() {
     try {
       const result = await getPaymentHistory(page, 10);
       if (result.success && result.payments) {
+        console.log('📊 Payments fetched:', result.payments);
+        // Debug: log booking info for each payment
+        result.payments.forEach((p, idx) => {
+          console.log(`Payment ${idx + 1}:`, {
+            serviceName: p.serviceName,
+            bookingId: p.bookingId,
+            bookingStatus: p.bookingStatus,
+            bookingCreatedAt: p.bookingCreatedAt,
+            isWithin1Hour: p.bookingCreatedAt ? Date.now() - new Date(p.bookingCreatedAt).getTime() <= 60 * 60 * 1000 : false
+          });
+        });
         setPayments(result.payments);
         setTotalPages(result.pagination?.totalPages || 1);
       }
@@ -154,6 +175,48 @@ export default function PaymentHistory() {
       });
     } finally {
       setRefundingId(null);
+    }
+  };
+
+  // Returns true if current time is within 1 hour of the given timestamp
+  const isWithin1Hour = (bookingCreatedAt?: string): boolean => {
+    if (!bookingCreatedAt) return false;
+    const msElapsed = Date.now() - new Date(bookingCreatedAt).getTime();
+    return msElapsed <= 60 * 60 * 1000;
+  };
+
+  const handleCancelBooking = async () => {
+    if (!bookingToCancel) return;
+
+    setCancellingId(bookingToCancel.bookingId);
+    setCancelConfirmOpen(false);
+
+    try {
+      const result = await cancelBooking(bookingToCancel.bookingId);
+      if (result.success) {
+        toast({
+          title: '✅ Booking Cancelled',
+          description: result.refund
+            ? `Booking cancelled. Refund of ₹${result.refund.amount.toLocaleString('en-IN')} will be credited within 5-7 business days.`
+            : 'Your booking has been cancelled successfully.',
+        });
+        fetchPayments(true);
+      } else {
+        toast({
+          title: 'Cancellation Failed',
+          description: result.message || 'Unable to cancel booking. Please try again.',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again later.',
+        variant: 'destructive'
+      });
+    } finally {
+      setCancellingId(null);
+      setBookingToCancel(null);
     }
   };
 
@@ -311,9 +374,15 @@ export default function PaymentHistory() {
               </CardContent>
             </Card>
 
-            {/* Payments List */}
-            <div className="space-y-3">
-              {payments.map((payment) => {
+            {/* Booking History Section */}
+            <div className="mt-8">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-gray-900">Booking History</h2>
+                <p className="text-sm text-muted-foreground">Manage your bookings and view payment details</p>
+              </div>
+              
+              <div className="space-y-3">
+                {payments.map((payment) => {
                 const statusConfig = getStatusConfig(payment.status);
                 
                 return (
@@ -375,6 +444,55 @@ export default function PaymentHistory() {
                               </Badge>
                             </div>
 
+                            {/* Cancel Booking button — only for pending bookings within 1-hour window */}
+                            {payment.bookingId && payment.bookingStatus === 'pending' && (() => {
+                              const withinWindow = isWithin1Hour(payment.bookingCreatedAt);
+                              return (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <span>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => {
+                                            if (!withinWindow) return;
+                                            setBookingToCancel({
+                                              bookingId: payment.bookingId!,
+                                              hasPaidPayment: payment.status === 'paid'
+                                            });
+                                            setCancelConfirmOpen(true);
+                                          }}
+                                          disabled={!withinWindow || cancellingId === payment.bookingId}
+                                          className={`text-xs ${withinWindow
+                                            ? 'border-red-300 text-red-600 hover:bg-red-50'
+                                            : 'opacity-50 cursor-not-allowed'
+                                          }`}
+                                        >
+                                          {cancellingId === payment.bookingId ? (
+                                            <>
+                                              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                              Cancelling...
+                                            </>
+                                          ) : (
+                                            <>
+                                              <Ban className="h-3 w-3 mr-1" />
+                                              Cancel
+                                            </>
+                                          )}
+                                        </Button>
+                                      </span>
+                                    </TooltipTrigger>
+                                    {!withinWindow && (
+                                      <TooltipContent>
+                                        <p>Cancellation window has expired</p>
+                                      </TooltipContent>
+                                    )}
+                                  </Tooltip>
+                                </TooltipProvider>
+                              );
+                            })()}
+
                             {/* Refund button */}
                             {payment.status === 'paid' && !payment.refundStatus && (
                               <Button
@@ -407,8 +525,7 @@ export default function PaymentHistory() {
                     </CardContent>
                   </Card>
                 );
-              })}
-            </div>
+              })}              </div>            </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
@@ -437,6 +554,31 @@ export default function PaymentHistory() {
           </>
         )}
       </div>
+
+      {/* Cancel Booking Confirmation Dialog */}
+      <Dialog open={cancelConfirmOpen} onOpenChange={setCancelConfirmOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Cancel Booking</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to cancel? Cancellations are only allowed within 1 hour of booking.
+              {bookingToCancel?.hasPaidPayment && (
+                <span className="block mt-2 text-sm">
+                  A full refund will be initiated and credited to your original payment method within 5-7 business days.
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button variant="outline" onClick={() => setCancelConfirmOpen(false)}>
+              Keep Booking
+            </Button>
+            <Button variant="destructive" onClick={handleCancelBooking}>
+              Yes, Cancel Booking
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

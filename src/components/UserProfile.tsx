@@ -8,8 +8,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Calendar, Clock, Package, Camera, Upload } from "lucide-react";
+import { Loader2, Calendar, Clock, Package, Camera, Upload, Ban, AlertCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Header from "@/components/Header";
+import { cancelBooking } from "@/services/paymentClient";
 
 interface Profile {
   full_name: string;
@@ -28,6 +32,8 @@ interface Booking {
   booking_time: string;
   final_amount: number;
   status: string;
+  created_at: string;
+  payment_status?: string;
   booking_items: Array<{
     service_name: string;
     quantity: number;
@@ -52,6 +58,9 @@ export default function UserProfile() {
   });
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
+  const [bookingToCancel, setBookingToCancel] = useState<{ bookingId: string; hasPaidPayment: boolean } | null>(null);
 
   useEffect(() => {
     if (authProfile) {
@@ -117,6 +126,51 @@ export default function UserProfile() {
       console.error("Error fetching bookings:", error);
     } finally {
       setLoadingBookings(false);
+    }
+  };
+
+  // Check if booking was created within 1 hour
+  const isWithin1Hour = (createdAt: string): boolean => {
+    if (!createdAt) return false;
+    const msElapsed = Date.now() - new Date(createdAt).getTime();
+    return msElapsed <= 60 * 60 * 1000;
+  };
+
+  // Cancel a booking
+  const handleCancelBooking = async () => {
+    if (!bookingToCancel) return;
+
+    setCancellingId(bookingToCancel.bookingId);
+    setCancelConfirmOpen(false);
+
+    try {
+      const result = await cancelBooking(bookingToCancel.bookingId);
+
+      if (result.success) {
+        toast({
+          title: '✅ Booking Cancelled',
+          description: bookingToCancel.hasPaidPayment
+            ? 'Refund will be credited to your account within 5-7 business days.'
+            : 'Booking has been cancelled successfully.',
+        });
+        fetchBookings();
+      } else {
+        toast({
+          title: 'Cancellation Failed',
+          description: result.message || 'Unable to cancel booking. Please try again.',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      console.error('Error cancelling booking:', error);
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again later.',
+        variant: 'destructive'
+      });
+    } finally {
+      setCancellingId(null);
+      setBookingToCancel(null);
     }
   };
 
@@ -222,11 +276,11 @@ export default function UserProfile() {
   };
 
   const upcomingBookings = bookings.filter(booking => 
-    new Date(booking.booking_date) >= new Date() && booking.status === 'confirmed'
+    new Date(booking.booking_date) >= new Date() || (booking.status !== 'completed' && booking.status !== 'cancelled')
   );
   
   const pastBookings = bookings.filter(booking => 
-    new Date(booking.booking_date) < new Date() || booking.status === 'completed'
+    (new Date(booking.booking_date) < new Date() && booking.status !== 'completed') || booking.status === 'completed' || booking.status === 'cancelled'
   );
 
   return (
@@ -388,27 +442,82 @@ export default function UserProfile() {
                 <p className="text-muted-foreground text-center py-8">No upcoming services scheduled.</p>
               ) : (
                 <div className="space-y-4">
-                  {upcomingBookings.map((booking) => (
-                    <div key={booking.id} className="border rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Calendar className="mr-2 h-4 w-4" />
-                          {new Date(booking.booking_date).toLocaleDateString()}
-                          <Clock className="ml-4 mr-2 h-4 w-4" />
-                          {booking.booking_time}
-                        </div>
-                        <span className="text-lg font-bold">₹{booking.final_amount}</span>
-                      </div>
-                      <div className="space-y-1">
-                        {booking.booking_items.map((item, index) => (
-                          <div key={index} className="flex items-center">
-                            <Package className="mr-2 h-4 w-4" />
-                            <span>{item.service_name} (x{item.quantity})</span>
+                  {upcomingBookings.map((booking) => {
+                    const withinCancelWindow = isWithin1Hour(booking.created_at);
+                    const isPaid = booking.payment_status === 'paid';
+                    return (
+                      <div key={booking.id} className="border rounded-lg p-4">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Calendar className="mr-2 h-4 w-4" />
+                            {new Date(booking.booking_date).toLocaleDateString()}
+                            <Clock className="ml-4 mr-2 h-4 w-4" />
+                            {booking.booking_time}
                           </div>
-                        ))}
+                          <span className="text-lg font-bold">₹{booking.final_amount}</span>
+                        </div>
+                        <div className="space-y-1 mb-3">
+                          {booking.booking_items.map((item, index) => (
+                            <div key={index} className="flex items-center">
+                              <Package className="mr-2 h-4 w-4" />
+                              <span>{item.service_name} (x{item.quantity})</span>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {/* Status and Actions */}
+                        <div className="flex items-center justify-between pt-3 border-t">
+                          <Badge className="capitalize">
+                            {booking.status}
+                          </Badge>
+                          
+                          {/* Cancel Button - only within 1 hour */}
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                      if (!withinCancelWindow) return;
+                                      setBookingToCancel({
+                                        bookingId: booking.id,
+                                        hasPaidPayment: isPaid
+                                      });
+                                      setCancelConfirmOpen(true);
+                                    }}
+                                    disabled={!withinCancelWindow || cancellingId === booking.id}
+                                    className={`text-xs ${withinCancelWindow
+                                      ? 'border-red-300 text-red-600 hover:bg-red-50'
+                                      : 'opacity-50 cursor-not-allowed'
+                                    }`}
+                                  >
+                                    {cancellingId === booking.id ? (
+                                      <>
+                                        <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                        Cancelling...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Ban className="h-3 w-3 mr-1" />
+                                        Cancel
+                                      </>
+                                    )}
+                                  </Button>
+                                </span>
+                              </TooltipTrigger>
+                              {!withinCancelWindow && (
+                                <TooltipContent>
+                                  <p>Cancellation window has expired (within 1 hour only)</p>
+                                </TooltipContent>
+                              )}
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
               </CardContent>
@@ -462,6 +571,31 @@ export default function UserProfile() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Cancel Booking Confirmation Dialog */}
+        <Dialog open={cancelConfirmOpen} onOpenChange={setCancelConfirmOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Cancel Booking</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to cancel this booking? Cancellations are only allowed within 1 hour of booking.
+                {bookingToCancel?.hasPaidPayment && (
+                  <span className="block mt-2 text-sm">
+                    A full refund will be initiated and credited to your original payment method within 5-7 business days.
+                  </span>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => setCancelConfirmOpen(false)}>
+                Keep Booking
+              </Button>
+              <Button variant="destructive" onClick={handleCancelBooking}>
+                Yes, Cancel Booking
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

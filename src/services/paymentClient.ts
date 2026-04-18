@@ -121,6 +121,8 @@ interface Payment {
   bookingId?: string;
   bookingDate?: string;
   bookingTimeSlot?: string;
+  bookingStatus?: string;
+  bookingCreatedAt?: string;
   createdAt: string;
   paidAt?: string;
   refundId?: string;
@@ -148,6 +150,15 @@ interface RefundResponse {
     id: string;
     amount: number;
     status: string;
+  };
+}
+
+interface CancelBookingResponse {
+  success: boolean;
+  message?: string;
+  refund?: {
+    id: string;
+    amount: number;
   };
 }
 
@@ -341,6 +352,43 @@ export async function requestRefund(paymentId: string, reason?: string): Promise
   }
 }
 
+/**
+ * Cancel a booking within the 1-hour cancellation window.
+ * Automatically processes a full refund if the payment was already captured.
+ */
+export async function cancelBooking(bookingId: string): Promise<CancelBookingResponse> {
+  try {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      return { success: false, message: 'Please login to continue' };
+    }
+
+    if (import.meta.env.DEV) {
+      console.log('[Payment Client] Cancelling booking:', bookingId);
+    }
+
+    const response = await fetch(getPaymentUrl('cancel-booking'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ bookingId })
+    });
+
+    const result = await response.json();
+
+    if (import.meta.env.DEV) {
+      console.log('[Payment Client] Cancel booking response:', result);
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Cancel booking error:', error);
+    return { success: false, message: 'Network error' };
+  }
+}
+
 // Razorpay types
 interface RazorpayCheckoutOptions {
   key?: string;  // Razorpay key from API (preferred) or env variable
@@ -456,11 +504,12 @@ export function openRazorpayCheckout(
 }
 
 // Export types
-export type { 
-  CreateOrderResponse, 
-  VerifyPaymentResponse, 
-  PaymentHistoryResponse, 
+export type {
+  CreateOrderResponse,
+  VerifyPaymentResponse,
+  PaymentHistoryResponse,
   RefundResponse,
+  CancelBookingResponse,
   ServicesResponse,
   Payment,
   Service,

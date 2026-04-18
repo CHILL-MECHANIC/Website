@@ -160,16 +160,28 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
       .single();
 
     if (profile?.phone) {
-      customerPhone = String(profile.phone).replace(/^\+?91/, '');
+      customerPhone = String(profile.phone).replace(/\D/g, '');
+      // Handle format: remove 91 if 12 digits, or 0 if 11 digits
+      if (customerPhone.length === 12 && customerPhone.startsWith('91')) {
+        customerPhone = customerPhone.substring(2);
+      } else if (customerPhone.length === 11 && customerPhone.startsWith('0')) {
+        customerPhone = customerPhone.substring(1);
+      }
       console.log('[SMS] Phone from profile:', customerPhone);
     } else if (decoded.phone) {
-      customerPhone = String(decoded.phone).replace(/^\+?91/, '');
+      customerPhone = String(decoded.phone).replace(/\D/g, '');
+      // Handle format: remove 91 if 12 digits, or 0 if 11 digits
+      if (customerPhone.length === 12 && customerPhone.startsWith('91')) {
+        customerPhone = customerPhone.substring(2);
+      } else if (customerPhone.length === 11 && customerPhone.startsWith('0')) {
+        customerPhone = customerPhone.substring(1);
+      }
       console.log('[SMS] Phone from token:', customerPhone);
     }
 
     console.log('[SMS] Final customer phone:', customerPhone);
 
-    if (customerPhone && customerPhone.length >= 10) {
+    if (customerPhone && customerPhone.length === 10 && /^\d{10}$/.test(customerPhone)) {
       const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
 
       const smsApiKey = process.env.SMS_API_KEY;
