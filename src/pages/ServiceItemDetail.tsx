@@ -30,6 +30,61 @@ import microwaveServiceImage2 from "@/assets/microwave-service-2.jpg";
 import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
 import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
 
+// SEO data for all service items
+const SERVICE_ITEM_SEO: Record<string, { title: string; description: string }> = {
+  // AC Services
+  "ac-foam-1": { title: "AC Foam Cleaning Service - 1 AC | Premium Service | Chill Mechanic", description: "Professional AC foam jet cleaning for single AC unit. Filter cleaning, sanitization, 30-day warranty. Book now at ₹599." },
+  "ac-foam-2": { title: "AC Foam Cleaning Service - 2 AC | Deep Cleaning | Chill Mechanic", description: "Premium foam cleaning for 2 AC units. Deep cleaning, filter service, coil cleaning. Book now at ₹1149." },
+  "ac-foam-3": { title: "AC Foam Cleaning Service - 3 AC | Complete Service | Chill Mechanic", description: "Comprehensive foam cleaning for 3 AC units. Full filter service, performance check. Book now at ₹1649." },
+  "ac-foam-4": { title: "AC Foam Cleaning Service - 4 AC | Premium Package | Chill Mechanic", description: "Premium foam cleaning for 4 AC units. Complete servicing, full inspection. Book now at ₹2199." },
+  "ac-foam-5": { title: "AC Foam Cleaning Service - 5 AC | Ultimate Package | Chill Mechanic", description: "Ultimate foam cleaning for 5 AC units. Complete deep service, full system inspection. Book now at ₹2499." },
+  "ac-power-jet-1": { title: "AC Power Jet Cleaning - 1 AC | Quick Service | Chill Mechanic", description: "Professional power jet cleaning for single AC unit. Fast, efficient, 30-day warranty. Book now at ₹499." },
+  "ac-power-jet-2": { title: "AC Power Jet Cleaning - 2 AC | Professional Service | Chill Mechanic", description: "Power jet cleaning for 2 AC units. Filter service included. Book now at ₹949." },
+  "ac-power-jet-3": { title: "AC Power Jet Cleaning - 3 AC | Complete Cleaning | Chill Mechanic", description: "Power jet cleaning for 3 AC units. Full filter service. Book now at ₹1349." },
+  "ac-power-jet-4": { title: "AC Power Jet Cleaning - 4 AC | Full Service | Chill Mechanic", description: "Power jet cleaning for 4 AC units. Complete servicing. Book now at ₹1799." },
+  "ac-not-cooling": { title: "AC Not Cooling Repair Gurgaon | Expert Technicians | Chill Mechanic", description: "Expert AC cooling repair service in Gurgaon. Diagnose and fix cooling issues. Same day service. Book now at ₹249." },
+  "ac-power-issue": { title: "AC Power Issue Repair Gurgaon | Electrical Diagnosis | Chill Mechanic", description: "Professional AC power issue repair. Electrical diagnosis, circuit repair. Expert technicians. Book now at ₹249." },
+  "ac-noise-reduction": { title: "AC Noise Reduction Service Gurgaon | Quiet Operation | Chill Mechanic", description: "AC noise reduction service. Diagnosis, component adjustment, lubrication. Smooth operation. Book now at ₹449." },
+  "ac-water-leakage": { title: "AC Water Leakage Repair Gurgaon | Fix Leaks Fast | Chill Mechanic", description: "Expert AC water leakage repair. Leak detection, drain cleaning, seal repair. Same day service. Book now at ₹549." },
+  "ac-gas-refill": { title: "AC Gas Refill & Charging Gurgaon | 1T, 1.5T, 2T | Chill Mechanic", description: "Professional AC gas refill & charging in Gurgaon. Top up from ₹1999, full charging from ₹2999. 3-month warranty." },
+  "ac-gas-1ton-topup": { title: "AC Gas Top Up - 1 Ton | Gurgaon | Chill Mechanic", description: "AC gas top up for 1 Ton AC in Gurgaon. Leak detection, pressure check. ₹1999. 3-month warranty." },
+  "ac-gas-1ton-full": { title: "AC Full Gas Charging - 1 Ton | Gurgaon | Chill Mechanic", description: "Complete AC gas charging for 1 Ton AC in Gurgaon. Fresh gas, leak detection. ₹2999. 3-month warranty." },
+  "ac-gas-1.5ton-topup": { title: "AC Gas Top Up - 1.5 Ton | Gurgaon | Chill Mechanic", description: "AC gas top up for 1.5 Ton AC in Gurgaon. Professional service. ₹2499. 3-month warranty." },
+  "ac-gas-1.5ton-full": { title: "AC Full Gas Charging - 1.5 Ton | Gurgaon | Chill Mechanic", description: "Complete AC gas charging for 1.5 Ton AC in Gurgaon. ₹3499. 3-month warranty." },
+  "ac-gas-2ton-topup": { title: "AC Gas Top Up - 2 Ton | Gurgaon | Chill Mechanic", description: "AC gas top up for 2 Ton AC in Gurgaon. Professional service. ₹2999. 3-month warranty." },
+  "ac-gas-2ton-full": { title: "AC Full Gas Charging - 2 Ton | Gurgaon | Chill Mechanic", description: "Complete AC gas charging for 2 Ton AC in Gurgaon. ₹3999. 3-month warranty." },
+  "ac-split-installation": { title: "Split AC Installation Gurgaon | Professional Setup | Chill Mechanic", description: "Professional split AC installation in Gurgaon. Complete piping, wiring, testing. Book now at ₹1499." },
+  "ac-split-uninstall": { title: "Split AC Uninstallation Gurgaon | Safe Removal | Chill Mechanic", description: "Safe split AC uninstallation in Gurgaon. Gas recovery included. Book now at ₹799." },
+  "ac-window-installation": { title: "Window AC Installation Gurgaon | Expert Service | Chill Mechanic", description: "Professional window AC installation in Gurgaon. Electrical setup included. Book now at ₹699." },
+  "ac-window-uninstall": { title: "Window AC Uninstallation Gurgaon | Safe Removal | Chill Mechanic", description: "Safe window AC uninstallation in Gurgaon. Quick service. Book now at ₹499." },
+  // Refrigerator Services
+  "fridge-single-door": { title: "Refrigerator Repair - Single Door | Gurgaon | Chill Mechanic", description: "Expert single door refrigerator repair in Gurgaon. Complete diagnostic check-up. Book now at ₹249." },
+  "fridge-double-door": { title: "Refrigerator Repair - Double Door | Gurgaon | Chill Mechanic", description: "Expert double door refrigerator repair in Gurgaon. Cooling system inspection. Book now at ₹249." },
+  // RO Services
+  "ro-checkup": { title: "RO Water Purifier Checkup Gurgaon | TDS Testing | Chill Mechanic", description: "Complete RO water purifier checkup in Gurgaon. TDS testing, system inspection. Book now at ₹249." },
+  "ro-filter-checkup": { title: "RO Filter Checkup Gurgaon | Filter Inspection | Chill Mechanic", description: "RO water purifier filter inspection. Performance assessment. Book now at ₹249." },
+  "ro-regular-service": { title: "RO Water Purifier Service Gurgaon | Regular Maintenance | Chill Mechanic", description: "RO water purifier regular service. Basic filter replacement, cleaning. Book now at ₹1699." },
+  "ro-full-service": { title: "RO Water Purifier Full Service Gurgaon | Complete Maintenance | Chill Mechanic", description: "RO water purifier full service. All filters, membrane cleaning. Book now at ₹3799." },
+  "ro-installation": { title: "RO Water Purifier Installation Gurgaon | Professional Setup | Chill Mechanic", description: "Professional RO water purifier installation. Complete setup and testing. Book now at ₹399." },
+  "ro-uninstallation": { title: "RO Water Purifier Uninstallation Gurgaon | Safe Removal | Chill Mechanic", description: "Safe RO water purifier uninstallation. Quick service. Book now at ₹349." },
+  // Geyser Services
+  "geyser-checkup": { title: "Geyser Repair Checkup Gurgaon | Expert Diagnosis | Chill Mechanic", description: "Complete geyser checkup in Gurgaon. Heating element, thermostat inspection. Book now at ₹249." },
+  "geyser-service": { title: "Geyser Service Gurgaon | Complete Maintenance | Chill Mechanic", description: "Professional geyser service. Element check, tank cleaning, safety inspection. Book now at ₹549." },
+  "geyser-installation": { title: "Geyser Installation Gurgaon | Professional Setup | Chill Mechanic", description: "Professional geyser installation. Pipe fitting, electrical setup. Book now at ₹449." },
+  "geyser-uninstallation": { title: "Geyser Uninstallation Gurgaon | Safe Removal | Chill Mechanic", description: "Safe geyser uninstallation. Quick service. Book now at ₹349." },
+  // Washing Machine Services
+  "wm-top-load-checkup": { title: "Washing Machine Repair - Top Load | Gurgaon | Chill Mechanic", description: "Expert top load washing machine repair in Gurgaon. Complete diagnostic. Book now at ₹249." },
+  "wm-front-load-checkup": { title: "Washing Machine Repair - Front Load | Gurgaon | Chill Mechanic", description: "Expert front load washing machine repair in Gurgaon. Complete diagnostic. Book now at ₹249." },
+  "wm-semi-auto-checkup": { title: "Washing Machine Repair - Semi Automatic | Gurgaon | Chill Mechanic", description: "Expert semi-automatic washing machine repair in Gurgaon. Complete checkup. Book now at ₹249." },
+  "wm-install-uninstall": { title: "Washing Machine Installation Gurgaon | Professional Setup | Chill Mechanic", description: "Professional washing machine installation/uninstallation. Quick service. Book now at ₹349." },
+  // Microwave Services
+  "microwave-checkup": { title: "Microwave Repair Gurgaon | Expert Service | Chill Mechanic", description: "Professional microwave repair in Gurgaon. Complete diagnostic checkup. Book now at ₹249." },
+  // Water Dispenser Services
+  "wd-checkup": { title: "Water Dispenser Repair Gurgaon | Expert Service | Chill Mechanic", description: "Professional water dispenser repair in Gurgaon. Cooling, heating system inspection. Book now at ₹249." },
+  // Deep Freezer Services
+  "df-checkup": { title: "Deep Freezer Repair Gurgaon | Expert Service | Chill Mechanic", description: "Professional deep freezer repair in Gurgaon. Temperature, cooling system inspection. Book now at ₹249." },
+};
+
 const serviceItemDetails = {
   "ac-foam-1": {
     id: "ac-foam-1",
@@ -1262,16 +1317,20 @@ export default function ServiceItemDetail() {
     </Card>
   );
 
+  // Get SEO data for current service item
+  const seo = serviceId ? SERVICE_ITEM_SEO[serviceId] : null;
+  const canonicalUrl = serviceId && serviceType ? `https://chillmechanic.com/services/${serviceType}/${serviceId}` : null;
+
   return (
     <>
-      {isGasRefill && (
+      {seo && (
         <Helmet>
-          <title>AC Gas Refill & Charging Gurgaon | 1T, 1.5T, 2T | Top Up & Full Charging | Chill Mechanic</title>
-          <meta name="description" content="Professional AC gas refill & charging in Gurgaon. Top up from ₹1999, full gas charging from ₹2999. Covers 1, 1.5 & 2 Ton ACs. Leak detection included. 3-month warranty. Same-day service. Book now!" />
-          <link rel="canonical" href="https://chillmechanic.com/services/ac/ac-gas-refill" />
-          <meta property="og:title" content="AC Gas Refill & Charging Gurgaon | Chill Mechanic" />
-          <meta property="og:description" content="Expert AC gas refill service in Gurgaon. Top up or full charging for 1T, 1.5T & 2T ACs. Transparent pricing, no hidden charges. 3-month warranty." />
-          <meta property="og:url" content="https://chillmechanic.com/services/ac/ac-gas-refill" />
+          <title>{seo.title}</title>
+          <meta name="description" content={seo.description} />
+          {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+          <meta property="og:title" content={seo.title} />
+          <meta property="og:description" content={seo.description} />
+          {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
         </Helmet>
       )}
       <div className="min-h-screen bg-background">
