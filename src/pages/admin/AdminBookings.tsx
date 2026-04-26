@@ -1135,12 +1135,20 @@ export default function AdminBookings() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div>
-                        <p className="font-medium">{booking.items?.[0]?.service_name || 'N/A'}</p>
-                        {booking.items && booking.items.length > 1 && (
-                          <p className="text-xs text-gray-500">+{booking.items.length - 1} more</p>
-                        )}
-                      </div>
+                      {booking.items && booking.items.length > 0 ? (
+                        <ul className="space-y-1 list-disc list-inside marker:text-gray-400">
+                          {booking.items.map((item) => (
+                            <li key={item.id} className="text-sm">
+                              <span className="font-medium">{item.service_name}</span>
+                              {item.quantity > 1 && (
+                                <span className="text-gray-500"> × {item.quantity}</span>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span className="text-gray-400 text-sm">N/A</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
@@ -1525,7 +1533,7 @@ export default function AdminBookings() {
                     type="date"
                     value={newBooking.bookingDate}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, bookingDate: e.target.value }))}
-                    min={new Date().toISOString().split('T')[0]}
+                    min={(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })()}
                   />
                 </div>
                 <div>

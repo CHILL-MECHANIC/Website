@@ -167,7 +167,7 @@ export default function Cart() {
     navigate("/payment", { 
       state: { 
         bookingData: {
-          date: bookingDetails.date.toISOString().split('T')[0],
+          date: format(bookingDetails.date, 'yyyy-MM-dd'),
           time: bookingDetails.time,
           instructions: bookingDetails.instructions,
           serviceAddress: buildServiceAddressString()
