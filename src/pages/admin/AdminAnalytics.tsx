@@ -29,12 +29,32 @@ export default function AdminAnalytics() {
   }, [isAdmin]);
 
   const fetchAnalytics = async () => {
-    const { data: bookings } = await supabase
-      .from("bookings")
-      .select(`
-        *,
-        booking_items(service_name, price, quantity)
-      `);
+    // Supabase caps a single response at 1000 rows by default — paginate to fetch all.
+    const PAGE_SIZE = 2000;
+    let allBookings: any[] = [];
+    let from = 0;
+
+    while (true) {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select(`
+          *,
+          booking_items(service_name, price, quantity)
+        `)
+        .range(from, from + PAGE_SIZE - 1);
+
+      if (error) {
+        console.error("Analytics fetch error:", error);
+        break;
+      }
+      if (!data || data.length === 0) break;
+
+      allBookings = allBookings.concat(data);
+      if (data.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+    }
+
+    const bookings = allBookings;
 
     if (bookings) {
       const totalBookings = bookings.length;

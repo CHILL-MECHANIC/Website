@@ -147,6 +147,39 @@ export default function UserProfile() {
       const result = await cancelBooking(bookingToCancel.bookingId);
 
       if (result.success) {
+        // Send cancellation SMS to customer
+        if (profile.phone) {
+          try {
+            let cleanedPhone = String(profile.phone).replace(/\D/g, '');
+            if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
+              cleanedPhone = cleanedPhone.substring(2);
+            } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
+              cleanedPhone = cleanedPhone.substring(1);
+            }
+
+            if (cleanedPhone.length === 10 && /^\d{10}$/.test(cleanedPhone)) {
+              const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+              const apiBaseUrl = isLocalhost ? (import.meta.env.VITE_API_URL || 'http://localhost:3001') : '';
+
+              await fetch(`${apiBaseUrl}/api/sms/send`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  recipient: '91' + cleanedPhone,
+                  message: `Dear Customer, \n\nYour booking with Chill Mechanic has been cancelled as requested. Your refund will be processed within 3-5 business days. \nWe'd love to serve you again soon! \n\nRegards, \nChill Mechanic \nHappy Appliances, Happier Homes`,
+                  type: 'OTP',
+                  senderId: 'CHLMEH',
+                  templateId: '1007212301685342172'
+                })
+              });
+            } else {
+              console.warn('[SMS] Invalid phone number for cancellation SMS after cleaning:', cleanedPhone, 'original:', profile.phone);
+            }
+          } catch (smsError) {
+            console.warn('[SMS] Failed to send booking cancellation SMS (non-critical):', smsError);
+          }
+        }
+
         toast({
           title: '✅ Booking Cancelled',
           description: bookingToCancel.hasPaidPayment

@@ -27,7 +27,7 @@ import {
 import {
   Loader2, RefreshCw, UserPlus, Bell, Search,
   Calendar, Clock, IndianRupee, Phone,
-  CheckCircle, XCircle, Play, AlertCircle, Plus, CheckSquare, RotateCcw
+  CheckCircle, XCircle, Play, AlertCircle, Plus, CheckSquare, RotateCcw, Shield
 } from 'lucide-react';
 
 interface Booking {
@@ -48,6 +48,7 @@ interface Booking {
   assigned_at: string | null;
   service_address: string | null;
   is_recomplaint?: boolean;
+  created_by_admin?: boolean;
 }
 
 interface Profile {
@@ -90,6 +91,7 @@ interface BookingWithDetails extends Booking {
 }
 
 type StatusFilter = 'all' | 'pending' | 'assigned' | 'accepted' | 'in_progress' | 'completed' | 'cancelled';
+type SourceFilter = 'all' | 'admin' | 'customer';
 
 export default function AdminBookings() {
   const { toast } = useToast();
@@ -104,6 +106,7 @@ export default function AdminBookings() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
   const [dateFilter, setDateFilter] = useState('');
   
   // Assign Modal state
@@ -166,7 +169,31 @@ export default function AdminBookings() {
   const fetchBookings = useCallback(async () => {
     setLoading(true);
     try {
-      // Step 1: Fetch bookings
+      // Step 1: Fetch stats via count queries (avoids Supabase's default 1000-row cap)
+      const countFor = (status?: string | string[]) => {
+        let q = supabase.from('bookings').select('*', { count: 'exact', head: true });
+        if (Array.isArray(status)) q = q.in('status', status);
+        else if (status) q = q.eq('status', status);
+        return q;
+      };
+
+      const [
+        totalRes,
+        pendingRes,
+        assignedRes,
+        inProgressRes,
+        completedRes,
+        cancelledRes
+      ] = await Promise.all([
+        countFor(),
+        countFor('pending'),
+        countFor('assigned'),
+        countFor(['in_progress', 'accepted']),
+        countFor('completed'),
+        countFor('cancelled')
+      ]);
+
+      // Step 2: Fetch filtered bookings based on selected filters
       let query = supabase
         .from('bookings')
         .select('*')
@@ -174,6 +201,12 @@ export default function AdminBookings() {
 
       if (statusFilter !== 'all') {
         query = query.eq('status', statusFilter);
+      }
+
+      if (sourceFilter === 'admin') {
+        query = query.eq('created_by_admin', true);
+      } else if (sourceFilter === 'customer') {
+        query = query.or('created_by_admin.is.null,created_by_admin.eq.false');
       }
 
       if (dateFilter) {
@@ -281,15 +314,15 @@ export default function AdminBookings() {
       }
 
       setBookings(filtered);
-      
-      // Calculate stats from all bookings (not filtered)
+
+      // Stats from count queries (unfiltered)
       setStats({
-        total: bookingsData.length,
-        pending: bookingsData.filter(b => b.status === 'pending').length,
-        assigned: bookingsData.filter(b => b.status === 'assigned').length,
-        inProgress: bookingsData.filter(b => b.status === 'in_progress' || b.status === 'accepted').length,
-        completed: bookingsData.filter(b => b.status === 'completed').length,
-        cancelled: bookingsData.filter(b => b.status === 'cancelled').length
+        total: totalRes.count || 0,
+        pending: pendingRes.count || 0,
+        assigned: assignedRes.count || 0,
+        inProgress: inProgressRes.count || 0,
+        completed: completedRes.count || 0,
+        cancelled: cancelledRes.count || 0
       });
 
       setNewBookingAlert(false);
@@ -304,7 +337,7 @@ export default function AdminBookings() {
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, dateFilter, searchQuery, toast]);
+  }, [statusFilter, sourceFilter, dateFilter, searchQuery, toast]);
 
   // Fetch technicians
   const fetchTechnicians = async () => {
@@ -397,7 +430,7 @@ export default function AdminBookings() {
   // Re-fetch when filters change
   useEffect(() => {
     fetchBookings();
-  }, [statusFilter, dateFilter, fetchBookings]);
+  }, [statusFilter, sourceFilter, dateFilter, fetchBookings]);
 
   // Assign technician
   const assignTechnician = async () => {
@@ -458,9 +491,9 @@ export default function AdminBookings() {
                 },
                 body: JSON.stringify({
                   recipient: '91' + cleanedPhone,
-                message: `Dear Customer,\n\nA technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285.\n\nRegards,\nChill Mechanic Team`,
-                type: 'OTP',
-                senderId: 'CHLMEH',
+                  message: `Dear Customer,\n\nA technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285.\n\nRegards,\nChill Mechanic Team`,
+                  type: 'OTP',
+                  senderId: 'CHLMEH',
                   templateId: '1007074801259726162'
                 })
               });
@@ -614,7 +647,8 @@ export default function AdminBookings() {
         payment_status: newBooking.paymentMode,
         special_instructions: newBooking.specialInstructions || null,
         technician_id: newBooking.technicianId || null,
-        service_address: serviceAddress
+        service_address: serviceAddress,
+        created_by_admin: true
       };
 
       // Set assigned_at timestamp if technician is selected
@@ -672,10 +706,10 @@ export default function AdminBookings() {
             console.log('[Admin SMS] Sending booking confirmation to:', cleanedPhone);
             
             const smsResponse = await fetch(`${apiBaseUrl}/api/sms/send`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
               body: JSON.stringify({
                 recipient: '91' + cleanedPhone,
                 message: `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`,
@@ -846,6 +880,43 @@ export default function AdminBookings() {
         .eq('id', bookingId);
 
       if (error) throw error;
+
+      // Send cancellation SMS to customer when status changes to cancelled
+      if (newStatus === 'cancelled') {
+        const cancelledBooking = bookings.find(b => b.id === bookingId);
+        const customerPhone = cancelledBooking?.customer?.phone;
+        if (customerPhone) {
+          try {
+            let cleanedPhone = String(customerPhone).replace(/\D/g, '');
+            if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
+              cleanedPhone = cleanedPhone.substring(2);
+            } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
+              cleanedPhone = cleanedPhone.substring(1);
+            }
+
+            if (cleanedPhone.length === 10 && /^\d{10}$/.test(cleanedPhone)) {
+              const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+              const apiBaseUrl = isLocalhost ? 'http://localhost:3001' : '';
+
+              await fetch(`${apiBaseUrl}/api/sms/send`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  recipient: '91' + cleanedPhone,
+                  message: `Dear Customer, \n\nYour booking with Chill Mechanic has been cancelled as requested. Your refund will be processed within 3-5 business days. \nWe'd love to serve you again soon! \n\nRegards, \nChill Mechanic \nHappy Appliances, Happier Homes`,
+                  type: 'OTP',
+                  senderId: 'CHLMEH',
+                  templateId: '1007212301685342172'
+                })
+              });
+            } else {
+              console.warn('[SMS] Invalid phone number for cancellation SMS after cleaning:', cleanedPhone, 'original:', customerPhone);
+            }
+          } catch (smsError) {
+            console.warn('[SMS] Failed to send booking cancellation SMS (non-critical):', smsError);
+          }
+        }
+      }
 
       toast({
         title: 'Status Updated',
@@ -1075,19 +1146,31 @@ export default function AdminBookings() {
               <SelectItem value="cancelled">Cancelled</SelectItem>
             </SelectContent>
           </Select>
-          
+
+          <Select value={sourceFilter} onValueChange={(v) => setSourceFilter(v as SourceFilter)}>
+            <SelectTrigger className="w-44">
+              <SelectValue placeholder="Source" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Sources</SelectItem>
+              <SelectItem value="admin">Admin Created</SelectItem>
+              <SelectItem value="customer">Customer Created</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Input
             type="date"
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
             className="w-40"
           />
-          
-          {(statusFilter !== 'all' || dateFilter || searchQuery) && (
-            <Button 
-              variant="ghost" 
+
+          {(statusFilter !== 'all' || sourceFilter !== 'all' || dateFilter || searchQuery) && (
+            <Button
+              variant="ghost"
               onClick={() => {
                 setStatusFilter('all');
+                setSourceFilter('all');
                 setDateFilter('');
                 setSearchQuery('');
               }}
@@ -1122,7 +1205,24 @@ export default function AdminBookings() {
                   <TableRow key={booking.id} className="hover:bg-gray-50">
                     <TableCell>
                       <div>
-                        <p className="font-medium">{booking.customer?.full_name || 'Unknown'}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">{booking.customer?.full_name || 'Unknown'}</p>
+                          {booking.created_by_admin && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Badge className="bg-purple-100 text-purple-800 border-purple-300 flex items-center gap-1 px-1.5 py-0">
+                                    <Shield className="w-3 h-3" />
+                                    Admin
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Booking created by admin</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                        </div>
                         <p className="text-sm text-gray-500 flex items-center gap-1">
                           <Phone className="w-3 h-3" />
                           {booking.customer?.phone || 'N/A'}
