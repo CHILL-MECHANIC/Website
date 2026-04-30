@@ -337,7 +337,6 @@ export default function Cart() {
                 onChange={(e) => setBookingDetails({...bookingDetails, time: e.target.value})}
               >
                 <option value="">Select Time</option>
-                <option value="09:00">9:00 AM</option>
                 <option value="10:00">10:00 AM</option>
                 <option value="11:00">11:00 AM</option>
                 <option value="12:00">12:00 PM</option>
@@ -349,7 +348,6 @@ export default function Cart() {
                 <option value="18:00">6:00 PM</option>
                 <option value="19:00">7:00 PM</option>
                 <option value="20:00">8:00 PM</option>
-                <option value="21:00">9:00 PM</option>
               </select>
             </div>
 
