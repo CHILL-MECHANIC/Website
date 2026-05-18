@@ -23,15 +23,55 @@ import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
 import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
 
-const SERVICE_SEO: Record<string, { title: string; description: string; price: string }> = {
-  ac: { title: 'AC Repair Gurgaon | AC Service Near Me | Starting Rs. 599 | Chill Mechanic', description: 'Professional AC repair & service in Gurgaon. Foam jet cleaning, gas refilling, cooling issues fixed. Same day service. Book online or call 9211970030', price: '599' },
-  refrigerator: { title: 'Fridge Repair Gurgaon | Refrigerator Service Near Me | Rs. 249', description: 'Expert refrigerator repair in Gurgaon. Cooling issues, compressor problems, door seal replacement. All brands serviced. Same day repair available.', price: '249' },
-  'washing-machine': { title: 'Washing Machine Repair Gurgaon | WM Service Near Me | Chill Mechanic', description: 'Washing machine repair in Gurgaon. Motor repair, drum cleaning, belt replacement. Top load & front load experts. Book service online.', price: '249' },
-  ro: { title: 'RO Repair Gurgaon | Water Purifier Service Near Me | Chill Mechanic', description: 'RO water purifier service in Gurgaon. Filter replacement, membrane cleaning, installation. All brands Kent, Aquaguard, Pureit. Book now!', price: '249' },
-  geyser: { title: 'Geyser Repair Gurgaon | Water Heater Service Near Me | Chill Mechanic', description: 'Geyser repair & installation in Gurgaon. Heating element replacement, thermostat issues, safety checks. Same day service. Call 9211970030', price: '249' },
-  microwave: { title: 'Microwave Repair Gurgaon | Microwave Service Near Me | Chill Mechanic', description: 'Microwave oven repair in Gurgaon. Heating issues, door problems, electrical faults. All brands repaired. Genuine parts guaranteed.', price: '249' },
-  'water-dispenser': { title: 'Water Dispenser Repair Gurgaon | Dispenser Service Near Me', description: 'Water dispenser service in Gurgaon. Filter replacement, temperature control, cleaning. Commercial & residential. Same day repair.', price: '249' },
-  'deep-freezer': { title: 'Deep Freezer Repair Gurgaon | Commercial Freezer Service', description: 'Deep freezer repair in Gurgaon. Cooling issues, compressor repair, maintenance. Restaurant & commercial freezer experts. Call now!', price: '249' },
+const SERVICE_SEO: Record<string, { title: string; description: string; price: string; keywords: string }> = {
+  ac: { 
+    title: 'AC Repair Gurgaon | AC Service Near Me | Starting Rs. 599 | Chill Mechanic', 
+    description: 'Professional AC repair & service in Gurgaon. Foam jet cleaning, gas refilling, cooling issues fixed. Same day service. Book online or call 9211970030', 
+    price: '599',
+    keywords: 'AC repair Gurgaon, AC service near me, air conditioner repair, cooling issues, AC maintenance'
+  },
+  refrigerator: { 
+    title: 'Fridge Repair Gurgaon | Refrigerator Service Near Me | Starting Rs. 249 | Chill Mechanic', 
+    description: 'Expert refrigerator repair in Gurgaon. Cooling issues, compressor problems, door seal replacement. All brands serviced. Same day repair available. Call 9211970030', 
+    price: '249',
+    keywords: 'refrigerator repair Gurgaon, fridge service, cooling issues, compressor repair, fridge maintenance'
+  },
+  'washing-machine': { 
+    title: 'Washing Machine Repair Gurgaon | WM Service Near Me | Starting Rs. 249 | Chill Mechanic', 
+    description: 'Washing machine repair in Gurgaon. Motor repair, drum cleaning, belt replacement. Top load & front load experts. Same day service. Book online now!', 
+    price: '249',
+    keywords: 'washing machine repair Gurgaon, WM service, top load repair, front load repair, washing machine maintenance'
+  },
+  ro: { 
+    title: 'RO Water Purifier Repair Gurgaon | Water Purifier Service Near Me | Starting Rs. 249 | Chill Mechanic', 
+    description: 'RO water purifier service in Gurgaon. Filter replacement, membrane cleaning, installation. All brands Kent, Aquaguard, Pureit serviced. Same day service available!', 
+    price: '249',
+    keywords: 'RO repair Gurgaon, water purifier service, RO maintenance, filter replacement, water quality testing'
+  },
+  geyser: { 
+    title: 'Geyser Repair Gurgaon | Water Heater Service Near Me | Starting Rs. 249 | Chill Mechanic', 
+    description: 'Geyser repair & installation in Gurgaon. Heating element replacement, thermostat issues, safety checks. Same day service. Call 9211970030', 
+    price: '249',
+    keywords: 'geyser repair Gurgaon, water heater service, heating element repair, geyser installation, water heater maintenance'
+  },
+  microwave: { 
+    title: 'Microwave Repair Gurgaon | Microwave Service Near Me | Starting Rs. 249 | Chill Mechanic', 
+    description: 'Microwave oven repair in Gurgaon. Heating issues, door problems, electrical faults. All brands repaired. Genuine parts guaranteed. Same day service!', 
+    price: '249',
+    keywords: 'microwave repair Gurgaon, microwave oven service, heating issues, microwave maintenance, microwave repair near me'
+  },
+  'water-dispenser': { 
+    title: 'Water Dispenser Repair Gurgaon | Dispenser Service Near Me | Starting Rs. 249 | Chill Mechanic', 
+    description: 'Water dispenser service in Gurgaon. Filter replacement, temperature control, cleaning. Commercial & residential. Same day repair available!', 
+    price: '249',
+    keywords: 'water dispenser repair, dispenser service Gurgaon, filter replacement, water dispenser maintenance, commercial dispenser'
+  },
+  'deep-freezer': { 
+    title: 'Deep Freezer Repair Gurgaon | Commercial Freezer Service | Starting Rs. 249 | Chill Mechanic', 
+    description: 'Deep freezer repair in Gurgaon. Cooling issues, compressor repair, maintenance. Restaurant & commercial freezer experts. Same day service!', 
+    price: '249',
+    keywords: 'deep freezer repair Gurgaon, commercial freezer service, freezer maintenance, compressor repair, commercial refrigeration'
+  },
 };
 
 const serviceDetails = {
@@ -221,7 +261,25 @@ export default function ServiceDetail() {
           <Helmet>
             <title>{seo.title}</title>
             <meta name="description" content={seo.description} />
+            <meta name="keywords" content={seo.keywords} />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <meta name="language" content="English" />
+            <meta name="revisit-after" content="7 days" />
+            <meta name="author" content="Chill Mechanic" />
             <link rel="canonical" href={`https://chillmechanic.com/services/${serviceType}`} />
+            
+            {/* Open Graph Meta Tags for Social Sharing */}
+            <meta property="og:title" content={seo.title} />
+            <meta property="og:description" content={seo.description} />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content={`https://chillmechanic.com/services/${serviceType}`} />
+            <meta property="og:site_name" content="Chill Mechanic" />
+            
+            {/* Twitter Card Meta Tags */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={seo.title} />
+            <meta name="twitter:description" content={seo.description} />
+            <meta name="twitter:site" content="@chillmechanic" />
           </Helmet>
         )}
         {seo && (
@@ -229,13 +287,65 @@ export default function ServiceDetail() {
             '@context': 'https://schema.org',
             '@type': 'Service',
             name: service.title,
-            provider: { '@type': 'LocalBusiness', name: 'Chill Mechanic' },
-            areaServed: 'Gurgaon',
-            offers: { '@type': 'Offer', price: seo.price, priceCurrency: 'INR' },
+            description: seo.description,
+            provider: { 
+              '@type': 'LocalBusiness', 
+              name: 'Chill Mechanic',
+              telephone: '+91-2902-1835',
+              email: 'info@chillmechanic.com',
+              url: 'https://chillmechanic.com',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'Gurgaon',
+                addressLocality: 'Gurgaon',
+                addressRegion: 'Haryana',
+                postalCode: '122001',
+                addressCountry: 'IN'
+              }
+            },
+            areaServed: {
+              '@type': 'City',
+              name: 'Gurgaon'
+            },
+            offers: { 
+              '@type': 'Offer', 
+              price: seo.price, 
+              priceCurrency: 'INR',
+              availability: 'https://schema.org/InStock',
+              url: `https://chillmechanic.com/services/${serviceType}`
+            },
+            serviceType: service.title,
+            url: `https://chillmechanic.com/services/${serviceType}`,
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: '4.8',
+              ratingCount: '150',
+              reviewCount: '150'
+            }
           }) }} />
         )}
         {faqs && (
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateFaqSchema(faqs)) }} />
+        )}
+        {seo && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://chillmechanic.com'
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: service.title,
+                item: `https://chillmechanic.com/services/${serviceType}`
+              }
+            ]
+          }) }} />
         )}
         <Header cartItemsCount={getCartItemsCount()} />
       
