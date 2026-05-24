@@ -65,12 +65,20 @@ export default function UserProfile() {
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
   const [bookingToCancel, setBookingToCancel] = useState<{ bookingId: string; hasPaidPayment: boolean } | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (authProfile) {
       fetchProfile();
       fetchBookings();
     }
+    
+    // Cleanup timer on unmount
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
   }, [authProfile]);
 
   const fetchProfile = async () => {
@@ -250,7 +258,7 @@ export default function UserProfile() {
 
       // Redirect to cart if it has items, otherwise stay on profile
       if (getCartItemsCount() > 0) {
-        setTimeout(() => navigate("/cart"), 500);
+        timerRef.current = setTimeout(() => navigate("/cart"), 500);
       }
     } catch (error) {
       toast({

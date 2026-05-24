@@ -39,9 +39,9 @@ export default function BookingConfirmationPageExample() {
   useEffect(() => {
     if (!bookingData) {
       // Redirect if no booking data
-      window.location.href = "/";
+      navigate("/");
     }
-  }, [bookingData]);
+  }, [bookingData, navigate]);
 
   const handleViewDetails = () => {
     // Navigate to booking details or perform other actions

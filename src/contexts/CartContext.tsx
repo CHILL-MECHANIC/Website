@@ -35,7 +35,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    } catch (error) {
+      console.error('Failed to save cart to localStorage:', error);
+      // Silently fail - cart will remain in memory for current session
+    }
   }, [cartItems]);
 
   const addToCart = (services: ServiceOption[]) => {

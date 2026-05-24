@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { CheckCircle, Calendar, Clock, MapPin, Zap, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import "../styles/BookingConfirmationCard.css";
 
 interface BookingConfirmationProps {
@@ -26,6 +27,7 @@ export default function BookingConfirmationCard({
 }: BookingConfirmationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     setIsAnimating(true);
@@ -43,6 +45,12 @@ export default function BookingConfirmationCard({
         amount,
         serviceType,
       };
+      
+      toast({
+        title: "Receipt Download Coming Soon",
+        description: "This feature is currently being developed. You can download your receipt from your profile soon.",
+      });
+      
       console.log("Receipt download requested:", receiptData);
       // TODO: Integrate with backend receipt endpoint when ready
       // const response = await fetch('/api/receipt/download', { method: 'POST', body: JSON.stringify(receiptData) });
@@ -54,6 +62,11 @@ export default function BookingConfirmationCard({
       // a.click();
     } catch (error) {
       console.error("Failed to download receipt:", error);
+      toast({
+        title: "Error",
+        description: "Failed to prepare receipt. Please try again later.",
+        variant: "destructive"
+      });
     } finally {
       setIsDownloading(false);
     }

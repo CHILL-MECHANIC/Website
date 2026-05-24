@@ -287,11 +287,14 @@ export default function ServiceDetail() {
             <meta property="og:type" content="website" />
             <meta property="og:url" content={`https://chillmechanic.com/services/${serviceType}`} />
             <meta property="og:site_name" content="Chill Mechanic" />
+            <meta property="og:image" content={service.image ? `https://chillmechanic.com${service.image}` : 'https://chillmechanic.com/og-image.jpg'} />
+            <meta property="og:image:alt" content={service.title} />
             
             {/* Twitter Card Meta Tags */}
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content={seo.title} />
             <meta name="twitter:description" content={seo.description} />
+            <meta name="twitter:image" content={service.image ? `https://chillmechanic.com${service.image}` : 'https://chillmechanic.com/og-image.jpg'} />
             <meta name="twitter:site" content="@chillmechanic" />
           </Helmet>
         )}
@@ -374,7 +377,7 @@ export default function ServiceDetail() {
               Book Now
             </Button>
             <Button size="lg" variant="outline" className="border-primary-foreground text-secondary-foreground hover:text-primary-foreground hover:bg-secondary-foreground/10" asChild>
-              <a href="tel:9211970030">Call 9211970030</a>
+              <a href="tel:+912902183500">Call +91-2902-1835</a>
             </Button>
           </div>
         </div>
