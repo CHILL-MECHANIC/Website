@@ -27,6 +27,7 @@ import NotFound from "./pages/NotFound";
 import UserProfile from "./components/UserProfile";
 import SMS from "./pages/SMS";
 import BlogPage from "./pages/BlogPage";
+import BlogArticle from "./pages/BlogArticle";
 import GalleryPage from "./pages/GalleryPage";
 import PaymentHistory from "./pages/PaymentHistory";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/sms" element={<SMS />} />
               <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:id" element={<BlogArticle />} />
               <Route path="/gallery" element={<GalleryPage />} />
               
               {/* Admin Routes */}              <Route path="/admin" element={<AdminDashboard />} />

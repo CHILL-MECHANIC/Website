@@ -25,10 +25,39 @@ export default function BookingConfirmationCard({
   onAction
 }: BookingConfirmationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     setIsAnimating(true);
   }, []);
+
+  const handleDownloadReceipt = async () => {
+    setIsDownloading(true);
+    try {
+      // Backend support for receipt generation not yet implemented
+      // Placeholder for future receipt PDF/CSV download functionality
+      const receiptData = {
+        bookingId,
+        date,
+        time,
+        amount,
+        serviceType,
+      };
+      console.log("Receipt download requested:", receiptData);
+      // TODO: Integrate with backend receipt endpoint when ready
+      // const response = await fetch('/api/receipt/download', { method: 'POST', body: JSON.stringify(receiptData) });
+      // const blob = await response.blob();
+      // const url = window.URL.createObjectURL(blob);
+      // const a = document.createElement('a');
+      // a.href = url;
+      // a.download = `receipt-${bookingId}.pdf`;
+      // a.click();
+    } catch (error) {
+      console.error("Failed to download receipt:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <div className={`booking-confirmation-container ${isAnimating ? 'animate-in' : ''}`}>
@@ -129,8 +158,11 @@ export default function BookingConfirmationCard({
           <Button 
             variant="outline"
             className="confirmation-button confirmation-button-secondary"
+            onClick={handleDownloadReceipt}
+            disabled={isDownloading}
+            title="Receipt download coming soon"
           >
-            Download Receipt
+            {isDownloading ? "Downloading..." : "Download Receipt"}
           </Button>
         </div>
 

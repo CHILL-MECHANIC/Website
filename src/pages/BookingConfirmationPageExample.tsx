@@ -37,11 +37,11 @@ export default function BookingConfirmationPageExample() {
   const [showConfirmation, setShowConfirmation] = useState(true);
 
   useEffect(() => {
-    if (!bookingData && !bookingId) {
+    if (!bookingData) {
       // Redirect if no booking data
       window.location.href = "/";
     }
-  }, [bookingData, bookingId]);
+  }, [bookingData]);
 
   const handleViewDetails = () => {
     // Navigate to booking details or perform other actions

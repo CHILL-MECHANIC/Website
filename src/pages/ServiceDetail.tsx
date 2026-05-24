@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 import TrustBadgeBar from "@/components/TrustBadgeBar";
@@ -13,6 +14,8 @@ import BrandsCarousel from "@/components/BrandsCarousel";
 import ServiceAreas from "@/components/ServiceAreas";
 import { serviceFaqMap } from "@/data/faqs";
 import { generateFaqSchema } from "@/utils/faqSchema";
+import { Play } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
@@ -23,34 +26,45 @@ import microwaveServiceImage from "@/assets/microwave-service.jpg";
 import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
 import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
 
+const supabaseUrl = (filename: string, bucket: string) =>
+  supabase.storage.from(bucket).getPublicUrl(filename).data.publicUrl;
+
+const VIDEOS = [
+  { id: 1, title: 'AC Deep Cleaning Service',      videoUrl: supabaseUrl('MainVD1.mp4', 'gallery-videos'), serviceType: 'AC' },
+  { id: 2, title: 'Appliance Repair in Action',    videoUrl: supabaseUrl('MainVD2.mp4', 'gallery-videos'), serviceType: 'AC' },
+  { id: 3, title: 'Refrigerator Repair',           videoUrl: supabaseUrl('Video2.mp4',  'gallery-videos'), serviceType: 'Refrigerator' },
+  { id: 4, title: 'Washing Machine Service',       videoUrl: supabaseUrl('Video3.mp4',  'gallery-videos'), serviceType: 'Washing Machine' },
+  { id: 5, title: 'Geyser & Appliance Repair',     videoUrl: supabaseUrl('Video4.mp4',  'gallery-videos'), serviceType: 'Geyser' },
+];
+
 const SERVICE_SEO: Record<string, { title: string; description: string; price: string; keywords: string }> = {
   ac: { 
     title: 'AC Repair Gurgaon | AC Service Near Me | Starting Rs. 599 | Chill Mechanic', 
-    description: 'Professional AC repair & service in Gurgaon. Foam jet cleaning, gas refilling, cooling issues fixed. Same day service. Book online or call 9211970030', 
+    description: 'Professional AC repair & service in Gurgaon. Foam jet cleaning, gas refilling, cooling issues fixed. Same day service. Call +91-2902-1835 to book', 
     price: '599',
     keywords: 'AC repair Gurgaon, AC service near me, air conditioner repair, cooling issues, AC maintenance'
   },
   refrigerator: { 
     title: 'Fridge Repair Gurgaon | Refrigerator Service Near Me | Starting Rs. 249 | Chill Mechanic', 
-    description: 'Expert refrigerator repair in Gurgaon. Cooling issues, compressor problems, door seal replacement. All brands serviced. Same day repair available. Call 9211970030', 
+    description: 'Expert refrigerator repair in Gurgaon. Cooling issues, compressor problems, door seal replacement. All brands serviced. Same day repair available. Call +91-2902-1835', 
     price: '249',
     keywords: 'refrigerator repair Gurgaon, fridge service, cooling issues, compressor repair, fridge maintenance'
   },
   'washing-machine': { 
     title: 'Washing Machine Repair Gurgaon | WM Service Near Me | Starting Rs. 249 | Chill Mechanic', 
-    description: 'Washing machine repair in Gurgaon. Motor repair, drum cleaning, belt replacement. Top load & front load experts. Same day service. Book online now!', 
+    description: 'Washing machine repair in Gurgaon. Motor repair, drum cleaning, belt replacement. Top load & front load experts. Same day service. Call +91-2902-1835 to book', 
     price: '249',
     keywords: 'washing machine repair Gurgaon, WM service, top load repair, front load repair, washing machine maintenance'
   },
   ro: { 
     title: 'RO Water Purifier Repair Gurgaon | Water Purifier Service Near Me | Starting Rs. 249 | Chill Mechanic', 
-    description: 'RO water purifier service in Gurgaon. Filter replacement, membrane cleaning, installation. All brands Kent, Aquaguard, Pureit serviced. Same day service available!', 
+    description: 'RO water purifier service in Gurgaon. Filter replacement, membrane cleaning, installation. All brands Kent, Aquaguard, Pureit serviced. Same day service available! Call +91-2902-1835', 
     price: '249',
     keywords: 'RO repair Gurgaon, water purifier service, RO maintenance, filter replacement, water quality testing'
   },
   geyser: { 
     title: 'Geyser Repair Gurgaon | Water Heater Service Near Me | Starting Rs. 249 | Chill Mechanic', 
-    description: 'Geyser repair & installation in Gurgaon. Heating element replacement, thermostat issues, safety checks. Same day service. Call 9211970030', 
+    description: 'Geyser repair & installation in Gurgaon. Heating element replacement, thermostat issues, safety checks. Same day service. Call +91-2902-1835', 
     price: '249',
     keywords: 'geyser repair Gurgaon, water heater service, heating element repair, geyser installation, water heater maintenance'
   },
@@ -262,8 +276,7 @@ export default function ServiceDetail() {
             <title>{seo.title}</title>
             <meta name="description" content={seo.description} />
             <meta name="keywords" content={seo.keywords} />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <meta name="language" content="English" />
+            <meta name="language" content="en-US" />
             <meta name="revisit-after" content="7 days" />
             <meta name="author" content="Chill Mechanic" />
             <link rel="canonical" href={`https://chillmechanic.com/services/${serviceType}`} />
@@ -316,12 +329,8 @@ export default function ServiceDetail() {
             },
             serviceType: service.title,
             url: `https://chillmechanic.com/services/${serviceType}`,
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.8',
-              ratingCount: '150',
-              reviewCount: '150'
-            }
+            // aggregateRating temporarily removed - hardcoded values don't reflect real user reviews
+            // Will be re-enabled when integrated with actual review data
           }) }} />
         )}
         {faqs && (
@@ -348,9 +357,28 @@ export default function ServiceDetail() {
           }) }} />
         )}
         <Header cartItemsCount={getCartItemsCount()} />
-      
+
       {/* Trust Badges */}
       <TrustBadgeBar />
+
+      {/* CTA Section - Call Now Button at Top */}
+      <section className="bg-primary text-primary-foreground py-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-lg font-semibold mb-2">⚡ Limited slots available today</p>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Book Your {service.title} Now</h2>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button size="lg" variant="secondary" onClick={() => {
+              const grid = document.querySelector('[data-services-grid]');
+              grid?.scrollIntoView({ behavior: 'smooth' });
+            }}>
+              Book Now
+            </Button>
+            <Button size="lg" variant="outline" className="border-primary-foreground text-secondary-foreground hover:text-primary-foreground hover:bg-secondary-foreground/10" asChild>
+              <a href="tel:9211970030">Call 9211970030</a>
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* Hero Section */}
       <section className="py-16">
@@ -435,24 +463,37 @@ export default function ServiceDetail() {
 
       <CustomerReviews />
 
-      {/* Final CTA */}
-      <section className="bg-primary text-primary-foreground py-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-lg font-semibold mb-2">⚡ Limited slots available today</p>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Book Your {service.title} Now</h2>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button size="lg" variant="secondary" onClick={() => {
-              const grid = document.querySelector('[data-services-grid]');
-              grid?.scrollIntoView({ behavior: 'smooth' });
-            }}>
-              Book Now
-            </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground text-secondary-foreground hover:text-primary-foreground hover:bg-secondary-foreground/10" asChild>
-              <a href="tel:9211970030">Call 9211970030</a>
-            </Button>
+      {/* Videos Section */}
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Play className="h-6 w-6 text-secondary" />
+            <h2 className="text-3xl md:text-4xl font-bold">Our Work</h2>
           </div>
+          <p className="text-center text-muted-foreground mb-10">Real repairs, real results</p>
+
+          <Carousel opts={{ align: 'start', loop: true }} className="w-full max-w-6xl mx-auto">
+            <CarouselContent>
+              {VIDEOS.map((v) => (
+                <CarouselItem key={v.id} className="basis-[82%] sm:basis-1/2 lg:basis-1/3">
+                  <div className="rounded-2xl overflow-hidden border bg-black aspect-[9/16]">
+                    <video
+                      src={v.videoUrl}
+                      preload="none"
+                      playsInline
+                      controls
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </div>
       </section>
+
       <BrandsCarousel />
       <ServiceAreas />
     </div>

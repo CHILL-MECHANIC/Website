@@ -8,6 +8,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ArrowLeft, ChevronDown } from "lucide-react";
 
@@ -23,6 +24,7 @@ export default function Auth() {
     otp: ""
   });
   const { checkPhoneExists, signUp, signIn, verifySignUpOtp, verifySignInOtp, resendOtp } = useAuth();
+  const { getCartItemsCount } = useCart();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -111,8 +113,13 @@ export default function Auth() {
             variant: "destructive"
           });
         } else {
-          // Navigate based on user state
-          if (result.user?.isNewUser || !result.user?.isProfileComplete) {
+          // Check if cart has items
+          const hasCart = getCartItemsCount() > 0;
+
+          // Navigate based on user state and cart
+          if (hasCart) {
+            navigate("/cart");
+          } else if (result.user?.isNewUser || !result.user?.isProfileComplete) {
             navigate("/profile");
           } else {
             navigate("/");

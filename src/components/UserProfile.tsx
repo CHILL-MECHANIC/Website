@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Calendar, Clock, Package, Camera, Upload, Ban, AlertCircle } from "lucide-react";
@@ -41,7 +43,9 @@ interface Booking {
 }
 
 export default function UserProfile() {
+  const navigate = useNavigate();
   const { profile: authProfile, signOut } = useAuth();
+  const { getCartItemsCount } = useCart();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -243,6 +247,11 @@ export default function UserProfile() {
         title: "Profile updated",
         description: "Your profile has been updated successfully."
       });
+
+      // Redirect to cart if it has items, otherwise stay on profile
+      if (getCartItemsCount() > 0) {
+        setTimeout(() => navigate("/cart"), 500);
+      }
     } catch (error) {
       toast({
         title: "Update failed",

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface ServiceOption {
   id: string;
@@ -22,24 +22,36 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+const CART_STORAGE_KEY = 'chill_mechanic_cart';
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    try {
+      const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (services: ServiceOption[]) => {
     setCartItems(prevItems => {
       const newItems = [...prevItems];
-      
+
       services.forEach(service => {
         const existingIndex = newItems.findIndex(item => item.id === service.id);
-        
+
         if (existingIndex >= 0) {
           newItems[existingIndex].quantity += 1;
         } else {
           newItems.push({ ...service, quantity: 1 });
         }
       });
-      
+
       return newItems;
     });
   };

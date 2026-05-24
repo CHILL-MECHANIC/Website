@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -119,15 +119,10 @@ const categoryColor: Record<string, string> = {
 };
 
 export default function BlogPage() {
+  const navigate = useNavigate();
   const { getCartItemsCount } = useCart();
   const featured = ARTICLES[0];
   const categories = ['AC Tips', 'Refrigerator', 'RO & Water', 'Washing Machine', 'Geyser', 'Microwave'];
-  const [expandedFeatured, setExpandedFeatured] = useState(false);
-  const [expandedIds, setExpandedIds] = useState<number[]>([]);
-
-  const toggleExpanded = (id: number) => {
-    setExpandedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -160,27 +155,22 @@ export default function BlogPage() {
       {/* Featured */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border rounded-2xl p-6 md:p-8">
+          <button
+            type="button"
+            onClick={() => navigate(`/blog/${featured.id}`)}
+            className="w-full max-w-6xl mx-auto bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border rounded-2xl p-6 md:p-8 text-left hover:shadow-lg transition-shadow"
+          >
             <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-2">Featured Guide</p>
             <h2 className="text-2xl md:text-3xl font-bold mb-3">{featured.title}</h2>
             <p className="text-muted-foreground mb-4 max-w-3xl">{featured.excerpt}</p>
             <div className="flex flex-wrap items-center gap-3 text-sm">
               <span className={`px-2 py-1 rounded-full font-medium ${categoryColor[featured.category]}`}>{featured.category}</span>
               <span className="inline-flex items-center gap-1 text-muted-foreground"><Clock3 className="h-4 w-4" /> {featured.readTime}</span>
-              <button
-                type="button"
-                onClick={() => setExpandedFeatured((prev) => !prev)}
-                className="inline-flex items-center gap-1 text-primary font-medium hover:underline"
-              >
-                {expandedFeatured ? 'Collapse article' : 'Read article'} <ArrowRight className="h-4 w-4" />
-              </button>
+              <span className="inline-flex items-center gap-1 text-primary font-medium">
+                Read article <ArrowRight className="h-4 w-4" />
+              </span>
             </div>
-            {expandedFeatured && (
-              <div className="mt-4 pt-4 border-t border-primary/20">
-                <p className="text-sm leading-relaxed text-muted-foreground">{featured.fullArticle}</p>
-              </div>
-            )}
-          </div>
+          </button>
         </div>
       </section>
 
@@ -202,7 +192,11 @@ export default function BlogPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {ARTICLES.map((article) => (
-              <Card key={article.title} className="flex flex-col border hover:shadow-lg transition-all hover:-translate-y-1">
+              <Card
+                key={article.title}
+                className="flex flex-col border hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer"
+                onClick={() => navigate(`/blog/${article.id}`)}
+              >
                 <CardContent className="p-6 flex flex-col gap-3 flex-1">
                   <span
                     className={`self-start text-xs font-semibold px-2 py-1 rounded-full ${
@@ -217,19 +211,10 @@ export default function BlogPage() {
                     <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                       <BookOpenText className="h-3.5 w-3.5" /> {article.readTime}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => toggleExpanded(article.id)}
-                      className="text-sm font-medium text-primary inline-flex items-center gap-1 hover:underline"
-                    >
-                      {expandedIds.includes(article.id) ? 'Collapse' : 'Read more'} <ArrowRight className="h-3.5 w-3.5" />
-                    </button>
+                    <span className="text-sm font-medium text-primary inline-flex items-center gap-1">
+                      Read more <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
                   </div>
-                  {expandedIds.includes(article.id) && (
-                    <div className="pt-3 border-t">
-                      <p className="text-sm leading-relaxed text-muted-foreground">{article.fullArticle}</p>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
             ))}
