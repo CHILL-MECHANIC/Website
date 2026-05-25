@@ -377,7 +377,7 @@ export default function ServiceDetail() {
               Book Now
             </Button>
             <Button size="lg" variant="outline" className="border-primary-foreground text-secondary-foreground hover:text-primary-foreground hover:bg-secondary-foreground/10" asChild>
-              <a href="tel:+912902183500">Call +919121870030</a>
+              <a href="tel:+912902183500">Call +919211970030</a>
             </Button>
           </div>
         </div>
