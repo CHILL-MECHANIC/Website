@@ -1,25 +1,27 @@
 export const acFaqs = [
-  { question: "How often should I service my AC?", answer: "Every 3–4 months for optimal performance. Gurgaon's heat and dust make regular maintenance essential to prevent breakdowns." },
-  { question: "What's included in AC service?", answer: "Filter cleaning/replacement, coil cleaning, gas pressure check, drain pipe cleaning, electrical connections check, and performance testing." },
-  { question: "Why is my AC not cooling properly?", answer: "Common causes: dirty filters, low refrigerant gas, blocked condenser coils, faulty compressor, or thermostat issues." },
-  { question: "How do I know if my AC needs gas refilling?", answer: "Signs include reduced cooling, ice formation on pipes, hissing sounds, or the AC running continuously without cooling effectively." },
-  { question: "What's the difference between Power Jet and Foam service?", answer: "Power Jet uses high-pressure water. Foam service uses a foaming agent for deeper coil cleaning — recommended every 6 months." },
-  { question: "Do you repair inverter AC?", answer: "Yes — inverter, split, window, and cassette AC across all major brands." },
-  { question: "How long does AC service take?", answer: "Standard service: 45–60 minutes per unit. We give a time estimate before starting." },
-  { question: "Do you provide AMC (Annual Maintenance Contract)?", answer: "Yes, AMC plans from Rs. 2999/year for 4 services. Includes priority booking, 10% parts discount, and extended warranty." },
-  { question: "Which AC brands do you service?", answer: "LG, Samsung, Daikin, Voltas, Blue Star, Hitachi, Carrier, O General, Lloyd, and more." },
-  { question: "Is there any warranty on AC repair?", answer: "30-day warranty on repairs, 90-day warranty on gas refilling. Parts warranty as per manufacturer." },
+  { question: "Which is the best AC repair and service company in Gurgaon?", answer: "Looking for the Best AC Repair & Service in Gurgaon? Chill Mechanic has successfully completed 2000+ AC repairs in just 4 months with a 90% same-day resolution rate. Trusted for fast response, expert technicians, affordable pricing, and reliable AC repair services in Gurgaon." },
+  { question: "Why should I choose Chill Mechanic for AC repair in Gurgaon?", answer: "Chill Mechanic has 50+ years of combined industry experience and a team of highly trained AC technicians with an average experience of 10+ years. We provide doorstep AC repair, AC installation, AC gas filling, AC maintenance and AC servicing across Gurgaon with a fast response time of around 60 minutes." },
+  { question: "How much does AC inspection cost in Gurgaon?", answer: "At Chill Mechanic, the approximate AC inspection charge starts from just ₹249. After inspection, our technicians explain the issue clearly and provide transparent pricing before starting any repair work." },
+  { question: "How often should AC maintenance or servicing be done?", answer: "For the best cooling performance and long AC life, AC servicing and maintenance should ideally be done every 3 to 4 months, especially during heavy summer usage. Regular AC maintenance helps prevent cooling problems, water leakage, bad smell and high electricity bills." },
+  { question: "Do you provide same day AC repair service in Gurgaon?", answer: "Yes, Chill Mechanic provides same day AC repair and service in Gurgaon with a 90% same day resolution success rate. Our technicians are available across Gurgaon for quick doorstep support and emergency AC repairs." },
+  { question: "What are the most common AC problems you repair?", answer: "The most common AC issues handled by Chill Mechanic include: AC not cooling properly, AC gas leakage, water leakage from AC, AC making noise, AC compressor issues, dirty AC filters and maintenance problems, AC remote and PCB faults, and Split AC and Window AC servicing." },
+  { question: "How experienced are Chill Mechanic AC technicians?", answer: "Our AC technicians have an average experience of 10+ years and are trained to repair all major AC brands. With 50+ years of combined technical experience, Chill Mechanic delivers reliable and professional AC repair services in Gurgaon." },
+  { question: "What is the average cost of AC repair in Gurgaon?", answer: "The average AC repair cost depends on the issue and spare parts required. However, most AC repair services at Chill Mechanic start from approximately ₹1000 with complete transparency and no hidden charges." },
+  { question: "Which areas in Gurgaon does Chill Mechanic serve?", answer: "Chill Mechanic provides AC repair and AC service across the whole Gurgaon region, including residential apartments, offices, societies, villas and commercial spaces, that's why we are regarded as the best AC repair and service in Gurgaon." },
+  { question: "Is Chill Mechanic safe and trustworthy for home AC service?", answer: "Yes, customer safety is our priority. Our safety policy is: \"Safety Check, Every Visit, Every Time.\" All technicians follow proper safety protocols and professional service standards during every AC repair and maintenance visit." },
+  { question: "Do customers trust Chill Mechanic services?", answer: "Yes, around 20–30% of our customers are repeat customers, which reflects strong customer satisfaction and trust in our AC repair and maintenance services in Gurgaon." },
 ];
 
 export const fridgeFaqs = [
-  { question: "Why is my refrigerator not cooling?", answer: "Common reasons: thermostat issues, dirty condenser coils, faulty compressor, refrigerant leak, or door seal problems." },
-  { question: "How often should I clean refrigerator coils?", answer: "Every 6 months. Dirty coils increase electricity bills and reduce cooling efficiency." },
-  { question: "Why is water leaking from my refrigerator?", answer: "Usually a blocked defrost drain, damaged water line, or improper leveling." },
-  { question: "What's included in refrigerator service?", answer: "Thermostat testing, compressor check, coil cleaning, door seal inspection, drain cleaning, and temperature calibration." },
-  { question: "Do you repair all types of refrigerators?", answer: "Yes — single door, double door, side-by-side, and French door, all brands." },
-  { question: "Why is my fridge making noise?", answer: "Could be a faulty compressor, fan motor issues, or ice buildup." },
-  { question: "How long does a refrigerator repair take?", answer: "Most repairs completed in 1–2 hours. We provide a time estimate before starting." },
-  { question: "Should I repair or replace my old refrigerator?", answer: "If repair cost is under 40% of a new unit's price and it's under 10 years old, repair is usually better. We give honest advice." },
+  { question: "Why is Chill Mechanic considered the Best Refrigerator Service & Repair in Gurgaon?", answer: "Chill Mechanic is trusted for fast, affordable and professional refrigerator repair solutions across Gurgaon. We have completed 2000+ refrigerator repairs in just 4 months with a 90% same-day resolution rate. Our expert technicians have an average experience of 10+ years, making us one of the most reliable choices for Refrigerator Repair Services Near Me in Gurgaon." },
+  { question: "How quickly can Chill Mechanic provide Doorstep Refrigerator Repair in Gurgaon?", answer: "We provide quick Doorstep Refrigerator Repair in Gurgaon with an average response time of around 60 minutes. Our technicians are available across Gurgaon to handle urgent refrigerator issues including cooling problems, water leakage, compressor faults and maintenance services." },
+  { question: "What are the most common refrigerator problems repaired by Chill Mechanic?", answer: "Our team commonly handles: Refrigerator Not Cooling Repair, Refrigerator Water Leakage Repair, Refrigerator Compressor Repair, excessive ice formation, gas charging issues, noise and vibration problems, and regular refrigerator maintenance services. Maintenance related issues are the most common refrigerator problems we solve." },
+  { question: "How much does refrigerator inspection and repair cost in Gurgaon?", answer: "Chill Mechanic offers affordable refrigerator repair services in Gurgaon. The inspection charge for most refrigerator services starts at approximately ₹249, while the average repair cost is around ₹1000 depending on the issue and spare parts required." },
+  { question: "How often should refrigerator maintenance be done?", answer: "For better cooling performance and longer appliance life, refrigerator maintenance is recommended every 3 to 4 months. Regular servicing helps prevent compressor failure, cooling issues, water leakage and unexpected breakdowns." },
+  { question: "Does Chill Mechanic offer same day refrigerator repair services in Gurgaon?", answer: "Yes, Chill Mechanic provides same day refrigerator repair services in Gurgaon with a 90% same day resolution success rate. Our technicians carry commonly required tools and spare parts to complete most repairs during the first visit." },
+  { question: "Are Chill Mechanic technicians experienced and verified?", answer: "Yes, all Chill Mechanic technicians are professionally trained and verified. Our team has an average experience of 10+ years, while our combined industry experience exceeds 50+ years in refrigerator repair and appliance servicing." },
+  { question: "Why do customers repeatedly choose Chill Mechanic for refrigerator repair in Gurgaon?", answer: "Around 20% to 30% of our customers are repeat clients because of our fast response time, affordable pricing, experienced technicians, genuine repair solutions, professional doorstep support and high same day repair success rate. These factors make Chill Mechanic a trusted name for Best Refrigerator Service & Repair in Gurgaon." },
+  { question: "Do you provide Refrigerator Compressor Repair in Gurgaon?", answer: "Yes, Chill Mechanic specializes in Refrigerator Compressor Repair in Gurgaon. Our experienced technicians diagnose compressor issues accurately and provide reliable repair or replacement solutions to restore proper cooling performance." },
 ];
 
 export const washingMachineFaqs = [
@@ -33,27 +35,24 @@ export const washingMachineFaqs = [
 ];
 
 export const roFaqs = [
-  { question: "How often should I change RO filters?", answer: "Sediment filter: 6 months · Carbon filter: 6–8 months · RO membrane: 12–18 months, depending on water quality." },
-  { question: "Why is my RO not working?", answer: "Clogged filters, pump failure, low water pressure, or electrical problems." },
-  { question: "Why is water flowing slowly?", answer: "Usually clogged filters or low incoming water pressure. Filter replacement often solves it." },
-  { question: "Do you service all RO brands?", answer: "Yes — Kent, Aquaguard, Pureit, Livpure, AO Smith, Blue Star, and all others." },
-  { question: "What's included in RO service?", answer: "Filter check/replacement, membrane cleaning, pump testing, TDS check, and leak inspection." },
-  { question: "Why does my RO water taste bad?", answer: "Expired carbon filter or membrane issues. Filter replacement restores taste and quality." },
+  { question: "Why choose Chill Mechanic for RO repair in Gurgaon?", answer: "Chill Mechanic has completed 2000+ RO repairs in 4 months with 90% same day resolution and expert technicians having 10+ years of experience." },
+  { question: "How fast is your RO repair service in Gurgaon?", answer: "We provide Doorstep RO Water Purifier Repair in Gurgaon with an average response time of around 60 minutes." },
+  { question: "What are the common RO problems you repair?", answer: "We fix water leakage, low water flow, bad taste, filter blockage, RO not working and regular maintenance issues." },
+  { question: "What is the inspection charge for RO service?", answer: "The inspection charge starts from approximately ₹249, while the average repair cost is around ₹1000." },
+  { question: "Do you provide same day RO repair service?", answer: "Yes, Chill Mechanic offers Same Day RO Service in Gurgaon with a 90% resolution success rate." },
+  { question: "Why do customers book Chill Mechanic again?", answer: "Customers trust us for affordable pricing, fast service, expert technicians and reliable RO maintenance solutions." },
 ];
 
 export const geyserFaqs = [
-  { question: "Why is my geyser not heating water?", answer: "Faulty heating element, thermostat issues, or electrical problems." },
-  { question: "Why is my geyser leaking?", answer: "Pressure valve, tank corrosion, or loose connections. We identify the source and repair or replace as needed." },
-  { question: "How long does a geyser repair take?", answer: "Most repairs done within 1 hour. Element and thermostat fixes are quick services." },
-  { question: "Do you install new geysers?", answer: "Yes — professional installation including electrical connections, piping, and safety checks." },
-  { question: "Which geyser brands do you repair?", answer: "AO Smith, Racold, Bajaj, Havells, Crompton, V-Guard, and more." },
+  { question: "Do you provide doorstep geyser repair service in Gurgaon?", answer: "Yes, we offer Doorstep Geyser Repair Gurgaon across all major Gurgaon locations with quick response support." },
+  { question: "How much does geyser inspection cost?", answer: "The inspection charge for geyser services starts from approximately ₹249." },
+  { question: "Do you repair instant and storage geysers?", answer: "Yes, we repair instant geysers, storage geysers, electric water heaters and gas geysers." },
 ];
 
 export const microwaveFaqs = [
-  { question: "Why is my microwave not heating?", answer: "Usually a faulty magnetron, capacitor, or diode — all repairable by our technicians." },
-  { question: "Is it safe to repair a microwave?", answer: "Yes — our certified technicians follow strict safety protocols for high-voltage components." },
-  { question: "Do you repair all microwave types?", answer: "Yes — solo, grill, and convection microwaves across all brands: LG, Samsung, IFB, Bajaj, and more." },
-  { question: "Why is my microwave sparking?", answer: "Metal objects, damaged waveguide cover, or faulty magnetron. Stop using it immediately and call us." },
+  { question: "How quickly can microwave repair technicians arrive?", answer: "Our average response time for Microwave Service & Repair in Gurgaon is around 60 minutes." },
+  { question: "What is the average microwave repair cost in Gurgaon?", answer: "Most microwave repair services start with an inspection charge of approximately ₹249." },
+  { question: "Why choose Chill Mechanic for Microwave Repair Gurgaon?", answer: "Customers trust us for fast doorstep support, experienced technicians and affordable repair solutions." },
 ];
 
 export const dispenserFaqs = [
@@ -63,9 +62,10 @@ export const dispenserFaqs = [
 ];
 
 export const deepFreezerFaqs = [
-  { question: "Do you repair commercial deep freezers?", answer: "Yes — we specialize in commercial deep freezer repair for restaurants, shops, and businesses." },
-  { question: "Why is my deep freezer not freezing properly?", answer: "Thermostat issues, refrigerant leak, compressor problems, or door seal damage." },
-  { question: "How quickly can you repair a commercial freezer?", answer: "Same-day service available for commercial freezer repairs in Gurgaon." },
+  { question: "Does Chill Mechanic provide Doorstep Deep Freezer Repair in Gurgaon?", answer: "Yes, we provide fast doorstep Deep Freezer Service & Repair across all major Gurgaon locations." },
+  { question: "Why is excessive ice forming inside my deep freezer?", answer: "Ice buildup is commonly caused by damaged door seals, temperature issues or delayed maintenance." },
+  { question: "How often should a deep freezer be serviced?", answer: "Deep freezer maintenance is recommended every 3 to 4 months for better cooling and energy efficiency." },
+  { question: "Why choose Chill Mechanic for Deep Freezer Repair Gurgaon?", answer: "Customers choose Chill Mechanic for affordable pricing, expert technicians and 90% same-day repair service." },
 ];
 
 export const homepageFaqs = [

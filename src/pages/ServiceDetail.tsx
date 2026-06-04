@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
@@ -13,9 +14,11 @@ import CustomerReviews from "@/components/CustomerReviews";
 import BrandsCarousel from "@/components/BrandsCarousel";
 import ServiceAreas from "@/components/ServiceAreas";
 import { serviceFaqMap } from "@/data/faqs";
+import { serviceContentMap } from "@/data/serviceContent";
 import { generateFaqSchema } from "@/utils/faqSchema";
-import { Play } from "lucide-react";
+import { ChevronDown, Play } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getServiceItemPrimaryImage } from "@/config/serviceImages";
 
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
@@ -228,7 +231,8 @@ export default function ServiceDetail() {
   const { serviceType } = useParams<{ serviceType: string }>();
   const navigate = useNavigate();
   const { addToCart, getCartItemsCount } = useCart();
-  
+  const [showFullContent, setShowFullContent] = useState(false);
+
   const service = serviceType ? serviceDetails[serviceType as keyof typeof serviceDetails] : null;
 
   if (!service) {
@@ -267,33 +271,38 @@ export default function ServiceDetail() {
 
   const seo = serviceType ? SERVICE_SEO[serviceType] : null;
   const faqs = serviceType ? serviceFaqMap[serviceType] : undefined;
+  const content = serviceType ? serviceContentMap[serviceType] : undefined;
+
+  // Prefer the richer content meta when available, falling back to SERVICE_SEO.
+  const metaTitle = content?.metaTitle || seo?.title;
+  const metaDescription = content?.metaDescription || seo?.description;
 
   return (
     <>
       <div className="min-h-screen bg-background">
         {seo && (
           <Helmet>
-            <title>{seo.title}</title>
-            <meta name="description" content={seo.description} />
+            <title>{metaTitle}</title>
+            <meta name="description" content={metaDescription} />
             <meta name="keywords" content={seo.keywords} />
             <meta name="language" content="en-US" />
             <meta name="revisit-after" content="7 days" />
             <meta name="author" content="Chill Mechanic" />
             <link rel="canonical" href={`https://chillmechanic.com/services/${serviceType}`} />
-            
+
             {/* Open Graph Meta Tags for Social Sharing */}
-            <meta property="og:title" content={seo.title} />
-            <meta property="og:description" content={seo.description} />
+            <meta property="og:title" content={metaTitle} />
+            <meta property="og:description" content={metaDescription} />
             <meta property="og:type" content="website" />
             <meta property="og:url" content={`https://chillmechanic.com/services/${serviceType}`} />
             <meta property="og:site_name" content="Chill Mechanic" />
             <meta property="og:image" content={service.image ? `https://chillmechanic.com${service.image}` : 'https://chillmechanic.com/og-image.jpg'} />
             <meta property="og:image:alt" content={service.title} />
-            
+
             {/* Twitter Card Meta Tags */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content={seo.title} />
-            <meta name="twitter:description" content={seo.description} />
+            <meta name="twitter:title" content={metaTitle} />
+            <meta name="twitter:description" content={metaDescription} />
             <meta name="twitter:image" content={service.image ? `https://chillmechanic.com${service.image}` : 'https://chillmechanic.com/og-image.jpg'} />
             <meta name="twitter:site" content="@chillmechanic" />
           </Helmet>
@@ -303,7 +312,7 @@ export default function ServiceDetail() {
             '@context': 'https://schema.org',
             '@type': 'Service',
             name: service.title,
-            description: seo.description,
+            description: metaDescription,
             provider: { 
               '@type': 'LocalBusiness', 
               name: 'Chill Mechanic',
@@ -388,15 +397,17 @@ export default function ServiceDetail() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-                {service.title}
+              <h1 className="text-3xl md:text-4xl font-semibold mb-6 text-foreground">
+                {content?.h1 || service.title}
               </h1>
               <p className="text-xl text-muted-foreground mb-6">
-                {service.description}
+                {content?.intro || service.description}
               </p>
-              <p className="text-muted-foreground leading-relaxed">
-                {service.longDescription}
-              </p>
+              {!content && (
+                <p className="text-muted-foreground leading-relaxed">
+                  {service.longDescription}
+                </p>
+              )}
             </div>
             
             <div className="relative">
@@ -421,8 +432,19 @@ export default function ServiceDetail() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {service.services.map((serviceItem) => (
-              <Card key={serviceItem.id} className="hover:shadow-lg transition-shadow">
+            {service.services.map((serviceItem) => {
+              const itemImage = getServiceItemPrimaryImage(serviceItem.id);
+              return (
+              <Card key={serviceItem.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                {itemImage && (
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={itemImage}
+                      alt={serviceItem.name}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <h3 className="text-xl font-semibold">{serviceItem.name}</h3>
@@ -440,15 +462,15 @@ export default function ServiceDetail() {
                     <span className="text-2xl font-bold text-primary">₹{serviceItem.price}</span>
                   </div>
                   <div className="flex gap-3">
-                    <Button 
+                    <Button
                       onClick={() => navigate(`/services/${serviceType}/${serviceItem.id}`)}
                       className="flex-1"
                     >
                       View Details
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => handleAddToCart(serviceItem)}
-                      variant="outline" 
+                      variant="outline"
                       className="flex-1"
                     >
                       Add to Cart
@@ -456,10 +478,59 @@ export default function ServiceDetail() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>
+
+      {/* Detailed Content Section (H2-H4) with expandable content */}
+      {content && content.sections.length > 0 && (
+        <section className="py-12 bg-muted/20">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="space-y-4">
+              {content.sections.map((section, i) => {
+                const sectionId = `section-${i}`;
+                const isExpanded = showFullContent || i === 0;
+                return (
+                  <div key={i} className="border-b border-border last:border-b-0">
+                    <button
+                      onClick={() => {
+                        if (i === 0) return;
+                        setShowFullContent((prev) => !prev);
+                      }}
+                      className="w-full text-left py-4 flex items-center justify-between hover:bg-muted/30 transition-colors rounded-sm"
+                      disabled={i === 0}
+                      aria-expanded={isExpanded}
+                      aria-controls={sectionId}
+                    >
+                      <h2 className="text-lg font-medium text-foreground">
+                        {section.heading}
+                      </h2>
+                      {i > 0 && (
+                        <ChevronDown
+                          className={`h-5 w-5 text-muted-foreground transition-transform flex-shrink-0 ml-3 ${
+                            isExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      )}
+                    </button>
+
+                    {isExpanded && (
+                      <div
+                        id={sectionId}
+                        className="pb-4 text-muted-foreground leading-relaxed"
+                      >
+                        {section.body}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* FAQ Section */}
       {faqs && <FaqAccordion faqs={faqs} />}

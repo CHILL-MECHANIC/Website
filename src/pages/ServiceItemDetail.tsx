@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft, Check, X, Clock, Shield, DollarSign, Star, ShieldCheck, Wrench, Gauge, ClipboardCheck, Handshake, Rocket } from "lucide-react";
 import Header from "@/components/Header";
@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import CustomerReviews from "@/components/CustomerReviews";
 import BrandsCarousel from "@/components/BrandsCarousel";
 import ServiceAreas from "@/components/ServiceAreas";
+import { getServiceItemImages } from "@/config/serviceImages";
 
 import acServiceImage from "@/assets/ac-service.jpg";
 import acServiceImage2 from "@/assets/ac-service-2.jpg";
@@ -1212,9 +1213,19 @@ export default function ServiceItemDetail() {
   const { serviceType, serviceId } = useParams<{ serviceType: string; serviceId: string }>();
   const navigate = useNavigate();
   const { addToCart, getCartItemsCount } = useCart();
-  
+
   const isGasRefill = serviceId === "ac-gas-refill";
   const serviceItem = serviceId ? serviceItemDetails[serviceId as keyof typeof serviceItemDetails] : null;
+
+  // Get Supabase images for the service item, with fallback to asset images
+  const displayImages = useMemo(() => {
+    if (!serviceId) return [];
+    const supabaseImages = getServiceItemImages(serviceId);
+    if (supabaseImages.length > 0) {
+      return supabaseImages;
+    }
+    return serviceItem?.images || [];
+  }, [serviceId, serviceItem?.images]);
 
   if (!serviceItem) {
     return (
@@ -1352,7 +1363,7 @@ export default function ServiceItemDetail() {
           <div className="flex flex-col gap-6">
             <Carousel className="w-full">
               <CarouselContent>
-                {serviceItem.images.map((image, index) => (
+                {displayImages.map((image, index) => (
                   <CarouselItem key={index}>
                     <img
                       src={image}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
@@ -21,6 +21,7 @@ import FaqAccordion from "@/components/FaqAccordion";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 import { homepageFaqs } from "@/data/faqs";
 import { generateFaqSchema } from "@/utils/faqSchema";
+import { getServiceCategoryPrimaryImage } from "@/config/serviceImages";
 import acServiceImage from "@/assets/ac-service.jpg";
 import refrigeratorServiceImage from "@/assets/refrigerator-service.jpg";
 import roServiceImage from "@/assets/ro-service.jpg";
@@ -99,6 +100,15 @@ const Index = () => {
     getCartItemsCount
   } = useCart();
   const navigate = useNavigate();
+
+  // Get Supabase images for services with fallback to asset images
+  const servicesWithImages = useMemo(() => {
+    return services.map(service => ({
+      ...service,
+      image: getServiceCategoryPrimaryImage(service.id, service.image)
+    }));
+  }, []);
+
   const handleBookNow = (serviceId: string) => {
     setSelectedServiceType(serviceId);
     setIsModalOpen(true);
@@ -212,7 +222,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map(service => <ServiceCard key={service.id} title={service.title} description={service.description} image={service.image} price={service.price} onBookNow={() => handleBookNow(service.id)} onEnquire={() => handleEnquire(service.id)} />)}
+            {servicesWithImages.map(service => <ServiceCard key={service.id} title={service.title} description={service.description} image={service.image} price={service.price} onBookNow={() => handleBookNow(service.id)} onEnquire={() => handleEnquire(service.id)} />)}
           </div>
         </div>
       </section>

@@ -157,7 +157,9 @@ export default function Contact() {
                     <Phone className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h3 className="font-semibold">Phone</h3>
-                      <p className="text-muted-foreground">+91 9211970031</p>
+                      <button className="text-muted-foreground" onClick={() => window.location.href = "tel:+919211970031"}>
+                        +91 9211970031
+                      </button>
                       <p className="text-sm text-muted-foreground">Available 24/7 for emergencies</p>
                     </div>
                   </div>
@@ -199,7 +201,7 @@ export default function Contact() {
                   <p className="text-sm text-muted-foreground mb-4">
                     Need urgent appliance repair? Our emergency service team is available 24/7.
                   </p>
-                  <Button variant="destructive" className="w-full">
+                  <Button variant="destructive" className="w-full" onClick={() => window.location.href = "tel:+919211970031"}>
                     <Phone className="mr-2 h-4 w-4" />
                     Call Emergency: +919211970031
                   </Button>
