@@ -257,4 +257,112 @@ export const serviceContentMap: Record<string, ServiceContent> = {
     metaDescription:
       "Book Online Deep Freezer Repair in Gurgaon, Commercial Freezer Repair Starting at Rs. 249. Expert technicians, fast doorstep service & reliable solutions.",
   },
+  "washing-machine": {
+    h1: "Book Best Washing Machine Service & Repair in Gurgaon Online",
+    intro:
+      "At Chill Mechanic, we specialize in professional washing machine repair and maintenance services in Gurgaon, offering quick assistance, skilled technicians and dependable doorstep solutions for all major brands. Our goal is to deliver professional and affordable repair solutions for all types of washing machines. Whether your machine is not spinning, leaking water, making noise or facing drainage issues, our expert team is always ready to help.",
+    sections: [
+      {
+        heading: "Trusted Washing Machine Repair Company in Gurgaon",
+        body: "As a trusted washing machine repair company in Gurgaon, we focus on customer satisfaction, quality service and long-lasting repair solutions. Our skilled technicians use advanced tools and genuine spare parts to ensure your washing machine works efficiently after every service visit.",
+      },
+      {
+        heading: "Professional Washing Machine Repair in Gurgaon",
+        body: "We offer complete washing machine repair in Gurgaon for all major brands and models. Our team handles technical issues related to automatic, semi-automatic, front load and top load washing machines. We understand how important a washing machine is for daily household work, which is why we provide quick and dependable repair services across Gurgaon. Our skilled washing machine technicians in Gurgaon are equipped to identify and repair issues quickly and effectively. From motor repair and drum replacement to PCB issues and water inlet problems, we provide complete repair support at affordable pricing.",
+      },
+      {
+        heading: "Automatic Washing Machine Repair in Gurgaon",
+        body: "We specialize in automatic washing machine repair in Gurgaon for all leading brands including LG, Samsung, Whirlpool, Bosch, IFB, Haier, Panasonic and more. Automatic washing machines require expert handling, and our technicians are trained with the latest repair techniques to resolve all technical faults quickly. Whether your machine is showing error codes, not draining water or stopping mid cycle, our experts provide accurate diagnosis and effective solutions directly at your home.",
+      },
+      {
+        heading: "Front Load Washing Machine Repair Gurgaon",
+        body: "Our company provides expert front load washing machine repair Gurgaon services with same day doorstep assistance. Front load washing machines often face issues like excessive vibration, drainage blockage, door lock errors and drum malfunction. Our technicians carefully inspect every component and provide durable repair solutions to improve machine performance. We ensure high quality servicing that helps extend the lifespan of your washing machine while maintaining energy efficiency and smooth operation.",
+      },
+      {
+        heading: "Top Load Washing Machine Repair Gurgaon",
+        body: "If you are looking for reliable top load washing machine repair Gurgaon, Chill Mechanic is your trusted service partner. Our team repairs all types of top load washing machines and resolves issues related to spinning, washing cycles, water overflow and unusual noise. We provide professional doorstep service across Gurgaon with transparent pricing and customer friendly support. Our mission is to make washing machine repair services simple, affordable and hassle free for every customer.",
+      },
+      {
+        heading: "Semi-Automatic Washing Machine Repair in Gurgaon",
+        body: "We also provide affordable semi-automatic washing machine repair in Gurgaon for residential customers. Semi-automatic machines often require regular maintenance due to heavy usage and water related issues. Our technicians are experienced in repairing timers, motors, dryers, inlet valves and other important machine parts. With years of experience in appliance repair, we ensure reliable solutions that restore your machine's performance quickly.",
+      },
+      {
+        heading: "Washing Machine Installation Service in Gurgaon",
+        body: "Along with repair services, we also offer professional washing machine installation service in Gurgaon for both residential and commercial customers. Proper installation is important for the smooth functioning and long life of your appliance. Our team ensures correct water connection, drainage setup and machine levelling during installation. We help customers install front load, top load, fully automatic and semi-automatic washing machines safely and professionally.",
+      },
+      {
+        heading: "Doorstep Washing Machine Repair in Gurgaon",
+        body: "At Chill Mechanic, we provide fast and convenient doorstep washing machine repair in Gurgaon so customers do not need to transport heavy appliances to service centers. Our technicians visit your location with proper tools and equipment to diagnose and repair the issue on-site. We are committed to providing quick response, trusted technicians, affordable pricing and high-quality repair services across Gurgaon. Whether you need urgent repair, routine maintenance or installation support, our expert team is always ready to assist you.",
+      },
+      {
+        heading: "Customer Focused Professional Service",
+        body: "Choose Chill Mechanic for reliable washing machine repair and service in Gurgaon, offering dependable appliance care focused on lasting performance and complete customer satisfaction.",
+      },
+    ],
+    metaTitle: "Book Online Washing Machine Repair & Services Gurgaon|Rs 249",
+    metaDescription:
+      "Book Online Washing Machine Repair & Services in Gurgaon from Rs. 249. Expert technicians with 10+ years average experience. Fast doorstep repair service.",
+  },
+  "water-dispenser": {
+    h1: "Book Best Water Dispenser Service & Repair in Gurgaon Online",
+    intro:
+      "At Chill Mechanic, we provide the best water dispenser service & repair in Gurgaon with professional technicians, fast doorstep support and reliable repair solutions for residential and commercial customers. Our company specializes in repairing all types of water dispensers including hot and cold dispensers, office dispensers, commercial water coolers and bottled water dispenser systems.",
+    sections: [
+      {
+        heading: "Trusted Water Dispenser Repair Company in Gurgaon",
+        body: "As a trusted water dispenser repair company in Gurgaon, we focus on delivering high quality repair services with transparent pricing and customer satisfaction. Whether your dispenser is not cooling, facing heating problems, leaking water or making unusual noise, our expert team provides complete repair and maintenance support across Gurgaon.",
+      },
+      {
+        heading: "Professional Water Dispenser Repair in Gurgaon",
+        body: "We offer complete water dispenser repair in Gurgaon for homes, offices, restaurants, schools, clinics and commercial spaces. Our technicians are experienced in diagnosing and repairing cooling systems, compressors, thermostats, switches, water taps and electrical components. Our skilled water dispenser technician in Gurgaon uses advanced tools and modern repair methods to provide quick and accurate solutions for all types of dispenser issues. We ensure safe servicing and long-lasting appliance performance after every repair.",
+      },
+      {
+        heading: "Doorstep Water Dispenser Repair in Gurgaon",
+        body: "Our company provides fast and convenient doorstep water dispenser repair in Gurgaon so customers can get their appliances repaired without transportation hassles. Our trained technicians arrive at your doorstep with the necessary tools and replacement parts to inspect and fix the problem efficiently at your location. We provide same-day repair support in many Gurgaon locations to ensure minimal inconvenience for customers. Our doorstep repair services are designed for comfort, convenience and quick problem resolution.",
+      },
+      {
+        heading: "Hot and Cold-Water Dispenser Repair Gurgaon",
+        body: "We specialize in hot and cold-water dispenser repair Gurgaon for all major brands and models. Water dispensers with heating and cooling systems require professional handling to maintain safe and efficient operation. Our technicians repair heating elements, cooling systems, thermostats, switches, compressors, and water flow components to restore proper dispenser functionality and temperature balance.",
+      },
+      {
+        heading: "Water Dispenser Cooling Issue Repair Gurgaon",
+        body: "If your dispenser is unable to cool water properly, our experts provide professional water dispenser cooling issue repair Gurgaon services. Cooling problems may occur due to compressor faults, gas leakage, thermostat malfunction or electrical issues.",
+      },
+      {
+        heading: "Water Dispenser Not Cooling Repair Gurgaon",
+        body: "At Chill Mechanic, we provide reliable water dispenser not cooling repair Gurgaon services for residential and commercial dispensers. A cooling failure can affect daily operations in homes and offices, which is why we offer quick diagnosis and dependable repair support. We use advanced diagnostic tools to identify the root cause and provide long-lasting repair solutions using quality spare parts.",
+      },
+      {
+        heading: "Water Dispenser Compressor Repair Gurgaon",
+        body: "The compressor plays an important role in maintaining water cooling performance. Our expert water dispenser compressor repair Gurgaon services help resolve issues related to overheating, low cooling, unusual noise and compressor failure.",
+      },
+      {
+        heading: "Water Dispenser Leakage Repair Gurgaon",
+        body: "Water leakage can damage electrical components and affect dispenser performance. We provide professional water dispenser leakage repair Gurgaon services to identify and fix internal leakage, tap issues, drainage problems and loose pipe connections.",
+      },
+      {
+        heading: "Water Dispenser Heating Issue Repair Gurgaon",
+        body: "If your dispenser is unable to provide hot water properly, our specialists offer reliable water dispenser heating issue repair Gurgaon services. Heating issues are commonly caused by faulty heating elements, switches or thermostat problems.",
+      },
+      {
+        heading: "Water Dispenser Switch Repair Gurgaon",
+        body: "We provide expert water dispenser switch repair Gurgaon services for faulty power switches, heating switches, cooling switches and electrical control systems. A damaged switch can interrupt normal dispenser operation and create safety risks.",
+      },
+      {
+        heading: "Commercial Water Dispenser Repair Gurgaon",
+        body: "Our company offers specialized commercial water dispenser repair Gurgaon services for offices, restaurants, schools, hospitals and corporate spaces. Commercial dispensers require regular maintenance and professional servicing due to continuous usage.",
+      },
+      {
+        heading: "Water Dispenser Maintenance Service in Gurgaon",
+        body: "Regular servicing helps improve dispenser efficiency and reduces the risk of major breakdowns. Our affordable water dispenser maintenance service in Gurgaon includes cooling inspection, internal cleaning, gas pressure testing, electrical checking and complete performance diagnosis.",
+      },
+      {
+        heading: "Book Water Dispenser Repair Online Gurgaon",
+        body: "Customers can easily book water dispenser repair online Gurgaon with Chill Mechanic for fast and hassle-free service scheduling. Our support team responds quickly and assigns experienced technicians based on your appliance issue and location. We are committed to providing professional repair support, affordable pricing, and customer-focused appliance solutions across Gurgaon. Choose Chill Mechanic for the best water dispenser service & repair in Gurgaon and get trusted appliance repair solutions designed for performance, convenience and customer satisfaction.",
+      },
+    ],
+    metaTitle: "Book Online Water Dispenser Service & Repair Gurgaon| Rs 249",
+    metaDescription:
+      "Book Online Water Dispenser Service & Repair in Gurgaon from Rs. 249. 2000+ units serviced by expert technicians with fast doorstep support.",
+  },
 };

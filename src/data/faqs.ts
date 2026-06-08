@@ -25,13 +25,17 @@ export const fridgeFaqs = [
 ];
 
 export const washingMachineFaqs = [
-  { question: "Why is my washing machine not spinning?", answer: "Unbalanced load, broken belt, faulty motor, or lid switch issue." },
-  { question: "Why is water not draining?", answer: "Usually a clogged drain pump, blocked hose, or faulty pump motor." },
-  { question: "How often should I clean the drum?", answer: "Every 2–3 months to prevent mold, odors, and residue buildup." },
-  { question: "Do you repair top load and front load machines?", answer: "Yes — all types: automatic top load, front load, and semi-automatic, all brands." },
-  { question: "Why is my washing machine making loud noise?", answer: "Worn bearings, loose drum, foreign objects, or motor issues." },
-  { question: "What's included in washing machine service?", answer: "Drum cleaning, filter cleaning, hose inspection, electrical check, motor testing, and performance verification." },
-  { question: "Do you provide installation?", answer: "Yes — professional installation and uninstallation including leveling, hose connection, and testing." },
+  { question: "My washing machine stopped working suddenly in Gurgaon. Who should I call?", answer: "If your washing machine suddenly stops working, Chill Mechanic provides fast doorstep washing machine repair in Gurgaon with an average response time of just 60 minutes. Our experienced technicians diagnose and repair most issues on the same day." },
+  { question: "Which company provides the best doorstep washing machine repair service in Gurgaon?", answer: "Chill Mechanic is trusted for doorstep washing machine repair Gurgaon services because of our 10+ years experienced technicians, affordable inspection pricing and 90% same day repair success rate across Gurgaon." },
+  { question: "How do I know if my washing machine needs servicing?", answer: "Common signs include: Loud noise during spin cycle, Water leakage, Drum not rotating, Clothes not cleaning properly, Bad smell from machine, Slow drainage. Experts at Chill Mechanic recommend washing machine maintenance every 3 to 4 months for smooth performance and longer machine life." },
+  { question: "How much does washing machine repair cost in Gurgaon?", answer: "The average repair cost depends on the machine issue and spare parts requirement. At Chill Mechanic, washing machine inspection starts from approximately ₹249, while most repair services are completed around ₹1000." },
+  { question: "Do you repair front load and top load washing machines?", answer: "Yes, Chill Mechanic repairs: Front load washing machines, Top load washing machines, Fully automatic washing machines, Semi automatic washing machines. Our technicians are trained to handle all major washing machine brands and models." },
+  { question: "Why is my washing machine making too much noise?", answer: "Excessive noise usually happens because of drum imbalance, bearing damage, loose components or lack of maintenance. Chill Mechanic technicians quickly identify the exact issue and provide reliable washing machine maintenance in Gurgaon." },
+  { question: "Can I get same-day washing machine repair service in Gurgaon?", answer: "Yes, Chill Mechanic maintains a 90% same day resolution rate for washing machine repair services in Gurgaon. Our local technicians cover the whole Gurgaon region for quick assistance." },
+  { question: "How experienced are Chill Mechanic technicians?", answer: "Our technicians have an average experience of 10+ years and our combined industry experience exceeds 50+ years. We have successfully completed 2000+ appliance repairs within just 4 months." },
+  { question: "Is regular washing machine maintenance really necessary?", answer: "Yes. Regular washing machine servicing helps: Reduce electricity consumption, Improve washing performance, Prevent major repair costs, Increase machine lifespan, Avoid sudden breakdowns." },
+  { question: "What makes Chill Mechanic different from other washing machine repair companies in Gurgaon?", answer: "Chill Mechanic focuses on: Fast 60-minute response time, Experienced technicians, Transparent pricing, Doorstep repair service, Safety first service standards, Trusted customer support. Our service policy is: 'Safety Check, Every Visit, Every Time.'" },
+  { question: "Which areas in Gurgaon are covered by Chill Mechanic?", answer: "We provide washing machine installation, maintenance and repair services across the whole Gurgaon area including homes, apartments, offices, societies and commercial spaces." },
 ];
 
 export const roFaqs = [
@@ -56,9 +60,10 @@ export const microwaveFaqs = [
 ];
 
 export const dispenserFaqs = [
-  { question: "Why is my water dispenser not cooling?", answer: "Faulty cooling compressor or thermostat issues. We repair or replace the cooling system." },
-  { question: "Do you repair both hot and cold dispensers?", answer: "Yes — all types including hot, cold, and room temperature models." },
-  { question: "How often should I clean my water dispenser?", answer: "Every 3 months for hygiene. We offer professional cleaning and sanitization." },
+  { question: "Do you provide Doorstep Water Dispenser Repair in Gurgaon?", answer: "Yes, Chill Mechanic offers fast doorstep Water Dispenser Service & Repair across Gurgaon." },
+  { question: "Why is water leaking from my dispenser?", answer: "Water leakage may happen because of loose connections, damaged pipes or internal tank issues." },
+  { question: "How much does water dispenser repair cost in Gurgaon?", answer: "The inspection charge starts from approximately ₹249, while repair costs depend on the issue and parts required." },
+  { question: "Why choose Chill Mechanic for Water Dispenser Repair Gurgaon?", answer: "Customers trust us for quick response, experienced technicians, affordable pricing and reliable repair solutions." },
 ];
 
 export const deepFreezerFaqs = [
