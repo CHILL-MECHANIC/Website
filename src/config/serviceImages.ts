@@ -66,6 +66,10 @@ export const SERVICE_ITEM_IMAGES: Record<string, string[]> = {
   "wm-top-load-checkup": ["Checkup - Automatic Front Load"],
   "wm-front-load-checkup": ["Checkup - Automatic Front Load"],
   "wm-semi-auto-checkup": ["Check Up - Semi Automatic"],
+  "wm-top-load-service": ["Checkup - Automatic Front Load"],
+  "wm-top-load-jet": ["Checkup - Automatic Front Load"],
+  "wm-front-load-service": ["Checkup - Automatic Front Load"],
+  "wm-front-load-jet": ["Checkup - Automatic Front Load"],
   "wm-install-uninstall": ["Installation & Uninstallation"],
 
   // Microwave Services

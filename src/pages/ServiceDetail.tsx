@@ -175,15 +175,19 @@ const serviceDetails = {
     image: washingMachineServiceImage,
     description: "Expert washing machine repair and maintenance for all brands and models.",
     longDescription: `
-      Our washing machine services cover motor repair, drum cleaning, belt replacement, 
-      drain cleaning, control panel fixes, and complete system maintenance. 
+      Our washing machine services cover motor repair, drum cleaning, belt replacement,
+      drain cleaning, control panel fixes, and complete system maintenance.
       We ensure your washing machine operates efficiently for reliable laundry care.
     `,
     services: [
       { id: "wm-top-load-checkup", name: "Checkup - AM Top Load", price: 249, description: "Complete diagnostic check-up for automatic top load washing machines." },
       { id: "wm-front-load-checkup", name: "Checkup - AM Front Load", price: 249, description: "Complete diagnostic check-up for automatic front load washing machines." },
       { id: "wm-semi-auto-checkup", name: "Check Up - Semi Automatic", price: 249, description: "Complete diagnostic check-up for semi-automatic washing machines." },
-      { id: "wm-install-uninstall", name: "Installation & Uninstallation", price: 349, description: "Professional installation or uninstallation service for washing machines." },
+      { id: "wm-top-load-service", name: "Top Load Service", price: 499, description: "Complete service and maintenance for top load washing machines with comprehensive cleaning." },
+      { id: "wm-top-load-jet", name: "Top Load Jet Service", price: 999, description: "Premium jet cleaning service for top load washing machines with deep maintenance." },
+      { id: "wm-front-load-service", name: "Front Load Service", price: 700, description: "Complete service and maintenance for front load washing machines with thorough inspection." },
+      { id: "wm-front-load-jet", name: "Front Load Jet Service", price: 1699, description: "Premium jet cleaning service for front load washing machines with advanced deep cleaning." },
+      { id: "wm-install-uninstall", name: "Installation & Uninstallation", price: 399, description: "Professional installation or uninstallation service for washing machines." },
     ],
   },
   microwave: {

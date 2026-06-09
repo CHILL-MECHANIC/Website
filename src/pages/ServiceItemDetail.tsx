@@ -77,7 +77,11 @@ const SERVICE_ITEM_SEO: Record<string, { title: string; description: string }> =
   "wm-top-load-checkup": { title: "Washing Machine Repair - Top Load | Gurgaon | Chill Mechanic", description: "Expert top load washing machine repair in Gurgaon. Complete diagnostic. Book now at ₹249." },
   "wm-front-load-checkup": { title: "Washing Machine Repair - Front Load | Gurgaon | Chill Mechanic", description: "Expert front load washing machine repair in Gurgaon. Complete diagnostic. Book now at ₹249." },
   "wm-semi-auto-checkup": { title: "Washing Machine Repair - Semi Automatic | Gurgaon | Chill Mechanic", description: "Expert semi-automatic washing machine repair in Gurgaon. Complete checkup. Book now at ₹249." },
-  "wm-install-uninstall": { title: "Washing Machine Installation Gurgaon | Professional Setup | Chill Mechanic", description: "Professional washing machine installation/uninstallation. Quick service. Book now at ₹349." },
+  "wm-top-load-service": { title: "Top Load Washing Machine Service | Complete Maintenance | Chill Mechanic", description: "Professional top load washing machine service in Gurgaon. Complete cleaning and maintenance. Book now at ₹499." },
+  "wm-top-load-jet": { title: "Top Load Jet Cleaning Service | Premium Deep Cleaning | Chill Mechanic", description: "Premium jet cleaning service for top load washing machines. Deep maintenance and cleaning. Book now at ₹999." },
+  "wm-front-load-service": { title: "Front Load Washing Machine Service | Complete Maintenance | Chill Mechanic", description: "Professional front load washing machine service in Gurgaon. Thorough inspection and cleaning. Book now at ₹700." },
+  "wm-front-load-jet": { title: "Front Load Jet Cleaning Service | Advanced Deep Cleaning | Chill Mechanic", description: "Premium jet cleaning service for front load washing machines. Advanced deep cleaning and maintenance. Book now at ₹1699." },
+  "wm-install-uninstall": { title: "Washing Machine Installation Gurgaon | Professional Setup | Chill Mechanic", description: "Professional washing machine installation/uninstallation. Quick service. Book now at ₹399." },
   // Microwave Services
   "microwave-checkup": { title: "Microwave Repair Gurgaon | Expert Service | Chill Mechanic", description: "Professional microwave repair in Gurgaon. Complete diagnostic checkup. Book now at ₹249." },
   // Water Dispenser Services
@@ -1080,12 +1084,134 @@ const serviceItemDetails = {
       "Installation services"
     ]
   },
+  "wm-top-load-service": {
+    id: "wm-top-load-service",
+    name: "Top Load Service",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 499,
+    duration: "2-3 hours",
+    warranty: "30 days",
+    description: "Complete service and maintenance for top load washing machines with comprehensive cleaning.",
+    detailedDescription: "Professional top load washing machine service including thorough inspection, cleaning, drum and agitator examination, motor check, and complete system maintenance to ensure optimal performance.",
+    included: [
+      "Complete diagnostic inspection",
+      "Drum and agitator cleaning",
+      "Motor lubrication and inspection",
+      "Brake band and pulley check",
+      "Water inlet valve cleaning",
+      "Drain pump inspection",
+      "Belt condition assessment",
+      "Performance test run",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Component replacement",
+      "Deep descaling",
+      "Part cost",
+      "Installation services"
+    ]
+  },
+  "wm-top-load-jet": {
+    id: "wm-top-load-jet",
+    name: "Top Load Jet Service",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 999,
+    duration: "3-4 hours",
+    warranty: "30 days",
+    description: "Premium jet cleaning service for top load washing machines with deep maintenance.",
+    detailedDescription: "Premium jet cleaning service for top load washing machines using advanced water jet technology for deep cleaning and complete maintenance. This service provides thorough removal of deposits, bacterial growth, and mineral buildup.",
+    included: [
+      "Complete diagnostic inspection",
+      "High-pressure jet cleaning of drum",
+      "Agitator and base cleaning",
+      "Motor and bearing inspection",
+      "Complete system descaling",
+      "Brake and pulley maintenance",
+      "Belt replacement (if needed)",
+      "Water inlet valve cleaning",
+      "Drain pump deep cleaning",
+      "Performance optimization",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Additional component repairs",
+      "Electrical system work",
+      "Part cost (except belt)",
+      "Installation services"
+    ]
+  },
+  "wm-front-load-service": {
+    id: "wm-front-load-service",
+    name: "Front Load Service",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 700,
+    duration: "2-3 hours",
+    warranty: "30 days",
+    description: "Complete service and maintenance for front load washing machines with thorough inspection.",
+    detailedDescription: "Professional front load washing machine service including comprehensive inspection, drum seal examination, suspension system check, motor assessment, and complete system maintenance for optimal washing performance.",
+    included: [
+      "Complete diagnostic inspection",
+      "Drum seal and gasket examination",
+      "Door lock mechanism check",
+      "Suspension and damper inspection",
+      "Motor and bearing check",
+      "Heater element inspection",
+      "Pump and drain system cleaning",
+      "Control panel testing",
+      "Detergent dispenser cleaning",
+      "Performance test run",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Component replacement",
+      "Seal or gasket replacement",
+      "Deep descaling",
+      "Part cost",
+      "Installation services"
+    ]
+  },
+  "wm-front-load-jet": {
+    id: "wm-front-load-jet",
+    name: "Front Load Jet Service",
+    categoryTitle: "Washing Machine Service & Repair",
+    images: [washingMachineServiceImage, washingMachineServiceImage2],
+    price: 1699,
+    duration: "4-5 hours",
+    warranty: "30 days",
+    description: "Premium jet cleaning service for front load washing machines with advanced deep cleaning.",
+    detailedDescription: "Ultimate premium jet cleaning service for front load washing machines using advanced water jet technology. This comprehensive service provides deep cleaning, complete descaling, and thorough maintenance for superior washing performance and longevity.",
+    included: [
+      "Complete diagnostic inspection",
+      "High-pressure jet cleaning of drum",
+      "Door gasket and seal cleaning",
+      "Suspension and damper servicing",
+      "Motor bearing lubrication",
+      "Complete system descaling",
+      "Heater element cleaning",
+      "Pump and drain system deep cleaning",
+      "Control module testing",
+      "Detergent dispenser deep cleaning",
+      "Water inlet valve cleaning",
+      "Suspension replacement (if needed)",
+      "Performance optimization and testing",
+      "30-day service warranty"
+    ],
+    notIncluded: [
+      "Motor or drum replacement",
+      "Electrical system repairs",
+      "Door replacement",
+      "Additional part cost"
+    ]
+  },
   "wm-install-uninstall": {
     id: "wm-install-uninstall",
     name: "Installation & Uninstallation",
     categoryTitle: "Washing Machine Service & Repair",
     images: [washingMachineServiceImage, washingMachineServiceImage2],
-    price: 349,
+    price: 399,
     duration: "1-2 hours",
     warranty: "15 days",
     description: "Professional installation or uninstallation service for washing machines.",
