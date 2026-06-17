@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import sitemap from "vite-plugin-sitemap";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -14,19 +13,6 @@ export default defineConfig(({ mode }) => ({
     react(),
     // Only include componentTagger in development mode
     mode === "development" && componentTagger(),
-    sitemap({
-      hostname: 'https://chillmechanic.com',
-      dynamicRoutes: [
-        '/', '/about', '/contact', '/blog', '/gallery', '/privacy',
-        '/services/ac', '/services/refrigerator', '/services/washing-machine',
-        '/services/ro', '/services/geyser', '/services/microwave',
-        '/services/water-dispenser', '/services/deep-freezer',
-        '/services/ac/ac-gas-refill',
-        '/services/ac/ac-foam-1', '/services/ac/ac-foam-2', '/services/ac/ac-not-cooling',
-        '/services/ac/ac-split-installation', '/services/ac/ac-window-installation',
-      ],
-      outDir: 'public',
-    }),
   ].filter(Boolean),
   resolve: {
     alias: {
