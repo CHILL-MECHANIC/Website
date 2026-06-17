@@ -54,7 +54,7 @@ const MIME = {
 
 // --- Minimal static server with SPA fallback, so client routing renders each URL ---
 function startServer() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
       const urlPath = decodeURIComponent(req.url.split('?')[0]);
       const filePath = path.join(distDir, urlPath);
@@ -78,11 +78,17 @@ function startServer() {
 
 async function run() {
   const routes = getRoutes();
+  console.log(`[prerender] Found ${routes.length} routes to render`);
+
+  console.log(`[prerender] Starting local server on port ${PORT}...`);
   const server = await startServer();
+  console.log(`[prerender] Server listening on http://localhost:${PORT}`);
+  console.log('[prerender] Starting Puppeteer with Chromium...');
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
   });
+  console.log('[prerender] Browser launched successfully');
 
   const rendered = [];
   let failures = 0;
@@ -90,6 +96,7 @@ async function run() {
   for (const route of routes) {
     const page = await browser.newPage();
     try {
+      console.log(`[prerender] Rendering ${route}...`);
       await page.goto(`http://localhost:${PORT}${route}`, {
         waitUntil: 'networkidle0',
         timeout: 45000,
@@ -143,6 +150,7 @@ async function run() {
 
 run().catch((err) => {
   // Never fail the deploy: any unrendered route still falls back to CSR via the SPA rewrite.
-  console.error('Prerender error (continuing with CSR fallback):', err);
+  console.error('[prerender] FATAL ERROR (continuing with CSR fallback):', err.message);
+  console.error('[prerender] Stack:', err.stack);
   process.exit(0);
 });
