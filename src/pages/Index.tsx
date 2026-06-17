@@ -19,7 +19,10 @@ import ServiceAreas from "@/components/ServiceAreas";
 import BlogPreview from "@/components/BlogPreview";
 import FaqAccordion from "@/components/FaqAccordion";
 import LocalBusinessSchema from "@/components/LocalBusinessSchema";
+import CompanyStats from "@/components/CompanyStats";
+import QuickFacts from "@/components/QuickFacts";
 import { homepageFaqs } from "@/data/faqs";
+import { homepageStats } from "@/data/serviceStats";
 import { generateFaqSchema } from "@/utils/faqSchema";
 import { getServiceCategoryPrimaryImage } from "@/config/serviceImages";
 import acServiceImage from "@/assets/ac-service.jpg";
@@ -224,6 +227,19 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {servicesWithImages.map(service => <ServiceCard key={service.id} title={service.title} description={service.description} image={service.image} price={service.price} onBookNow={() => handleBookNow(service.id)} onEnquire={() => handleEnquire(service.id)} />)}
           </div>
+        </div>
+      </section>
+
+      {/* Company Stats Section */}
+      <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Impact & Achievements</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Trusted by thousands of families in Gurgaon. Here's what we've accomplished.
+            </p>
+          </div>
+          <CompanyStats title="Company Stats" stats={homepageStats.stats} />
         </div>
       </section>
 

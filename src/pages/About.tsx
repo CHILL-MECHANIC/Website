@@ -2,7 +2,9 @@ import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CompanyStats from "@/components/CompanyStats";
 import { useCart } from "@/contexts/CartContext";
+import { aboutStats } from "@/data/serviceStats";
 import { CheckCircle, Users, Award, Clock, Shield } from "lucide-react";
 import FatherImage from "@/assets/FatherImage.jpg";
 
@@ -195,6 +197,17 @@ export default function About() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Company Stats Section */}
+          <div className="my-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Achievements</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Built on trust, reliability, and excellence over 50 years
+              </p>
+            </div>
+            <CompanyStats title="Company Stats" stats={aboutStats.stats} />
+          </div>
         </div>
       </div>
       

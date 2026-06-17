@@ -13,8 +13,11 @@ import FaqAccordion from "@/components/FaqAccordion";
 import CustomerReviews from "@/components/CustomerReviews";
 import BrandsCarousel from "@/components/BrandsCarousel";
 import ServiceAreas from "@/components/ServiceAreas";
+import CompanyStats from "@/components/CompanyStats";
+import QuickFacts from "@/components/QuickFacts";
 import { serviceFaqMap } from "@/data/faqs";
 import { serviceContentMap } from "@/data/serviceContent";
+import { serviceStatsData } from "@/data/serviceStats";
 import { generateFaqSchema } from "@/utils/faqSchema";
 import { ChevronDown, Play } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -534,6 +537,32 @@ export default function ServiceDetail() {
             </div>
           </div>
         </section>
+      )}
+
+      {/* Company Stats & Quick Facts Section */}
+      {serviceStatsData[serviceType] && (
+        <>
+          <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
+            <div className="container mx-auto px-4">
+              <div className="mb-12">
+                <CompanyStats 
+                  title={`${service.title} - Company Stats`}
+                  stats={serviceStatsData[serviceType].stats} 
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="py-16">
+            <div className="container mx-auto px-4">
+              <QuickFacts 
+                title={`Quick Facts - ${service.title}`}
+                facts={serviceStatsData[serviceType].quickFacts}
+                columns={1}
+              />
+            </div>
+          </section>
+        </>
       )}
 
       {/* FAQ Section */}
