@@ -19,14 +19,14 @@ const iconMap = {
   award: Award,
 };
 
-export default function QuickFacts({ facts, title = "Quick Facts", columns = 1 }: QuickFactsProps) {
+export default function QuickFacts({ facts = [], title = "Quick Facts", columns = 1 }: QuickFactsProps) {
   const gridClass = {
     1: "grid-cols-1",
     2: "grid-cols-1 md:grid-cols-2",
     3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
   };
 
-  const normalizedFacts = facts.map((fact) => {
+  const normalizedFacts = (facts || []).map((fact) => {
     if (typeof fact === "string") {
       return { text: fact, icon: undefined };
     }

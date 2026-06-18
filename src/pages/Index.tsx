@@ -230,19 +230,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Company Stats Section */}
-      <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Impact & Achievements</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Trusted by thousands of families in Gurgaon. Here's what we've accomplished.
-            </p>
-          </div>
-          <CompanyStats title="Company Stats" stats={homepageStats.stats} />
-        </div>
-      </section>
-
       {/* How It Works */}
       <HowItWorks />
 
@@ -260,6 +247,30 @@ const Index = () => {
 
       {/* Homepage FAQ */}
       <FaqAccordion faqs={homepageFaqs} />
+
+      {/* Company Stats Section */}
+      <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Impact & Achievements</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Trusted by thousands of families in Gurgaon. Here's what we've accomplished.
+            </p>
+          </div>
+          <CompanyStats title="Company Stats" stats={homepageStats.stats} />
+        </div>
+      </section>
+
+      {/* Quick Facts */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <QuickFacts 
+            facts={homepageStats.quickFacts}
+            title="Why Choose Chill Mechanic?"
+            columns={2}
+          />
+        </div>
+      </section>
 
       {/* Customer Reviews Section */}
       <section className="py-16 bg-muted/30">

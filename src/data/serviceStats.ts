@@ -149,6 +149,13 @@ export const homepageStats = {
     { label: "Maintenance Frequency Recommended", value: "Every 3 Months" },
     { label: "Service Coverage", value: "Across Gurgaon" },
   ],
+  quickFacts: [
+    "10,000+ home appliances repaired in just 4 months",
+    "90% same-day service completion rate",
+    "All technicians have 10+ years of experience",
+    "50+ years of combined team expertise",
+    "Available within 60 minutes of booking",
+  ],
 };
 
 export const aboutStats = {

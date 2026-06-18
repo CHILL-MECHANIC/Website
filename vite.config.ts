@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     // Ensure build doesn't fail on warnings
+    minify: 'esbuild',
     rollupOptions: {
       onwarn(warning, warn) {
         // Suppress certain warnings during build
@@ -28,5 +29,12 @@ export default defineConfig(({ mode }) => ({
         warn(warning);
       },
     },
+    esbuildOptions: {
+      drop: [],
+    },
+    cssMinify: true,
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 500,
+    reportCompressedSize: true,
   },
 }));
