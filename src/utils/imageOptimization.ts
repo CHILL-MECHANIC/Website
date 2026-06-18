@@ -17,8 +17,9 @@ export interface ResponsiveImageOptions {
  * @returns srcset string
  */
 export const generateSrcSet = (imagePath: string, widths: number[] = [320, 480, 640, 1024]): string => {
+  const separator = imagePath.includes('?') ? '&' : '?';
   return widths
-    .map(width => `${imagePath}?w=${width} ${width}w`)
+    .map(width => `${imagePath}${separator}w=${width} ${width}w`)
     .join(', ');
 };
 
@@ -47,7 +48,8 @@ export const getCompressedImageUrl = (imagePath: string, quality = 80): string =
   // For local images, return as is (compression happens during build)
   // For external images, add compression parameters
   if (imagePath.includes('http') || imagePath.includes('supabase')) {
-    return `${imagePath}?quality=${quality}`;
+    const separator = imagePath.includes('?') ? '&' : '?';
+    return `${imagePath}${separator}quality=${quality}`;
   }
   return imagePath;
 };
@@ -79,10 +81,26 @@ export const getResponsiveImageClasses = (isSmallScreen: boolean): string => {
  * @param imagePath - Path to the image
  * @returns Object with different image formats
  */
-export const getImageFormats = (imagePath: string) => ({
-  webp: imagePath.replace(/\.(jpg|jpeg|png)$/i, '.webp'),
-  fallback: imagePath,
-});
+export const getImageFormats = (imagePath: string) => {
+  const webpPath = imagePath.replace(/\.(jpg|jpeg|png|gif|bmp)$/i, '.webp');
+  // If the image format wasn't recognized, append .webp instead of replacing
+  const webp = webpPath === imagePath ? `${imagePath.split('?')[0]}.webp${imagePath.includes('?') ? '?' + imagePath.split('?')[1] : ''}` : webpPath;
+  return {
+    webp,
+    fallback: imagePath,
+  };
+};
+
+const escapeHtml = (text: string): string => {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  };
+  return text.replace(/[&<>"']/g, char => map[char]);
+};
 
 /**
  * Create a picture element with multiple sources for optimal loading
@@ -97,10 +115,14 @@ export const createResponsiveImage = (
   sizes = getResponsiveSizes()
 ): string => {
   const formats = getImageFormats(imagePath);
+  const escapedAlt = escapeHtml(alt);
+  const escapedSizes = escapeHtml(sizes);
+  const webpSrcSet = generateSrcSet(formats.webp);
+  const fallbackSrcSet = generateSrcSet(formats.fallback);
   return `
     <picture>
-      <source srcset="${formats.webp}" type="image/webp" sizes="${sizes}">
-      <img src="${formats.fallback}" alt="${alt}" sizes="${sizes}" loading="lazy" />
+      <source srcset="${webpSrcSet}" type="image/webp" sizes="${escapedSizes}">
+      <img srcset="${fallbackSrcSet}" src="${formats.fallback}" alt="${escapedAlt}" sizes="${escapedSizes}" loading="lazy" />
     </picture>
   `;
 };

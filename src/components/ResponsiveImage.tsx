@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getResponsiveSizes, getImageFormats, getCompressedImageUrl } from '@/utils/imageOptimization';
+import { getResponsiveSizes, getImageFormats, getCompressedImageUrl, generateSrcSet } from '@/utils/imageOptimization';
 
 interface ResponsiveImageProps {
   src: string;
@@ -28,14 +28,28 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   priority = false,
 }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    let resizeTimer: NodeJS.Timeout;
+
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1024);
     };
+
+    const debouncedCheckMobile = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(checkMobile, 150);
+    };
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    setIsMounted(true);
+
+    window.addEventListener('resize', debouncedCheckMobile);
+    return () => {
+      window.removeEventListener('resize', debouncedCheckMobile);
+      clearTimeout(resizeTimer);
+    };
   }, []);
 
   // Reduce quality on mobile for faster loading
@@ -44,15 +58,18 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   const formats = getImageFormats(optimizedSrc);
 
   const imageClasses = `${className} object-${objectFit} w-full h-auto`;
+  const webpSrcSet = generateSrcSet(formats.webp);
+  const fallbackSrcSet = generateSrcSet(formats.fallback);
 
   return (
     <picture>
       <source
-        srcSet={formats.webp}
+        srcSet={webpSrcSet}
         type="image/webp"
         sizes={sizes}
       />
       <img
+        srcSet={fallbackSrcSet}
         src={formats.fallback}
         alt={alt}
         className={imageClasses}
