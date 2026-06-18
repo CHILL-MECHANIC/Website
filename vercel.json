@@ -3,19 +3,6 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.chillmechanic.com"
-        }
-      ],
-      "destination": "https://chillmechanic.com/$1",
-      "statusCode": 301
-    }
-  ],
   "functions": {
     "api/auth.ts": {
       "maxDuration": 10
