@@ -539,15 +539,18 @@ export default function ServiceDetail() {
         </section>
       )}
 
+      {/* FAQ Section */}
+      {faqs && <FaqAccordion faqs={faqs} />}
+
       {/* Company Stats & Quick Facts Section */}
       {serviceStatsData[serviceType] && (
         <>
           <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
             <div className="container mx-auto px-4">
               <div className="mb-12">
-                <CompanyStats 
+                <CompanyStats
                   title={`${service.title} - Company Stats`}
-                  stats={serviceStatsData[serviceType].stats} 
+                  stats={serviceStatsData[serviceType].stats}
                 />
               </div>
             </div>
@@ -555,7 +558,7 @@ export default function ServiceDetail() {
 
           <section className="py-16">
             <div className="container mx-auto px-4">
-              <QuickFacts 
+              <QuickFacts
                 title={`Quick Facts - ${service.title}`}
                 facts={serviceStatsData[serviceType].quickFacts}
                 columns={1}
@@ -564,9 +567,6 @@ export default function ServiceDetail() {
           </section>
         </>
       )}
-
-      {/* FAQ Section */}
-      {faqs && <FaqAccordion faqs={faqs} />}
 
       <CustomerReviews />
 
