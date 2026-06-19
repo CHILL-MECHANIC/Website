@@ -57,3 +57,5 @@ API_DOCUMENTATION.md
 TROUBLESHOOTING.md
 .env*.local
 *.md
+
+./claude
