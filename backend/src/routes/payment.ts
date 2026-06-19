@@ -292,7 +292,7 @@ router.post('/verify', asyncHandler(async (req: Request, res: Response) => {
       
       // Skip if invalid
       if (formattedPhone.length === 10 && /^\d{10}$/.test(formattedPhone)) {
-        const smsMessage = `Dear Customer, Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed. Regards, Chill Mechanic Happy Appliances, Happier Homes`;
+        const smsMessage = `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`;
         
         await axios.post(
           'https://api.uniquedigitaloutreach.com/v1/sms',

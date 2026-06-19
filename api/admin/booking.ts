@@ -160,7 +160,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           if (formattedPhone.length !== 10 || !/^\d{10}$/.test(formattedPhone)) {
             console.warn('[SMS] Invalid phone after cleaning:', formattedPhone, 'original:', profile.phone);
           } else {
-            const smsMessage = `Dear Customer, A technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285. Regards, Chill Mechanic Team`;
+            const smsMessage = `Dear Customer,\n\nA technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285.\n\nRegards,\nChill Mechanic Team`;
 
             console.log('[SMS] Sending technician assignment SMS:', {
               to: '91' + formattedPhone,
