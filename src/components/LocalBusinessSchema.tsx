@@ -3,7 +3,7 @@ export default function LocalBusinessSchema() {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: 'Chill Mechanic',
-    image: 'https://www.chillmechanic.com/logo.png',
+    image: 'https://www.chillmechanic.com/logo.webp',
     telephone: '+919211970030',
     email: 'support@chillmechanic.com',
     address: {
