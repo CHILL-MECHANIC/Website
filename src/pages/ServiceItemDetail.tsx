@@ -1456,7 +1456,7 @@ export default function ServiceItemDetail() {
 
   // Get SEO data for current service item
   const seo = serviceId ? SERVICE_ITEM_SEO[serviceId] : null;
-  const canonicalUrl = serviceId && serviceType ? `https://chillmechanic.com/services/${serviceType}/${serviceId}` : null;
+  const canonicalUrl = serviceId && serviceType ? `https://www.chillmechanic.com/services/${serviceType}/${serviceId}` : null;
 
   return (
     <>

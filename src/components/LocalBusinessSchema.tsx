@@ -3,7 +3,7 @@ export default function LocalBusinessSchema() {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: 'Chill Mechanic',
-    image: 'https://chillmechanic.com/logo.png',
+    image: 'https://www.chillmechanic.com/logo.png',
     telephone: '+919211970030',
     email: 'support@chillmechanic.com',
     address: {
@@ -13,7 +13,7 @@ export default function LocalBusinessSchema() {
       addressCountry: 'IN',
     },
     geo: { '@type': 'GeoCoordinates', latitude: 28.4595, longitude: 77.0266 },
-    url: 'https://chillmechanic.com',
+    url: 'https://www.chillmechanic.com',
     openingHours: 'Mo-Su 08:00-20:00',
     priceRange: '₹₹',
     aggregateRating: {

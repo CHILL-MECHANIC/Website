@@ -295,22 +295,22 @@ export default function ServiceDetail() {
             <meta name="language" content="en-US" />
             <meta name="revisit-after" content="7 days" />
             <meta name="author" content="Chill Mechanic" />
-            <link rel="canonical" href={`https://chillmechanic.com/services/${serviceType}`} />
+            <link rel="canonical" href={`https://www.chillmechanic.com/services/${serviceType}`} />
 
             {/* Open Graph Meta Tags for Social Sharing */}
             <meta property="og:title" content={metaTitle} />
             <meta property="og:description" content={metaDescription} />
             <meta property="og:type" content="website" />
-            <meta property="og:url" content={`https://chillmechanic.com/services/${serviceType}`} />
+            <meta property="og:url" content={`https://www.chillmechanic.com/services/${serviceType}`} />
             <meta property="og:site_name" content="Chill Mechanic" />
-            <meta property="og:image" content={service.image ? `https://chillmechanic.com${service.image}` : 'https://chillmechanic.com/og-image.jpg'} />
+            <meta property="og:image" content={service.image ? `https://www.chillmechanic.com${service.image}` : 'https://www.chillmechanic.com/og-image.jpg'} />
             <meta property="og:image:alt" content={service.title} />
 
             {/* Twitter Card Meta Tags */}
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content={metaTitle} />
             <meta name="twitter:description" content={metaDescription} />
-            <meta name="twitter:image" content={service.image ? `https://chillmechanic.com${service.image}` : 'https://chillmechanic.com/og-image.jpg'} />
+            <meta name="twitter:image" content={service.image ? `https://www.chillmechanic.com${service.image}` : 'https://www.chillmechanic.com/og-image.jpg'} />
             <meta name="twitter:site" content="@chillmechanic" />
           </Helmet>
         )}
@@ -325,7 +325,7 @@ export default function ServiceDetail() {
               name: 'Chill Mechanic',
               telephone: '+91-2902-1835',
               email: 'info@chillmechanic.com',
-              url: 'https://chillmechanic.com',
+              url: 'https://www.chillmechanic.com',
               address: {
                 '@type': 'PostalAddress',
                 streetAddress: 'Gurgaon',
@@ -344,10 +344,10 @@ export default function ServiceDetail() {
               price: seo.price, 
               priceCurrency: 'INR',
               availability: 'https://schema.org/InStock',
-              url: `https://chillmechanic.com/services/${serviceType}`
+              url: `https://www.chillmechanic.com/services/${serviceType}`
             },
             serviceType: service.title,
-            url: `https://chillmechanic.com/services/${serviceType}`,
+            url: `https://www.chillmechanic.com/services/${serviceType}`,
             // aggregateRating temporarily removed - hardcoded values don't reflect real user reviews
             // Will be re-enabled when integrated with actual review data
           }) }} />
@@ -364,13 +364,13 @@ export default function ServiceDetail() {
                 '@type': 'ListItem',
                 position: 1,
                 name: 'Home',
-                item: 'https://chillmechanic.com'
+                item: 'https://www.chillmechanic.com'
               },
               {
                 '@type': 'ListItem',
                 position: 2,
                 name: service.title,
-                item: `https://chillmechanic.com/services/${serviceType}`
+                item: `https://www.chillmechanic.com/services/${serviceType}`
               }
             ]
           }) }} />

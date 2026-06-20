@@ -87,7 +87,7 @@ export default function GalleryPage() {
           name="description"
           content="See real results from Chill Mechanic's appliance repair work. Video gallery, technician profiles, and customer reviews. Gurgaon's trusted repair service."
         />
-        <link rel="canonical" href="https://chillmechanic.com/gallery" />
+        <link rel="canonical" href="https://www.chillmechanic.com/gallery" />
       </Helmet>
 
       <Header cartItemsCount={getCartItemsCount()} />

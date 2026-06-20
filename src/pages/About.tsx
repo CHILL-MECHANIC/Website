@@ -16,7 +16,7 @@ export default function About() {
       <Helmet>
         <title>About Chill Mechanic | 50 Years of Appliance Repair Excellence</title>
         <meta name="description" content="Chill Mechanic - 50 years of trusted appliance repair in Gurgaon. Family legacy, certified technicians, customer-first approach. Learn our story." />
-        <link rel="canonical" href="https://chillmechanic.com/about" />
+        <link rel="canonical" href="https://www.chillmechanic.com/about" />
       </Helmet>
       <Header cartItemsCount={getCartItemsCount()} />
       

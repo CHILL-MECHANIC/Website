@@ -32,7 +32,7 @@ export default function BlogArticle() {
     );
   }
 
-  const canonicalUrl = `https://chillmechanic.com/blog/${id}`;
+  const canonicalUrl = `https://www.chillmechanic.com/blog/${id}`;
 
   return (
     <>

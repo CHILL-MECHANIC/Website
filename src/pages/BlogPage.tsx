@@ -21,7 +21,7 @@ export default function BlogPage() {
           name="description"
           content="Expert tips on AC, refrigerator, washing machine & appliance maintenance. Guides for Gurgaon homeowners from Chill Mechanic."
         />
-        <link rel="canonical" href="https://chillmechanic.com/blog" />
+        <link rel="canonical" href="https://www.chillmechanic.com/blog" />
       </Helmet>
 
       <Header cartItemsCount={getCartItemsCount()} />

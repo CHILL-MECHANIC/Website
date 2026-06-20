@@ -51,7 +51,7 @@ export default function Contact() {
       <Helmet>
         <title>Contact Chill Mechanic | Appliance Repair Gurgaon | 9211970030</title>
         <meta name="description" content="Contact Chill Mechanic for appliance repair in Gurgaon. Phone: 9211970030, Email: support@chillmechanic.com. 24/7 emergency service available." />
-        <link rel="canonical" href="https://chillmechanic.com/contact" />
+        <link rel="canonical" href="https://www.chillmechanic.com/contact" />
       </Helmet>
       <LocalBusinessSchema />
       <Header cartItemsCount={getCartItemsCount()} />

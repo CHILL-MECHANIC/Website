@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chillmechanic.com/sitemap.xml
+Sitemap: https://www.chillmechanic.com/sitemap.xml

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { ResponsiveImage } from "@/components/ResponsiveImage";
 
 interface ServiceCardProps {
   title: string;
@@ -21,10 +22,12 @@ export default function ServiceCard({
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="aspect-[4/3] overflow-hidden">
-        <img
+        <ResponsiveImage
           src={image}
           alt={title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          className="hover:scale-105 transition-transform duration-300"
+          objectFit="cover"
+          lazy={true}
         />
       </div>
       

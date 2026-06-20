@@ -20,21 +20,30 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Ensure build doesn't fail on warnings
     minify: 'esbuild',
     rollupOptions: {
       onwarn(warning, warn) {
-        // Suppress certain warnings during build
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
         warn(warning);
+      },
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+          'tanstack-vendor': ['@tanstack/react-query'],
+          'supabase-vendor': ['@supabase/supabase-js'],
+        },
       },
     },
     esbuildOptions: {
       drop: [],
+      minifyIdentifiers: true,
+      minifySyntax: true,
     },
     cssMinify: true,
     cssCodeSplit: true,
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 400,
     reportCompressedSize: true,
+    sourcemap: false,
   },
 }));

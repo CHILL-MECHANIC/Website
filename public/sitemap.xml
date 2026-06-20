@@ -2,379 +2,149 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <!-- Main Pages -->
   <url>
-    <loc>https://chillmechanic.com/</loc>
+    <loc>https://www.chillmechanic.com/</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/about</loc>
+    <loc>https://www.chillmechanic.com/about</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/contact</loc>
+    <loc>https://www.chillmechanic.com/contact</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog</loc>
+    <loc>https://www.chillmechanic.com/blog</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <!-- Blog Articles -->
   <url>
-    <loc>https://chillmechanic.com/blog/1</loc>
+    <loc>https://www.chillmechanic.com/blog/1</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/2</loc>
+    <loc>https://www.chillmechanic.com/blog/2</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/3</loc>
+    <loc>https://www.chillmechanic.com/blog/3</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/4</loc>
+    <loc>https://www.chillmechanic.com/blog/4</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/5</loc>
+    <loc>https://www.chillmechanic.com/blog/5</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/6</loc>
+    <loc>https://www.chillmechanic.com/blog/6</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/7</loc>
+    <loc>https://www.chillmechanic.com/blog/7</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/8</loc>
+    <loc>https://www.chillmechanic.com/blog/8</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/9</loc>
+    <loc>https://www.chillmechanic.com/blog/9</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/blog/10</loc>
+    <loc>https://www.chillmechanic.com/blog/10</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/gallery</loc>
+    <loc>https://www.chillmechanic.com/gallery</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/privacy</loc>
+    <loc>https://www.chillmechanic.com/privacy</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <!-- Service Category Pages -->
   <url>
-    <loc>https://chillmechanic.com/services/ac</loc>
+    <loc>https://www.chillmechanic.com/services/ac</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/services/refrigerator</loc>
+    <loc>https://www.chillmechanic.com/services/refrigerator</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/services/ro</loc>
+    <loc>https://www.chillmechanic.com/services/ro</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/services/washing-machine</loc>
+    <loc>https://www.chillmechanic.com/services/washing-machine</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/services/geyser</loc>
+    <loc>https://www.chillmechanic.com/services/geyser</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/services/microwave</loc>
+    <loc>https://www.chillmechanic.com/services/microwave</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/services/water-dispenser</loc>
+    <loc>https://www.chillmechanic.com/services/water-dispenser</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://chillmechanic.com/services/deep-freezer</loc>
+    <loc>https://www.chillmechanic.com/services/deep-freezer</loc>
     <lastmod>2026-05-24T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  <!-- AC Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-foam-1</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-foam-2</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-foam-3</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-foam-4</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-foam-5</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-power-jet-1</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-power-jet-2</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-power-jet-3</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-power-jet-4</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-not-cooling</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-power-issue</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-noise-reduction</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-water-leakage</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-gas-refill</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-split-installation</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-split-uninstall</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-window-installation</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ac/ac-window-uninstall</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <!-- Refrigerator Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/refrigerator/fridge-single-door</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/refrigerator/fridge-double-door</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <!-- RO Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/ro/ro-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ro/ro-filter-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ro/ro-regular-service</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ro/ro-full-service</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ro/ro-installation</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/ro/ro-uninstallation</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <!-- Geyser Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/geyser/geyser-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/geyser/geyser-service</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/geyser/geyser-installation</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/geyser/geyser-uninstallation</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <!-- Washing Machine Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/washing-machine/wm-top-load-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/washing-machine/wm-front-load-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/washing-machine/wm-semi-auto-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://chillmechanic.com/services/washing-machine/wm-install-uninstall</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <!-- Microwave Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/microwave/microwave-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <!-- Water Dispenser Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/water-dispenser/wd-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <!-- Deep Freezer Service Items -->
-  <url>
-    <loc>https://chillmechanic.com/services/deep-freezer/df-checkup</loc>
-    <lastmod>2026-05-24T00:00:00.000Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
   </url>
 </urlset>

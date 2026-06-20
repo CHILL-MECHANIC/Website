@@ -143,7 +143,7 @@ const Index = () => {
       <Helmet>
         <title>AC & Appliance Repair Gurgaon | Same Day Service | Chill Mechanic</title>
         <meta name="description" content="Expert AC, refrigerator & washing machine repair in Gurgaon. Same day service, certified technicians, upfront pricing. Book now! Call 9211970030" />
-        <link rel="canonical" href="https://chillmechanic.com/" />
+        <link rel="canonical" href="https://www.chillmechanic.com/" />
       </Helmet>
       <LocalBusinessSchema />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateFaqSchema(homepageFaqs)) }} />
