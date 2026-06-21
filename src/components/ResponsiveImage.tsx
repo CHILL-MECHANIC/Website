@@ -57,32 +57,17 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   const imageClasses = `${className} object-${objectFit} w-full h-auto`;
   const fallbackSrcSet = generateSrcSet(optimizedSrc);
 
-  // Only offer a WebP <source> when the asset is genuinely a .webp. Pointing a
-  // <source type="image/webp"> at a derived .webp path that doesn't exist makes
-  // browsers pick that source, 404, and render nothing (a <picture> does not
-  // fall back to <img> when the chosen <source> fails to load).
-  const isWebpSource = /\.webp(\?|$)/i.test(optimizedSrc);
-
   return (
-    <picture>
-      {isWebpSource && (
-        <source
-          srcSet={fallbackSrcSet}
-          type="image/webp"
-          sizes={sizes}
-        />
-      )}
-      <img
-        srcSet={fallbackSrcSet}
-        src={optimizedSrc}
-        alt={alt}
-        className={imageClasses}
-        sizes={sizes}
-        loading={lazy && !priority ? 'lazy' : 'eager'}
-        decoding={priority ? 'auto' : 'async'}
-        {...(priority && { fetchPriority: 'high' as const })}
-      />
-    </picture>
+    <img
+      srcSet={fallbackSrcSet}
+      src={optimizedSrc}
+      alt={alt}
+      className={imageClasses}
+      sizes={sizes}
+      loading={lazy && !priority ? 'lazy' : 'eager'}
+      decoding={priority ? 'auto' : 'async'}
+      {...(priority && { fetchPriority: 'high' as const })}
+    />
   );
 };
 

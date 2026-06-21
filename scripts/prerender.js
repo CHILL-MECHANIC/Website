@@ -146,11 +146,17 @@ async function run() {
   }
 
   console.log(`\nPrerender complete: ${rendered.length} pages written, ${failures} skipped.`);
+
+  // A total wipe-out (e.g. Chromium missing on the build host) silently ships the
+  // un-prerendered SPA shell with no canonical/links to every route — a hidden SEO
+  // outage. Fail the build loudly in that case. Partial failures still fall back to CSR.
+  if (rendered.length === 0) {
+    throw new Error('Prerendered 0 pages — refusing to ship an un-prerendered build.');
+  }
 }
 
 run().catch((err) => {
-  // Never fail the deploy: any unrendered route still falls back to CSR via the SPA rewrite.
-  console.error('[prerender] FATAL ERROR (continuing with CSR fallback):', err.message);
+  console.error('[prerender] FATAL ERROR:', err.message);
   console.error('[prerender] Stack:', err.stack);
-  process.exit(0);
+  process.exit(1);
 });
