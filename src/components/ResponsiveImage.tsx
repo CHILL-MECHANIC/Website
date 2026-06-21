@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getResponsiveSizes, getImageFormats, getCompressedImageUrl, generateSrcSet } from '@/utils/imageOptimization';
+import { getResponsiveSizes, getCompressedImageUrl, generateSrcSet } from '@/utils/imageOptimization';
 
 interface ResponsiveImageProps {
   src: string;
@@ -28,7 +28,6 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   priority = false,
 }) => {
   const [isMobile, setIsMobile] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     let resizeTimer: NodeJS.Timeout;
@@ -43,7 +42,6 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
     };
 
     checkMobile();
-    setIsMounted(true);
 
     window.addEventListener('resize', debouncedCheckMobile);
     return () => {
@@ -55,22 +53,28 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   // Reduce quality on mobile for faster loading
   const optimizedQuality = isMobile ? Math.max(quality - 20, 50) : quality;
   const optimizedSrc = getCompressedImageUrl(src, optimizedQuality);
-  const formats = getImageFormats(optimizedSrc);
 
   const imageClasses = `${className} object-${objectFit} w-full h-auto`;
-  const webpSrcSet = generateSrcSet(formats.webp);
-  const fallbackSrcSet = generateSrcSet(formats.fallback);
+  const fallbackSrcSet = generateSrcSet(optimizedSrc);
+
+  // Only offer a WebP <source> when the asset is genuinely a .webp. Pointing a
+  // <source type="image/webp"> at a derived .webp path that doesn't exist makes
+  // browsers pick that source, 404, and render nothing (a <picture> does not
+  // fall back to <img> when the chosen <source> fails to load).
+  const isWebpSource = /\.webp(\?|$)/i.test(optimizedSrc);
 
   return (
     <picture>
-      <source
-        srcSet={webpSrcSet}
-        type="image/webp"
-        sizes={sizes}
-      />
+      {isWebpSource && (
+        <source
+          srcSet={fallbackSrcSet}
+          type="image/webp"
+          sizes={sizes}
+        />
+      )}
       <img
         srcSet={fallbackSrcSet}
-        src={formats.fallback}
+        src={optimizedSrc}
         alt={alt}
         className={imageClasses}
         sizes={sizes}

@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
 const indexPath = path.join(distDir, 'index.html');
 const PORT = 4178;
-const ORIGIN = 'https://chillmechanic.com';
+const ORIGIN = 'https://www.chillmechanic.com';
 
 if (!fs.existsSync(indexPath)) {
   console.error(`Prerender failed: missing ${indexPath}. Run "vite build" first.`);

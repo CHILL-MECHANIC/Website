@@ -9,6 +9,7 @@ interface ServiceCardProps {
   price: string;
   onBookNow: () => void;
   onEnquire: () => void;
+  priority?: boolean;
 }
 
 export default function ServiceCard({
@@ -18,6 +19,7 @@ export default function ServiceCard({
   price,
   onBookNow,
   onEnquire,
+  priority = false,
 }: ServiceCardProps) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -27,7 +29,8 @@ export default function ServiceCard({
           alt={title}
           className="hover:scale-105 transition-transform duration-300"
           objectFit="cover"
-          lazy={true}
+          lazy={!priority}
+          priority={priority}
         />
       </div>
       

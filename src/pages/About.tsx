@@ -14,7 +14,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>About Chill Mechanic | 50 Years of Appliance Repair Excellence</title>
+        <title>About Chill Mechanic | 50 Years of Appliance Repair</title>
         <meta name="description" content="Chill Mechanic - 50 years of trusted appliance repair in Gurgaon. Family legacy, certified technicians, customer-first approach. Learn our story." />
         <link rel="canonical" href="https://www.chillmechanic.com/about" />
       </Helmet>

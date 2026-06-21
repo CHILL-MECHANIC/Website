@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -52,6 +53,11 @@ export default function Privacy() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Privacy Policy & Terms | Chill Mechanic</title>
+        <meta name="description" content="Read Chill Mechanic's privacy policy and terms of service: how we collect, use and protect your data, your rights, and account deletion for appliance repair in Gurgaon." />
+        <link rel="canonical" href="https://www.chillmechanic.com/privacy" />
+      </Helmet>
       <Header cartItemsCount={getCartItemsCount()} />
       
       <div className="container mx-auto px-4 py-16">

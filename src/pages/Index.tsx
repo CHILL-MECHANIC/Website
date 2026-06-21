@@ -141,7 +141,7 @@ const Index = () => {
   };
   return <div className="min-h-screen bg-background">
       <Helmet>
-        <title>AC & Appliance Repair Gurgaon | Same Day Service | Chill Mechanic</title>
+        <title>AC & Appliance Repair Gurgaon | Chill Mechanic</title>
         <meta name="description" content="Expert AC, refrigerator & washing machine repair in Gurgaon. Same day service, certified technicians, upfront pricing. Book now! Call 9211970030" />
         <link rel="canonical" href="https://www.chillmechanic.com/" />
       </Helmet>
@@ -225,7 +225,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {servicesWithImages.map(service => <ServiceCard key={service.id} title={service.title} description={service.description} image={service.image} price={service.price} onBookNow={() => handleBookNow(service.id)} onEnquire={() => handleEnquire(service.id)} />)}
+            {servicesWithImages.map(service => <ServiceCard key={service.id} title={service.title} description={service.description} image={service.image} price={service.price} onBookNow={() => handleBookNow(service.id)} onEnquire={() => handleEnquire(service.id)} priority={true} />)}
           </div>
         </div>
       </section>
