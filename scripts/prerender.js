@@ -2,7 +2,29 @@ import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import { fileURLToPath } from 'url';
-import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteerCore from 'puppeteer-core';
+
+// On Vercel/CI the build container lacks the system libraries (libnspr4, etc.)
+// that Puppeteer's bundled Chromium needs, so it can't launch. @sparticuz/chromium
+// ships a self-contained Chromium build for that environment. Locally we keep the
+// full puppeteer package (with its own Chromium) for a zero-setup dev experience.
+const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.CI);
+
+async function launchBrowser() {
+  if (isServerless) {
+    return puppeteerCore.launch({
+      args: [...chromium.args, '--disable-gpu'],
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    });
+  }
+  const { default: puppeteer } = await import('puppeteer');
+  return puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+  });
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
@@ -83,11 +105,8 @@ async function run() {
   console.log(`[prerender] Starting local server on port ${PORT}...`);
   const server = await startServer();
   console.log(`[prerender] Server listening on http://localhost:${PORT}`);
-  console.log('[prerender] Starting Puppeteer with Chromium...');
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
-  });
+  console.log(`[prerender] Starting Puppeteer with Chromium (${isServerless ? '@sparticuz/chromium' : 'local puppeteer'})...`);
+  const browser = await launchBrowser();
   console.log('[prerender] Browser launched successfully');
 
   const rendered = [];

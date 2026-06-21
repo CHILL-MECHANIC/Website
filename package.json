@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npx puppeteer browsers install chrome && node scripts/prerender.js",
+    "build": "vite build && node scripts/prerender.js",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -71,6 +71,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@sparticuz/chromium": "^147.0.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.16.5",
@@ -87,6 +88,7 @@
     "lovable-tagger": "^1.1.10",
     "postcss": "^8.5.6",
     "puppeteer": "^25.1.0",
+    "puppeteer-core": "^25.1.0",
     "react-compare-image": "^3.5.14",
     "react-helmet-async": "^2.0.5",
     "tailwindcss": "^3.4.17",
