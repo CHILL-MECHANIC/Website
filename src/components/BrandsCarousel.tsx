@@ -50,11 +50,12 @@ const ALL_BRANDS: Brand[] = [
   { name: 'Havells', Icon: SiHavells, color: '#ff6600', short: 'HV' },
 ];
 
-export default function BrandsCarousel() {
+export default function BrandsCarousel({ headingLevel = 2 }: { headingLevel?: 2 | 3 | 4 | 5 | 6 }) {
+  const Heading = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   return (
     <section className="py-16 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold mb-2">BRANDS WE SERVE</h2>
+        <Heading className="text-3xl md:text-4xl font-bold mb-2">BRANDS WE SERVE</Heading>
         <p className="text-muted-foreground">Trusted repairs across all major appliance brands</p>
       </div>
 

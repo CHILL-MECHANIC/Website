@@ -217,7 +217,7 @@ const Index = () => {
       <section className="py-16" data-services-section>
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">OUR SERVICES</h2>
+            <h3 className="text-3xl md:text-4xl font-bold mb-4">OUR SERVICES</h3>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Professional appliance repair and maintenance services you can trust. 
               Quick, reliable, and affordable solutions for your home.
@@ -237,22 +237,22 @@ const Index = () => {
       <WhyChooseUs />
 
       {/* Brands We Service */}
-      <BrandsCarousel />
+      <BrandsCarousel headingLevel={6} />
 
       {/* Service Areas */}
-      <ServiceAreas />
+      <ServiceAreas headingLevel={6} />
 
       {/* Blog Preview */}
       <BlogPreview />
 
       {/* Homepage FAQ */}
-      <FaqAccordion faqs={homepageFaqs} />
+      <FaqAccordion faqs={homepageFaqs} headingLevel={6} />
 
       {/* Company Stats Section */}
       <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Impact & Achievements</h2>
+            <h6 className="text-3xl md:text-4xl font-bold mb-4">Our Impact & Achievements</h6>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Trusted by thousands of families in Gurgaon. Here's what we've accomplished.
             </p>
@@ -264,10 +264,11 @@ const Index = () => {
       {/* Quick Facts */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <QuickFacts 
+          <QuickFacts
             facts={homepageStats.quickFacts}
             title="Why Choose Chill Mechanic?"
             columns={2}
+            headingLevel={6}
           />
         </div>
       </section>
@@ -276,7 +277,7 @@ const Index = () => {
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">WHAT OUR CUSTOMERS SAY</h2>
+            <h6 className="text-3xl md:text-4xl font-bold mb-4">WHAT OUR CUSTOMERS SAY</h6>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               We appreciate your feedback and are committed to providing the best possible service.
             </p>

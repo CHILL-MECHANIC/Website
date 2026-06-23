@@ -7,7 +7,8 @@ const AREAS = [
   'Manesar', 'Palam Vihar', 'South City', 'Udyog Vihar', 'Cyber City', 'Huda City Centre',
 ];
 
-export default function ServiceAreas() {
+export default function ServiceAreas({ headingLevel = 2 }: { headingLevel?: 2 | 3 | 4 | 5 | 6 }) {
+  const Heading = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   return (
     <section className="py-16 bg-muted/20">
       <div className="max-w-6xl mx-auto px-4">
@@ -15,7 +16,7 @@ export default function ServiceAreas() {
           {/* Left */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <MapPin className="h-10 w-10 text-primary mb-4" />
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">We Serve All of Gurgaon</h2>
+            <Heading className="text-3xl md:text-4xl font-bold mb-3">We Serve All of Gurgaon</Heading>
             <p className="text-muted-foreground mb-6">
               Covering 20+ areas with same-day service
             </p>

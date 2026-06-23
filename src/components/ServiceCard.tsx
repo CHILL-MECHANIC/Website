@@ -35,7 +35,7 @@ export default function ServiceCard({
       </div>
       
       <CardHeader>
-        <h3 className="text-xl font-semibold text-foreground">{title}</h3>
+        <h4 className="text-xl font-semibold text-foreground">{title}</h4>
       </CardHeader>
       
       <CardContent>

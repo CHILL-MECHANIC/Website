@@ -23,7 +23,7 @@ export default function HowItWorks() {
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">HOW IT WORKS?</h2>
+          <h4 className="text-3xl md:text-4xl font-bold mb-2">HOW IT WORKS?</h4>
           <p className="text-muted-foreground">Book appliance repair in 3 simple steps</p>
         </div>
 
@@ -39,7 +39,7 @@ export default function HowItWorks() {
               <span className="inline-block bg-primary text-primary-foreground text-xs font-bold rounded-full w-6 h-6 leading-6 mb-3">
                 {i + 1}
               </span>
-              <h3 className="text-lg font-bold mb-2">{heading}</h3>
+              <h5 className="text-lg font-bold mb-2">{heading}</h5>
               <p className="text-muted-foreground text-sm max-w-xs">{body}</p>
             </div>
           ))}

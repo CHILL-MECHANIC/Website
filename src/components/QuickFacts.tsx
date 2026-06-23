@@ -10,6 +10,7 @@ interface QuickFactsProps {
   facts: QuickFact[] | string[];
   title?: string;
   columns?: 1 | 2 | 3;
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 
 const iconMap = {
@@ -19,7 +20,8 @@ const iconMap = {
   award: Award,
 };
 
-export default function QuickFacts({ facts = [], title = "Quick Facts", columns = 1 }: QuickFactsProps) {
+export default function QuickFacts({ facts = [], title = "Quick Facts", columns = 1, headingLevel = 2 }: QuickFactsProps) {
+  const Heading = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   const gridClass = {
     1: "grid-cols-1",
     2: "grid-cols-1 md:grid-cols-2",
@@ -35,7 +37,7 @@ export default function QuickFacts({ facts = [], title = "Quick Facts", columns 
 
   return (
     <div className="space-y-6">
-      {title && <h2 className="text-2xl font-bold text-foreground">{title}</h2>}
+      {title && <Heading className="text-2xl font-bold text-foreground">{title}</Heading>}
       <div className={`grid ${gridClass[columns]} gap-4`}>
         {normalizedFacts.map((fact, index) => {
           const IconComponent = fact.icon ? iconMap[fact.icon] : null;

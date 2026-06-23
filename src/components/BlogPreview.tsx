@@ -31,7 +31,7 @@ export default function BlogPreview() {
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">OUR BLOGS</h2>
+          <h6 className="text-3xl md:text-4xl font-bold mb-2">OUR BLOGS</h6>
           <p className="text-muted-foreground">Expert tips on appliance maintenance for Gurgaon homeowners</p>
         </div>
 
@@ -46,7 +46,7 @@ export default function BlogPreview() {
                 >
                   {article.category}
                 </span>
-                <h3 className="font-bold text-lg line-clamp-2">{article.title}</h3>
+                <h6 className="font-bold text-lg line-clamp-2">{article.title}</h6>
                 <p className="text-muted-foreground text-sm line-clamp-3">{article.excerpt}</p>
                 <Link to="/blog" className="text-primary text-sm font-medium inline-flex items-center gap-1 mt-auto">
                   Read More <ArrowRight className="h-3.5 w-3.5" />
