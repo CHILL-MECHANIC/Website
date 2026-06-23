@@ -120,7 +120,7 @@ export default function Header({
             </DropdownMenu>
             
             <Button variant="default" className="hidden md:inline-flex" asChild>
-              <a href={appStoreUrl} target="_blank" rel="noopener noreferrer">Get The App</a>
+              <a href={appStoreUrl} target="_blank" rel="noopener noreferrer nofollow">Get The App</a>
             </Button>
 
             {/* Mobile menu button */}
@@ -164,7 +164,7 @@ export default function Header({
                 </Link>}
               
               <Button variant="default" className="w-full mt-4" asChild>
-                <a href={appStoreUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsMenuOpen(false)}>
+                <a href={appStoreUrl} target="_blank" rel="noopener noreferrer nofollow" onClick={() => setIsMenuOpen(false)}>
                   Get The App
                 </a>
               </Button>

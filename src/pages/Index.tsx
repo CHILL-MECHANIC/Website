@@ -366,7 +366,7 @@ const Index = () => {
       <a
         href="https://wa.me/message/SGJEOWC7BT4QA1"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer nofollow"
         className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white rounded-full p-4 shadow-lg hover:scale-110 transition-transform duration-200 hover:shadow-xl"
         aria-label="Chat on WhatsApp"
       >

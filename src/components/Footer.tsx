@@ -37,19 +37,19 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="flex justify-center gap-4 mb-4">
-            <a href="https://www.facebook.com/share/17c6FYTJ9H/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <a href="https://www.facebook.com/share/17c6FYTJ9H/" target="_blank" rel="noopener noreferrer nofollow" aria-label="Facebook">
               <SiFacebook size={22} className="text-foreground hover:text-[#1877F2] transition-colors" />
             </a>
-            <a href="https://www.instagram.com/p/DQ8e6tjkxCK/?igsh=MXN6M244cGJ2NnZ6aA==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href="https://www.instagram.com/p/DQ8e6tjkxCK/?igsh=MXN6M244cGJ2NnZ6aA==" target="_blank" rel="noopener noreferrer nofollow" aria-label="Instagram">
               <SiInstagram size={22} className="text-foreground hover:text-[#E4405F] transition-colors" />
             </a>
-            <a href="https://x.com/chill_mechanic?s=21" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+            <a href="https://x.com/chill_mechanic?s=21" target="_blank" rel="noopener noreferrer nofollow" aria-label="Twitter">
               <SiX size={22} className="text-foreground hover:text-[#000000] transition-colors" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer nofollow" aria-label="LinkedIn">
               <SiLinkedin size={22} className="text-foreground hover:text-[#0A66C2] transition-colors" />
             </a>
-            <a href="https://wa.me/message/SGJEOWC7BT4QA1" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <a href="https://wa.me/message/SGJEOWC7BT4QA1" target="_blank" rel="noopener noreferrer nofollow" aria-label="WhatsApp">
               <SiWhatsapp size={22} className="text-foreground hover:text-[#25D366] transition-colors" />
             </a>
           </div>
@@ -153,19 +153,19 @@ export default function Footer() {
               </li>
             </ul>
             <div className="flex items-center gap-3 mt-4">
-              <a href="https://www.facebook.com/share/17c6FYTJ9H/" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Facebook">
+              <a href="https://www.facebook.com/share/17c6FYTJ9H/" target="_blank" rel="noopener noreferrer nofollow" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Facebook">
                 <SiFacebook size={20} className="text-foreground hover:text-[#1877F2] transition-colors" />
               </a>
-              <a href="https://www.instagram.com/p/DQ8e6tjkxCK/?igsh=MXN6M244cGJ2NnZ6aA==" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Instagram">
+              <a href="https://www.instagram.com/p/DQ8e6tjkxCK/?igsh=MXN6M244cGJ2NnZ6aA==" target="_blank" rel="noopener noreferrer nofollow" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Instagram">
                 <SiInstagram size={20} className="text-foreground hover:text-[#E4405F] transition-colors" />
               </a>
-              <a href="https://x.com/chill_mechanic?s=21" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Twitter">
+              <a href="https://x.com/chill_mechanic?s=21" target="_blank" rel="noopener noreferrer nofollow" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="Twitter">
                 <SiX size={20} className="text-foreground hover:text-[#000000] transition-colors" />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="LinkedIn">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer nofollow" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="LinkedIn">
                 <SiLinkedin size={20} className="text-foreground hover:text-[#0A66C2] transition-colors" />
               </a>
-              <a href="https://wa.me/message/SGJEOWC7BT4QA1" target="_blank" rel="noopener noreferrer" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="WhatsApp">
+              <a href="https://wa.me/message/SGJEOWC7BT4QA1" target="_blank" rel="noopener noreferrer nofollow" className="text-lg hover:scale-110 transition-transform bg-transparent" aria-label="WhatsApp">
                 <SiWhatsapp size={20} className="text-foreground hover:text-[#25D366] transition-colors" />
               </a>
             </div>
@@ -201,8 +201,8 @@ export default function Footer() {
               </div>
               <a 
                 href="https://maps.google.com/?q=Opposite+Worldmark,+Maidawas+Road,+Sector+64+Gurgaon+122102" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
                 className="space-y-1 group block"
               >
                 <div className="font-medium flex items-center gap-2 hover:text-primary transition-all duration-200">
