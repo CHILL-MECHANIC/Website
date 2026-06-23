@@ -35,7 +35,7 @@ export default function QuickFacts({ facts = [], title = "Quick Facts", columns 
 
   return (
     <div className="space-y-6">
-      {title && <h3 className="text-2xl font-bold text-foreground">{title}</h3>}
+      {title && <h2 className="text-2xl font-bold text-foreground">{title}</h2>}
       <div className={`grid ${gridClass[columns]} gap-4`}>
         {normalizedFacts.map((fact, index) => {
           const IconComponent = fact.icon ? iconMap[fact.icon] : null;

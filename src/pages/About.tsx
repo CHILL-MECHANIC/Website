@@ -60,7 +60,7 @@ export default function About() {
           {/* Mission Section */}
           <Card className="mb-12">
             <CardHeader>
-              <CardTitle className="text-2xl text-center">Our Mission</CardTitle>
+              <h2 className="text-2xl text-center font-semibold leading-none tracking-tight">Our Mission</h2>
             </CardHeader>
             <CardContent>
               <p className="text-lg text-center text-muted-foreground">
@@ -156,7 +156,7 @@ export default function About() {
           {/* Services Overview */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl text-center">Our Services</CardTitle>
+              <h2 className="text-2xl text-center font-semibold leading-none tracking-tight">Our Services</h2>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

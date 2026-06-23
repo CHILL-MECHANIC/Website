@@ -92,6 +92,16 @@ export default function GalleryPage() {
 
       <Header cartItemsCount={getCartItemsCount()} />
 
+      {/* ── Hero ── */}
+      <section className="bg-primary text-primary-foreground py-12 text-center">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-3">Our Gallery &amp; Customer Stories</h1>
+          <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto">
+            Real repair videos, our certified technicians, and reviews from 10,000+ happy Gurgaon customers.
+          </p>
+        </div>
+      </section>
+
       {/* ── Section 1: Our Work ── */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4">

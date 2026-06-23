@@ -384,7 +384,7 @@ export default function ServiceDetail() {
       <section className="bg-primary text-primary-foreground py-12">
         <div className="container mx-auto px-4 text-center">
           <p className="text-lg font-semibold mb-2">⚡ Limited slots available today</p>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Book Your {service.title} Now</h2>
+          <p className="text-2xl md:text-3xl font-bold mb-4">Book Your {service.title} Now</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" variant="secondary" onClick={() => {
               const grid = document.querySelector('[data-services-grid]');
