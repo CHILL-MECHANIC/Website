@@ -495,6 +495,9 @@ export default function ServiceDetail() {
       {content && content.sections.length > 0 && (
         <section className="py-12 bg-muted/20">
           <div className="max-w-4xl mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
+              More About Our {service.title} in Gurgaon
+            </h2>
             <div className="space-y-4">
               {content.sections.map((section, i) => {
                 const sectionId = `section-${i}`;
@@ -511,9 +514,9 @@ export default function ServiceDetail() {
                       aria-expanded={isExpanded}
                       aria-controls={sectionId}
                     >
-                      <h2 className="text-lg font-medium text-foreground">
+                      <h3 className="text-lg font-medium text-foreground">
                         {section.heading}
-                      </h2>
+                      </h3>
                       {i > 0 && (
                         <ChevronDown
                           className={`h-5 w-5 text-muted-foreground transition-transform flex-shrink-0 ml-3 ${
