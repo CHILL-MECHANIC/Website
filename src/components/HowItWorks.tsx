@@ -23,7 +23,7 @@ export default function HowItWorks() {
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h4 className="text-3xl md:text-4xl font-bold mb-2">HOW IT WORKS?</h4>
+          <h3 className="text-3xl md:text-4xl font-bold mb-2">HOW IT WORKS?</h3>
           <p className="text-muted-foreground">Book appliance repair in 3 simple steps</p>
         </div>
 
