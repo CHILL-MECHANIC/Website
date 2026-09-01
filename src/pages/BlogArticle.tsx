@@ -97,9 +97,10 @@ export default function BlogArticle() {
                       {article.excerpt}
                     </p>
 
-                    <div className="text-lg leading-relaxed text-muted-foreground whitespace-pre-wrap">
-                      {article.fullArticle}
-                    </div>
+                    <div
+                      className="text-lg leading-relaxed text-muted-foreground prose-headings:text-foreground prose-headings:font-bold prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg"
+                      dangerouslySetInnerHTML={{ __html: article.fullArticle }}
+                    />
                   </div>
 
                   {/* Share Section */}

@@ -119,16 +119,66 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 9,
-    title: 'How to Choose the Best AC Repair Service in Gurgaon',
+    title: 'Best AC Repair and Service in Gurgaon: Services, Pricing and How to Choose',
     category: 'AC Tips',
     readTime: '6 min read',
     excerpt:
-      "Look for certified technicians, transparent pricing, warranty on repairs, and genuine parts. Avoid services that give quotes without inspection or charge hidden fees.",
-    fullArticle:
-      'Choose services that offer technician verification, diagnostic-first pricing, proper invoices, and repair warranty. Ask whether genuine parts are used and if post-repair performance checks are included. Strong local support and quick callback times matter in summer. Online reviews are helpful, but transparent scope and warranty terms are the real trust indicators.',
-    seoDescription: 'How to choose an AC repair service: Tips for finding certified technicians, transparent pricing, and warranty guarantees in Gurgaon.',
-    keywords: 'AC repair service, technician selection, repair warranty, air conditioner service',
+      "A reliable AC repair service is important when your air conditioner stops cooling, starts leaking water, makes unusual sounds or develops a technical fault. At Chill Mechanic, we provide professional AC repair and servicing solutions across Gurgaon with a focus on proper diagnosis, transparent service and convenient doorstep support. With 4000+ ACs repaired based on our 4 months of service data, technicians with 10+ years of average experience and an average 60-minute response time, we help homeowners address common AC problems without unnecessary delays. Our inspection cost is ₹249, allowing us to identify the actual problem before recommending a repair.",
+    fullArticle: `
+<h2>What AC Repair Services Does Chill Mechanic Provide?</h2>
+<p>Our AC technicians handle a wide range of residential AC problems. Depending on the condition of your unit, our services include:</p>
+<ul>
+  <li>AC inspection and troubleshooting</li>
+  <li>Split and window AC repair</li>
+  <li>Inverter AC repair</li>
+  <li>AC cooling problem diagnosis</li>
+  <li>AC gas refilling</li>
+  <li>AC gas leakage repair</li>
+  <li>AC compressor repair</li>
+  <li>AC PCB repair</li>
+  <li>AC water leakage repair</li>
+  <li>AC maintenance and servicing</li>
+  <li>AC installation related services</li>
+  <li>And more</li>
+</ul>
+<p>Whether your AC has stopped cooling or is showing a technical fault, our approach starts with inspection and diagnosis before deciding on the appropriate repair.</p>
+
+<h3>AC Gas Refilling and Gas Leakage Repair</h3>
+<p>Low refrigerant can affect AC cooling, but simply adding gas is not always the correct solution. If the system has a leakage, the refrigerant may reduce again after refilling. Our AC Gas Refilling Service in Gurgaon includes checking the AC condition and identifying whether refrigerant levels may be contributing to poor cooling. When leakage is suspected, our AC Gas Leakage Repair in Gurgaon focuses on finding the source of the problem and addressing it before further service.</p>
+
+<h4>AC Compressor and PCB Repair</h4>
+<p>The compressor and PCB are important components of an air conditioning system. A compressor related fault may result in poor cooling, unusual operation or failure of the AC to function correctly. Our AC Compressor Repair in Gurgaon is based on inspection and diagnosis rather than assuming that every compressor problem requires replacement. Similarly, electrical and control related problems may involve the PCB. Our AC PCB Repair in Gurgaon helps identify whether the PCB, wiring or another component is responsible for the issue.</p>
+
+<h4>AC Water Leakage Repair in Gurgaon</h4>
+<p>Water dripping from an indoor AC unit is a common problem and should not simply be ignored. Blocked drainage, improper drainage, ice formation, installation issues or other technical conditions can contribute to leakage. With our AC Water Leakage Repair in Gurgaon, we inspect the relevant components to determine the likely cause and recommend the appropriate solution.</p>
+
+<h4>How Much Does AC Repair Cost in Gurgaon?</h4>
+<p>AC repair pricing depends on the type of AC, fault, required parts, labour and the complexity of the repair. At Chill Mechanic, the inspection cost is ₹249. The final repair cost can be determined after examining the AC and understanding the actual problem. This approach helps customers understand what needs to be repaired instead of choosing a service based only on an estimated price.</p>
+
+<h4>How to Choose an AC Repair Company in Gurgaon?</h4>
+<p>When selecting an AC Repair Company in Gurgaon, consider:</p>
+<ol>
+  <li>Technician experience and technical knowledge</li>
+  <li>Clear inspection and diagnosis</li>
+  <li>Transparent pricing</li>
+  <li>Availability of doorstep service</li>
+  <li>Coverage for different AC types</li>
+  <li>Customer reviews and service history</li>
+  <li>Response time</li>
+  <li>Clarity about repair and replacement requirements</li>
+</ol>
+<p>Experience and proper diagnosis are especially important because similar symptoms can sometimes have different causes.</p>
+
+<h4>Why Choose Chill Mechanic?</h4>
+<p>Chill Mechanic combines experienced technicians with convenient doorstep service for AC problems across Gurgaon. Our technicians have 10+ years of experience, while our recent service data records 4000+ AC repairs in 4 months. We aim to provide a convenient Doorstep AC Repair in Gurgaon experience with an average 60-minute response time. If you are searching for an AC Technician Near Me in Gurgaon, our team can inspect your AC, identify the problem and explain the required repair.</p>
+
+<h4>Book AC Repair Service in Gurgaon</h4>
+<p>If your AC is not cooling, leaking water, making unusual sounds or showing a technical fault, professional inspection can help identify the actual cause. Chill Mechanic provides AC repair and service with experienced technicians, doorstep convenience and a clear inspection process. For reliable AC servicing and repair support in Gurgaon, contact Chill Mechanic and schedule an inspection for your AC.</p>
+`,
+    seoDescription: 'Best AC Repair and Service in Gurgaon with Chill Mechanic. Explore services, pricing, common AC issues and tips to choose the right technician.',
+    keywords: 'AC repair Gurgaon, AC service Gurgaon, AC gas refilling, AC compressor repair, AC PCB repair, AC water leakage repair, AC technician near me',
     publishedDate: '2026-05-05',
+    updatedDate: '2026-09-01',
   },
   {
     id: 10,
