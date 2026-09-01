@@ -117,7 +117,7 @@ const serviceDetails = {
       { id: "ac-not-cooling", name: "AC Not Cooling/Less Cooling", price: 249, description: "Diagnose and fix cooling issues and performance problems." },
       { id: "ac-power-issue", name: "AC Power Issue", price: 249, description: "Electrical diagnosis and power circuit repair." },
       { id: "ac-noise-reduction", name: "AC Noise Reduction", price: 449, description: "Noise diagnosis, component adjustment, and lubrication." },
-      { id: "ac-water-leakage", name: "AC Water Leakage Repair", price: 549, description: "Leak detection, drain cleaning, and seal repair." },
+      { id: "ac-water-leakage", name: "AC Water Leakage Repair", price: 799, description: "Leak detection, drain cleaning, and seal repair." },
       { id: "ac-gas-refill", name: "Gas Refill & Check Up", price: 1999, description: "Gas leak detection, gas refill, and pressure check. Choose from 1, 1.5 & 2 Ton options." },
       { id: "ac-split-installation", name: "Split AC Installation", price: 1499, description: "Complete installation with piping, wiring, and testing." },
       { id: "ac-split-uninstall", name: "Split AC Uninstallation", price: 799, description: "Safe removal with gas recovery and dismantling." },
