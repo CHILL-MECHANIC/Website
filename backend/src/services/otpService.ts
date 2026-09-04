@@ -13,8 +13,9 @@ type OTPLogUpdate = Database['public']['Tables']['otp_logs']['Update'];
 
 // OTP configuration
 const OTP_VALIDITY_MINUTES = 10;
-const RATE_LIMIT_COOLDOWN_MINUTES = 5;
-const MAX_REQUESTS_PER_HOUR = 3;
+// Must stay in sync with api/auth.ts - both read the same otp_logs table.
+const RATE_LIMIT_WINDOW_MINUTES = 5;
+const MAX_REQUESTS_PER_WINDOW = 3;
 
 /**
  * Generates a 4-digit OTP
@@ -63,45 +64,29 @@ export function formatPhoneNumber(phone: string): string {
 export async function canRequestOTP(phone: string): Promise<{ canRequest: boolean; waitTime?: number }> {
   const formattedPhone = formatPhoneNumber(phone);
   const now = new Date();
-  const cooldownTime = new Date(now.getTime() - RATE_LIMIT_COOLDOWN_MINUTES * 60 * 1000);
-  const hourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+  const windowStart = new Date(now.getTime() - RATE_LIMIT_WINDOW_MINUTES * 60 * 1000);
 
   try {
-    // Check for recent requests (5-minute cooldown)
-    const { data: recentLogs, error: recentError } = await supabase
+    // Same rule as the deployed api/auth.ts: N requests per window, no per-request
+    // cooldown. Both hit the same otp_logs table, so if they disagree a number that
+    // works in production gets refused locally.
+    const { data: recentLogs, error } = await supabase
       .from('otp_logs')
       .select('created_at')
       .eq('phone', formattedPhone)
-      .gte('created_at', cooldownTime.toISOString())
-      .order('created_at', { ascending: false })
-      .limit(1);
+      .gte('created_at', windowStart.toISOString())
+      .order('created_at', { ascending: true });
 
-    if (recentError) {
-      console.error('[OTP] Error checking rate limit:', recentError);
+    if (error) {
+      console.error('[OTP] Error checking rate limit:', error);
       // Allow request if DB check fails (fail open)
       return { canRequest: true };
     }
 
-    if (recentLogs && recentLogs.length > 0) {
-      const lastRequest = new Date((recentLogs[0] as OTPLogRow).created_at);
-      const waitTime = Math.ceil((RATE_LIMIT_COOLDOWN_MINUTES * 60 * 1000 - (now.getTime() - lastRequest.getTime())) / 1000);
+    if (recentLogs && recentLogs.length >= MAX_REQUESTS_PER_WINDOW) {
+      const oldest = new Date((recentLogs[0] as OTPLogRow).created_at);
+      const waitTime = Math.ceil((RATE_LIMIT_WINDOW_MINUTES * 60 * 1000 - (now.getTime() - oldest.getTime())) / 1000);
       return { canRequest: false, waitTime: Math.max(0, waitTime) };
-    }
-
-    // Check for hourly limit (max 3 requests per hour)
-    const { data: hourlyLogs, error: hourlyError } = await supabase
-      .from('otp_logs')
-      .select('id')
-      .eq('phone', formattedPhone)
-      .gte('created_at', hourAgo.toISOString());
-
-    if (hourlyError) {
-      console.error('[OTP] Error checking hourly limit:', hourlyError);
-      return { canRequest: true };
-    }
-
-    if (hourlyLogs && hourlyLogs.length >= MAX_REQUESTS_PER_HOUR) {
-      return { canRequest: false, waitTime: 3600 }; // Wait 1 hour
     }
 
     return { canRequest: true };
@@ -201,7 +186,7 @@ export async function sendOTP(phoneNumber: string): Promise<{
     if (!rateLimitCheck.canRequest) {
       const waitMinutes = rateLimitCheck.waitTime
         ? Math.ceil(rateLimitCheck.waitTime / 60)
-        : RATE_LIMIT_COOLDOWN_MINUTES;
+        : RATE_LIMIT_WINDOW_MINUTES;
       return {
         success: false,
         error: `Please wait ${waitMinutes} minute(s) before requesting another OTP.`
@@ -425,7 +410,7 @@ export async function resendOTP(phoneNumber: string): Promise<{
     if (!rateLimitCheck.canRequest) {
       const waitMinutes = rateLimitCheck.waitTime
         ? Math.ceil(rateLimitCheck.waitTime / 60)
-        : RATE_LIMIT_COOLDOWN_MINUTES;
+        : RATE_LIMIT_WINDOW_MINUTES;
       return {
         success: false,
         error: `Please wait ${waitMinutes} minute(s) before requesting another OTP.`

@@ -35,6 +35,41 @@ interface ProfileAddress {
   pincode: string;
 }
 
+interface ManualAddress {
+  flatNo: string;
+  buildingName: string;
+  streetArea: string;
+  landmark: string;
+  pincode: string;
+}
+
+// A profile with no address still comes back as an object of empty strings, so
+// truthiness of `profileAddress` alone is not a usable signal anywhere.
+export const hasUsableProfileAddress = (p: ProfileAddress | null): boolean =>
+  !!(p?.address || p?.pincode);
+
+export const buildServiceAddress = (
+  usingProfile: boolean,
+  profileAddress: ProfileAddress | null,
+  manual: ManualAddress
+): string => {
+  const parts = usingProfile && profileAddress
+    ? [
+        profileAddress.address,
+        profileAddress.city,
+        profileAddress.state,
+        profileAddress.pincode ? `Pincode: ${profileAddress.pincode}` : ''
+      ]
+    : [
+        manual.flatNo ? `Flat/Apt: ${manual.flatNo}` : '',
+        manual.buildingName,
+        manual.streetArea,
+        manual.landmark ? `Landmark: ${manual.landmark}` : '',
+        manual.pincode ? `Pincode: ${manual.pincode}` : ''
+      ];
+  return parts.filter(Boolean).join(', ');
+};
+
 export default function Cart() {
   const navigate = useNavigate();
   const { profile, isAuthenticated } = useAuth();
@@ -63,7 +98,10 @@ export default function Cart() {
     pincode: ""
   });
   const [profileAddress, setProfileAddress] = useState<ProfileAddress | null>(null);
-  
+
+  const hasProfileAddress = hasUsableProfileAddress(profileAddress);
+  const usingProfile = useProfileAddress && hasProfileAddress;
+
   const [showSchedulingModal, setShowSchedulingModal] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
@@ -124,27 +162,6 @@ export default function Cart() {
     );
   }
 
-  // Build the service address string
-  const buildServiceAddressString = (): string => {
-    if (useProfileAddress && profileAddress) {
-      const parts = [
-        profileAddress.address,
-        profileAddress.city,
-        profileAddress.state,
-        profileAddress.pincode ? `Pincode: ${profileAddress.pincode}` : ''
-      ].filter(Boolean);
-      return parts.join(', ');
-    } else {
-      const parts = [
-        serviceAddress.flatNo ? `Flat/Apt: ${serviceAddress.flatNo}` : '',
-        serviceAddress.buildingName,
-        serviceAddress.streetArea,
-        serviceAddress.landmark ? `Landmark: ${serviceAddress.landmark}` : '',
-        serviceAddress.pincode ? `Pincode: ${serviceAddress.pincode}` : ''
-      ].filter(Boolean);
-      return parts.join(', ');
-    }
-  };
 
   const handleScheduleBooking = () => {
     if (!bookingDetails.date || !bookingDetails.time) {
@@ -158,7 +175,7 @@ export default function Cart() {
     }
 
     // Validate address
-    if (!useProfileAddress) {
+    if (!usingProfile) {
       if (!serviceAddress.streetArea || !serviceAddress.pincode) {
         return; // Need at least street and pincode
       }
@@ -170,7 +187,7 @@ export default function Cart() {
           date: format(bookingDetails.date, 'yyyy-MM-dd'),
           time: bookingDetails.time,
           instructions: bookingDetails.instructions,
-          serviceAddress: buildServiceAddressString()
+          serviceAddress: buildServiceAddress(usingProfile, profileAddress, serviceAddress)
         }
       } 
     });
@@ -359,7 +376,7 @@ export default function Cart() {
               </div>
               
               {/* Same as profile checkbox */}
-              {profileAddress && (profileAddress.address || profileAddress.pincode) && (
+              {hasProfileAddress && (
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="useProfileAddress"
@@ -375,7 +392,7 @@ export default function Cart() {
                 </div>
               )}
 
-              {useProfileAddress && profileAddress && (profileAddress.address || profileAddress.pincode) ? (
+              {usingProfile && profileAddress ? (
                 <div className="p-3 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground">
                     {profileAddress.address && <span>{profileAddress.address}</span>}
@@ -383,9 +400,6 @@ export default function Cart() {
                     {profileAddress.state && <span>, {profileAddress.state}</span>}
                     {profileAddress.pincode && <span> - {profileAddress.pincode}</span>}
                   </p>
-                  {!profileAddress.address && !profileAddress.pincode && (
-                    <p className="text-sm text-amber-600">No address found in profile. Please add a different address below.</p>
-                  )}
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -461,7 +475,7 @@ export default function Cart() {
                 disabled={
                   !bookingDetails.date || 
                   !bookingDetails.time || 
-                  (!useProfileAddress && (!serviceAddress.streetArea || !serviceAddress.pincode))
+                  (!usingProfile && (!serviceAddress.streetArea || !serviceAddress.pincode))
                 }
               >
                 Continue

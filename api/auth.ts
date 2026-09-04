@@ -101,6 +101,12 @@ const formatPhone = (phone: string): string => {
   return '91' + cleaned;
 };
 
+// Did the SMS vendor accept the message? Trust the HTTP status and the vendor's own
+// error field. Matching on the exact English success string breaks the moment the
+// vendor rewords it, which silently turns every OTP into a failure.
+export const smsAccepted = (status: number, data: any): boolean =>
+  status >= 200 && status < 300 && !data?.error;
+
 // Send OTP via SMS (using existing UniqueDigitalOutreach API)
 const sendOTP = async (phone: string, otp: string): Promise<boolean> => {
   const apiKey = process.env.SMS_API_KEY;
@@ -108,10 +114,14 @@ const sendOTP = async (phone: string, otp: string): Promise<boolean> => {
   const apiUrl = process.env.SMS_API_URL || 'https://api.uniquedigitaloutreach.com/v1/sms';
   
   if (!apiKey) {
+    // Only let dev continue without SMS. In production a missing key is a failure,
+    // not a silent success that leaves the user waiting for an OTP that never sends.
     if (process.env.NODE_ENV === 'development') {
       console.warn('[Auth] SMS_API_KEY not set, OTP:', otp);
+      return true;
     }
-    return true; // Allow dev to continue without SMS
+    console.error('[Auth] SMS_API_KEY not configured');
+    return false;
   }
 
   try {
@@ -134,10 +144,11 @@ const sendOTP = async (phone: string, otp: string): Promise<boolean> => {
       }
     );
 
-    if (response.data?.message === 'Message Sent Successfully!' && response.data?.data?.[0]) {
+    if (smsAccepted(response.status, response.data)) {
       return true;
     }
 
+    console.error('[Auth] SMS rejected:', response.status, JSON.stringify(response.data));
     return false;
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -234,7 +245,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           status: 'pending'
         });
 
-        await sendOTP(formattedPhone, otp);
+        if (!(await sendOTP(formattedPhone, otp))) {
+          return res.status(502).json({ success: false, message: 'Could not send OTP. Please try again.' });
+        }
         safeLog('[Auth] Signup OTP sent', { phone: formattedPhone, type: 'signup' });
 
         const response: { success: boolean; message: string; phone: string; debug?: { otp: string } } = {
@@ -400,7 +413,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.status(500).json({ success: false, message: 'Failed to create OTP', debug: { error: insertError.message } });
         }
 
-        await sendOTP(formattedPhone, otp);
+        if (!(await sendOTP(formattedPhone, otp))) {
+          return res.status(502).json({ success: false, message: 'Could not send OTP. Please try again.' });
+        }
         safeLog('[Auth] Signin OTP sent', { phone: formattedPhone, type: 'signin' });
 
         const response: { success: boolean; message: string; phone: string; userName?: string; debug?: { otp: string } } = {
@@ -410,8 +425,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           userName: profile?.full_name || null
         };
 
-        // Always include OTP in debug for testing
-        response.debug = { otp };
+        // Never return the OTP outside local development - anyone who can POST a
+        // registered phone number could otherwise read it back and sign in as them.
+        if (process.env.NODE_ENV === 'development') {
+          response.debug = { otp };
+        }
 
         return res.json(response);
       } catch (error) {
@@ -573,7 +591,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           status: 'pending'
         });
 
-        await sendOTP(formattedPhone, otp);
+        if (!(await sendOTP(formattedPhone, otp))) {
+          return res.status(502).json({ success: false, message: 'Could not resend OTP. Please try again.' });
+        }
         return res.json({ success: true, message: 'OTP resent successfully', phone: formattedPhone });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Failed to resend OTP';

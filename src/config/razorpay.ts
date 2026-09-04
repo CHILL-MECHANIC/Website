@@ -12,7 +12,7 @@ export const RAZORPAY_DEFAULT_OPTIONS = {
   currency: 'INR',
   name: 'ChillMechanic',
   description: 'Service Payment',
-  image: '/Logo.webp',
+  image: '/logo.webp',
   theme: {
     color: '#1277BD'  // ChillMechanic brand color
   }

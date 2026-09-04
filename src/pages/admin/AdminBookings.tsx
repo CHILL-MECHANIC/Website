@@ -432,6 +432,59 @@ export default function AdminBookings() {
     fetchBookings();
   }, [statusFilter, sourceFilter, dateFilter, fetchBookings]);
 
+  // Single path for every admin-triggered SMS. /api/sms/send already cleans and
+  // validates the number, so don't duplicate that here. Surfaces failures instead
+  // of swallowing them - a missing customer phone means the profiles read came
+  // back empty (RLS), which used to fail silently.
+  const sendBookingSMS = async (
+    phone: string | null | undefined,
+    message: string,
+    templateId: string
+  ) => {
+    if (!phone) {
+      toast({
+        title: 'SMS not sent',
+        description: 'No phone number on this customer profile.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const apiBaseUrl = isLocalhost ? 'http://localhost:3001' : '';
+
+    try {
+      const res = await fetch(`${apiBaseUrl}/api/sms/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipient: String(phone),
+          message,
+          type: 'OTP',
+          senderId: 'CHLMEH',
+          templateId
+        })
+      });
+      const body = await res.json().catch(() => ({}));
+
+      if (!res.ok || !body.success) {
+        console.error('[SMS] Failed:', res.status, body);
+        toast({
+          title: 'SMS not sent',
+          description: body.error || `SMS API returned ${res.status}`,
+          variant: 'destructive'
+        });
+      }
+    } catch (smsError: any) {
+      console.error('[SMS] Request failed:', smsError);
+      toast({
+        title: 'SMS not sent',
+        description: smsError?.message || 'Could not reach the SMS service.',
+        variant: 'destructive'
+      });
+    }
+  };
+
   // Assign technician
   const assignTechnician = async () => {
     if (!selectedBooking || !selectedTechnician) {
@@ -463,47 +516,11 @@ export default function AdminBookings() {
 
         if (bookingError) throw bookingError;
 
-        // Send SMS via backend Express server
-        try {
-          const customerPhone = selectedBooking.customer?.phone;
-          if (customerPhone) {
-            // Clean phone: remove all non-digits
-            let cleanedPhone = String(customerPhone).replace(/\D/g, '');
-            
-            // Handle different phone formats:
-            // 1. If 12 digits starting with 91 → remove country code
-            // 2. If 11 digits starting with 0 → remove leading 0
-            // 3. If already 10 digits → use as-is
-            if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
-              cleanedPhone = cleanedPhone.substring(2);
-            } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
-              cleanedPhone = cleanedPhone.substring(1);
-            }
-            
-            // Validate: must be 10 digits
-            if (cleanedPhone.length === 10 && /^\d{10}$/.test(cleanedPhone)) {
-              const apiBaseUrl = 'http://localhost:3001';
-              
-              await fetch(`${apiBaseUrl}/api/sms/send`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  recipient: '91' + cleanedPhone,
-                  message: `Dear Customer,\n\nA technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285.\n\nRegards,\nChill Mechanic Team`,
-                  type: 'OTP',
-                  senderId: 'CHLMEH',
-                  templateId: '1007074801259726162'
-                })
-              });
-            } else {
-              console.warn('[SMS] Invalid phone number after cleaning:', cleanedPhone, 'original:', customerPhone);
-            }
-          }
-        } catch (smsError) {
-          console.warn('[SMS] Failed to send SMS (non-critical):', smsError);
-        }
+        await sendBookingSMS(
+          selectedBooking.customer?.phone,
+          `Dear Customer,\n\nA technician has been assigned to your service request. The technician will reach your address at the scheduled time. Contact details - +917943444285.\n\nRegards,\nChill Mechanic Team`,
+          '1007074801259726162'
+        );
       } else {
         // Production: Use Vercel function that handles both assignment and SMS
         const response = await fetch('/api/admin/booking?action=assign', {
@@ -676,75 +693,17 @@ export default function AdminBookings() {
           quantity: 1
         });
 
-      // Send booking confirmation SMS to customer
-      try {
-        // Validate phone number
-        if (!newBooking.customerPhone || newBooking.customerPhone.trim() === '') {
-          console.warn('[Admin SMS] No customer phone provided, skipping SMS');
-        } else {
-          const apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:3001'
-            : '';
-          
-          // Clean phone: remove all non-digits
-          let cleanedPhone = newBooking.customerPhone.replace(/\D/g, '');
-          
-          // Handle different phone formats:
-          // 1. If 12 digits starting with 91 → remove country code (91XXXXXXXXXX → XXXXXXXXXX)
-          // 2. If 11 digits starting with 0 → remove leading 0 (0XXXXXXXXXX → XXXXXXXXXX)
-          // 3. If already 10 digits → use as-is
-          if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
-            cleanedPhone = cleanedPhone.substring(2);
-          } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
-            cleanedPhone = cleanedPhone.substring(1);
-          }
-          
-          // Validate: must be 10 digits after cleaning
-          if (cleanedPhone.length !== 10 || !/^\d{10}$/.test(cleanedPhone)) {
-            console.error('[Admin SMS] Invalid phone after cleaning:', cleanedPhone, 'original:', newBooking.customerPhone);
-          } else {
-            console.log('[Admin SMS] Sending booking confirmation to:', cleanedPhone);
-            
-            const smsResponse = await fetch(`${apiBaseUrl}/api/sms/send`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                recipient: '91' + cleanedPhone,
-                message: `Dear Customer,\n\nYour booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.\n\nRegards,\nChill Mechanic\nHappy Appliances, Happier Homes`,
-                type: 'OTP',
-                senderId: 'CHLMEH',
-                templateId: '1007913640137046123'
-              })
-            });
-            
-            // Check if response is ok before parsing JSON
-            if (!smsResponse.ok) {
-              console.error('[Admin SMS] SMS API returned error:', smsResponse.status, smsResponse.statusText);
-              // Try to parse error message from response
-              try {
-                const errorData = await smsResponse.json();
-                console.error('[Admin SMS] Error details:', errorData);
-              } catch {
-                console.error('[Admin SMS] Could not parse error response');
-              }
-            } else {
-              const smsResult = await smsResponse.json();
-              console.log('[Admin SMS] Response:', smsResult);
-              
-              if (smsResult.success) {
-                console.log('[Admin SMS] Booking confirmation SMS sent successfully');
-              } else {
-                console.error('[Admin SMS] Failed to send SMS:', smsResult.error);
-              }
-            }
-          }
-      }
-      } catch (smsError) {
-        console.error('[Admin SMS] Error sending booking confirmation:', smsError);
-        // Don't fail booking creation if SMS fails
-      }
+      await sendBookingSMS(
+        newBooking.customerPhone,
+        `Dear Customer,
+
+Your booking with Chill Mechanic has been confirmed successfully. Our team will assign a technician shortly and keep you informed.
+
+Regards,
+Chill Mechanic
+Happy Appliances, Happier Homes`,
+        '1007913640137046123'
+      );
 
       toast({
         title: '✅ Booking Created',
@@ -800,50 +759,19 @@ export default function AdminBookings() {
 
       if (error) throw error;
 
-      // Send completion SMS to customer
-      const customerPhone = booking.customer?.phone;
-      if (customerPhone) {
-        try {
-          // Clean phone: remove all non-digits
-          let cleanedPhone = String(customerPhone).replace(/\D/g, '');
-          
-          // Handle different phone formats:
-          // 1. If 12 digits starting with 91 → remove country code
-          // 2. If 11 digits starting with 0 → remove leading 0
-          // 3. If already 10 digits → use as-is
-          if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
-            cleanedPhone = cleanedPhone.substring(2);
-          } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
-            cleanedPhone = cleanedPhone.substring(1);
-          }
-          
-          // Validate: must be 10 digits
-          if (cleanedPhone.length === 10 && /^\d{10}$/.test(cleanedPhone)) {
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const apiBaseUrl = isLocalhost ? 'http://localhost:3001' : '';
+      await sendBookingSMS(
+        booking.customer?.phone,
+        `Dear Customer, 
 
-            await fetch(`${apiBaseUrl}/api/sms/send`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                recipient: '91' + cleanedPhone,
-              message: `Dear Customer, \n\nYour service request has been successfully completed by the Chill Mechanic team. We appreciate your trust in our services. Should you require any further assistance, please feel free to contact us. \n\nThank you for choosing Chill Mechanic.`,
-              type: 'OTP',
-              senderId: 'CHLMEH',
-              templateId: '1007732141749715637'
-            })
-          });
-          } else {
-            console.warn('[SMS] Invalid phone number for completion SMS after cleaning:', cleanedPhone, 'original:', customerPhone);
-          }
-        } catch (smsError) {
-          console.warn('[SMS] Failed to send booking completion SMS (non-critical):', smsError);
-        }
-      }
+Your service request has been successfully completed by the Chill Mechanic team. We appreciate your trust in our services. Should you require any further assistance, please feel free to contact us. 
+
+Thank you for choosing Chill Mechanic.`,
+        '1007732141749715637'
+      );
 
       toast({
         title: '✅ Booking Closed',
-        description: 'Booking marked as completed and SMS sent to customer.',
+        description: 'Booking marked as completed.',
       });
 
       fetchBookings();
@@ -883,39 +811,18 @@ export default function AdminBookings() {
 
       // Send cancellation SMS to customer when status changes to cancelled
       if (newStatus === 'cancelled') {
-        const cancelledBooking = bookings.find(b => b.id === bookingId);
-        const customerPhone = cancelledBooking?.customer?.phone;
-        if (customerPhone) {
-          try {
-            let cleanedPhone = String(customerPhone).replace(/\D/g, '');
-            if (cleanedPhone.length === 12 && cleanedPhone.startsWith('91')) {
-              cleanedPhone = cleanedPhone.substring(2);
-            } else if (cleanedPhone.length === 11 && cleanedPhone.startsWith('0')) {
-              cleanedPhone = cleanedPhone.substring(1);
-            }
+        await sendBookingSMS(
+          bookings.find(b => b.id === bookingId)?.customer?.phone,
+          `Dear Customer, 
 
-            if (cleanedPhone.length === 10 && /^\d{10}$/.test(cleanedPhone)) {
-              const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-              const apiBaseUrl = isLocalhost ? 'http://localhost:3001' : '';
+Your booking with Chill Mechanic has been cancelled as requested. Your refund will be processed within 3-5 business days. 
+We'd love to serve you again soon! 
 
-              await fetch(`${apiBaseUrl}/api/sms/send`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  recipient: '91' + cleanedPhone,
-                  message: `Dear Customer, \n\nYour booking with Chill Mechanic has been cancelled as requested. Your refund will be processed within 3-5 business days. \nWe'd love to serve you again soon! \n\nRegards, \nChill Mechanic \nHappy Appliances, Happier Homes`,
-                  type: 'OTP',
-                  senderId: 'CHLMEH',
-                  templateId: '1007212301685342172'
-                })
-              });
-            } else {
-              console.warn('[SMS] Invalid phone number for cancellation SMS after cleaning:', cleanedPhone, 'original:', customerPhone);
-            }
-          } catch (smsError) {
-            console.warn('[SMS] Failed to send booking cancellation SMS (non-critical):', smsError);
-          }
-        }
+Regards, 
+Chill Mechanic 
+Happy Appliances, Happier Homes`,
+          '1007212301685342172'
+        );
       }
 
       toast({
