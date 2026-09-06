@@ -93,6 +93,10 @@ interface BookingWithDetails extends Booking {
 type StatusFilter = 'all' | 'pending' | 'assigned' | 'accepted' | 'in_progress' | 'completed' | 'cancelled';
 type SourceFilter = 'all' | 'admin' | 'customer';
 
+// Booking flows await the SMS call before clearing their loading state, so a stalled
+// request must reject rather than hang the modal open forever.
+const SMS_REQUEST_TIMEOUT_MS = 15000;
+
 export default function AdminBookings() {
   const { toast } = useToast();
   const { isAdmin, loading: adminLoading } = useAdmin();
@@ -457,6 +461,7 @@ export default function AdminBookings() {
       const res = await fetch(`${apiBaseUrl}/api/sms/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(SMS_REQUEST_TIMEOUT_MS),
         body: JSON.stringify({
           recipient: String(phone),
           message,
@@ -477,9 +482,12 @@ export default function AdminBookings() {
       }
     } catch (smsError: any) {
       console.error('[SMS] Request failed:', smsError);
+      const timedOut = smsError?.name === 'TimeoutError' || smsError?.name === 'AbortError';
       toast({
         title: 'SMS not sent',
-        description: smsError?.message || 'Could not reach the SMS service.',
+        description: timedOut
+          ? 'SMS service did not respond in time. The booking change was saved.'
+          : smsError?.message || 'Could not reach the SMS service.',
         variant: 'destructive'
       });
     }

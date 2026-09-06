@@ -86,7 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           to: cleanedRecipient,
           text: message,
           type,
-          ...(templateId && { template_id: templateId })
+          ...(templateId && { templateId })
         },
         {
           headers: {

@@ -16,6 +16,9 @@ const OTP_VALIDITY_MINUTES = 10;
 // Must stay in sync with api/auth.ts - both read the same otp_logs table.
 const RATE_LIMIT_WINDOW_MINUTES = 5;
 const MAX_REQUESTS_PER_WINDOW = 3;
+// Returned when the limit itself could not be evaluated, so callers can say
+// "try again" instead of quoting a wait that was never calculated.
+const RATE_LIMIT_UNAVAILABLE = 'Unable to verify request limits right now. Please try again.';
 
 /**
  * Generates a 4-digit OTP
@@ -61,7 +64,7 @@ export function formatPhoneNumber(phone: string): string {
  * Checks if OTP can be requested for a phone number (rate limiting)
  * Returns: { canRequest: boolean, waitTime?: number (in seconds) }
  */
-export async function canRequestOTP(phone: string): Promise<{ canRequest: boolean; waitTime?: number }> {
+export async function canRequestOTP(phone: string): Promise<{ canRequest: boolean; waitTime?: number; error?: string }> {
   const formattedPhone = formatPhoneNumber(phone);
   const now = new Date();
   const windowStart = new Date(now.getTime() - RATE_LIMIT_WINDOW_MINUTES * 60 * 1000);
@@ -79,21 +82,26 @@ export async function canRequestOTP(phone: string): Promise<{ canRequest: boolea
 
     if (error) {
       console.error('[OTP] Error checking rate limit:', error);
-      // Allow request if DB check fails (fail open)
-      return { canRequest: true };
+      // Fail closed. Without a usable count the cap is not enforced at all, and an
+      // uncapped path here is billable SMS that anyone can trigger on repeat.
+      return { canRequest: false, error: RATE_LIMIT_UNAVAILABLE };
     }
 
     if (recentLogs && recentLogs.length >= MAX_REQUESTS_PER_WINDOW) {
       const oldest = new Date((recentLogs[0] as OTPLogRow).created_at);
       const waitTime = Math.ceil((RATE_LIMIT_WINDOW_MINUTES * 60 * 1000 - (now.getTime() - oldest.getTime())) / 1000);
-      return { canRequest: false, waitTime: Math.max(0, waitTime) };
+      // waitTime <= 0 means the oldest request has already aged out of the window,
+      // so there is nothing left to wait for - allow instead of reporting a 0 wait.
+      if (waitTime > 0) {
+        return { canRequest: false, waitTime };
+      }
     }
 
     return { canRequest: true };
   } catch (error) {
     console.error('[OTP] Error in canRequestOTP:', error);
-    // Fail open - allow request if check fails
-    return { canRequest: true };
+    // Fail closed for the same reason as the query error above.
+    return { canRequest: false, error: RATE_LIMIT_UNAVAILABLE };
   }
 }
 
@@ -184,7 +192,10 @@ export async function sendOTP(phoneNumber: string): Promise<{
     // Check rate limiting
     const rateLimitCheck = await canRequestOTP(phoneNumber);
     if (!rateLimitCheck.canRequest) {
-      const waitMinutes = rateLimitCheck.waitTime
+      if (rateLimitCheck.error) {
+        return { success: false, error: rateLimitCheck.error };
+      }
+      const waitMinutes = rateLimitCheck.waitTime !== undefined
         ? Math.ceil(rateLimitCheck.waitTime / 60)
         : RATE_LIMIT_WINDOW_MINUTES;
       return {
@@ -408,7 +419,10 @@ export async function resendOTP(phoneNumber: string): Promise<{
     // Check rate limiting
     const rateLimitCheck = await canRequestOTP(phoneNumber);
     if (!rateLimitCheck.canRequest) {
-      const waitMinutes = rateLimitCheck.waitTime
+      if (rateLimitCheck.error) {
+        return { success: false, error: rateLimitCheck.error };
+      }
+      const waitMinutes = rateLimitCheck.waitTime !== undefined
         ? Math.ceil(rateLimitCheck.waitTime / 60)
         : RATE_LIMIT_WINDOW_MINUTES;
       return {
