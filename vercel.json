@@ -38,6 +38,9 @@
       "maxDuration": 10
     }
   },
+  "redirects": [
+    { "source": "/services/:serviceType", "destination": "/services/:serviceType/gurgaon", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },

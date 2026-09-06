@@ -1477,7 +1477,7 @@ export default function ServiceItemDetail() {
         {/* Back Button */}
         <Button 
           variant="ghost" 
-          onClick={() => navigate(`/services/${serviceType}`)}
+          onClick={() => navigate(`/services/${serviceType}/gurgaon`)}
           className="mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />

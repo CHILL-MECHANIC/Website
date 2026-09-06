@@ -227,7 +227,7 @@ export default function ServiceSelectionModal({
 
   const handleServiceCategoryClick = (category: string) => {
     onClose();
-    navigate(`/services/${category}`);
+    navigate(`/services/${category}/gurgaon`);
   };
 
   const handleServiceToggle = (service: ServiceOption, checked: boolean) => {

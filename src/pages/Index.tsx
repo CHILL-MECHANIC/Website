@@ -43,56 +43,56 @@ const services = [{
   description: "Expert AC repair and maintenance services. We fix cooling issues, clean filters, and ensure optimal performance for your comfort.",
   image: acServiceImage,
   price: "₹249",
-  route: "/services/ac"
+  route: "/services/ac/gurgaon"
 }, {
   id: "refrigerator",
   title: "Refrigerator Service",
   description: "Professional refrigerator repair services. From cooling problems to compressor issues, we keep your appliances running smoothly.",
   image: refrigeratorServiceImage,
   price: "₹249",
-  route: "/services/refrigerator"
+  route: "/services/refrigerator/gurgaon"
 }, {
   id: "ro",
   title: "RO Service",
   description: "Complete RO water purifier service and maintenance. Filter replacements, membrane cleaning, and installation services.",
   image: roServiceImage,
   price: "₹249",
-  route: "/services/ro"
+  route: "/services/ro/gurgaon"
 }, {
   id: "geyser",
   title: "Geyser Service",
   description: "Reliable geyser repair and installation services. We handle heating element replacement, thermostat issues, and safety checks.",
   image: geyserServiceImage,
   price: "₹249",
-  route: "/services/geyser"
+  route: "/services/geyser/gurgaon"
 }, {
   id: "washing-machine",
   title: "Washing Machine Service",
   description: "Expert washing machine repair services. Motor repairs, drum cleaning, and maintenance to keep your laundry running smoothly.",
   image: washingMachineServiceImage,
   price: "₹249",
-  route: "/services/washing-machine"
+  route: "/services/washing-machine/gurgaon"
 }, {
   id: "microwave",
   title: "Microwave Service",
   description: "Professional microwave repair and maintenance services. We handle heating issues, door repairs, and electrical problems.",
   image: microwaveServiceImage,
   price: "₹249",
-  route: "/services/microwave"
+  route: "/services/microwave/gurgaon"
 }, {
   id: "water-dispenser",
   title: "Water Dispenser Service",
   description: "Professional water dispenser service and maintenance. Filter replacements, temperature control fixes, and complete system cleaning.",
   image: waterDispenserServiceImage,
   price: "₹249",
-  route: "/services/water-dispenser"
+  route: "/services/water-dispenser/gurgaon"
 }, {
   id: "deep-freezer",
   title: "Deep Freezer Service",
   description: "Expert deep freezer repair services. Cooling issues, compressor repairs, and maintenance for optimal food preservation.",
   image: deepFreezerServiceImage,
   price: "₹249",
-  route: "/services/deep-freezer"
+  route: "/services/deep-freezer/gurgaon"
 }];
 const Index = () => {
   const [selectedServiceType, setSelectedServiceType] = useState<string>("");
@@ -117,7 +117,7 @@ const Index = () => {
     setIsModalOpen(true);
   };
   const handleEnquire = (serviceId: string) => {
-    navigate(`/services/${serviceId}`);
+    navigate(`/services/${serviceId}/gurgaon`);
   };
   const handleModalContinue = (selectedServices: any[]) => {
     if (selectedServices.length > 0) {

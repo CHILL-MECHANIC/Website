@@ -24,28 +24,28 @@ export default function Header({
   } = useAdmin();
   const services = [{
     name: "AC Service",
-    path: "/services/ac"
+    path: "/services/ac/gurgaon"
   }, {
     name: "Refrigerator Service",
-    path: "/services/refrigerator"
+    path: "/services/refrigerator/gurgaon"
   }, {
     name: "RO Service",
-    path: "/services/ro"
+    path: "/services/ro/gurgaon"
   }, {
     name: "Geyser Service",
-    path: "/services/geyser"
+    path: "/services/geyser/gurgaon"
   }, {
     name: "Washing Machine Service",
-    path: "/services/washing-machine"
+    path: "/services/washing-machine/gurgaon"
   }, {
     name: "Microwave Service",
-    path: "/services/microwave"
+    path: "/services/microwave/gurgaon"
   }, {
     name: "Water Dispenser Service",
-    path: "/services/water-dispenser"
+    path: "/services/water-dispenser/gurgaon"
   }, {
     name: "Deep Freezer Service",
-    path: "/services/deep-freezer"
+    path: "/services/deep-freezer/gurgaon"
   }];
   return <header className="bg-background border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 rounded-lg">

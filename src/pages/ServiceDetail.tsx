@@ -295,13 +295,13 @@ export default function ServiceDetail() {
             <meta name="language" content="en-US" />
             <meta name="revisit-after" content="7 days" />
             <meta name="author" content="Chill Mechanic" />
-            <link rel="canonical" href={`https://www.chillmechanic.com/services/${serviceType}`} />
+            <link rel="canonical" href={`https://www.chillmechanic.com/services/${serviceType}/gurgaon`} />
 
             {/* Open Graph Meta Tags for Social Sharing */}
             <meta property="og:title" content={metaTitle} />
             <meta property="og:description" content={metaDescription} />
             <meta property="og:type" content="website" />
-            <meta property="og:url" content={`https://www.chillmechanic.com/services/${serviceType}`} />
+            <meta property="og:url" content={`https://www.chillmechanic.com/services/${serviceType}/gurgaon`} />
             <meta property="og:site_name" content="Chill Mechanic" />
             <meta property="og:image" content={service.image ? `https://www.chillmechanic.com${service.image}` : 'https://www.chillmechanic.com/og-image.jpg'} />
             <meta property="og:image:alt" content={service.title} />
@@ -344,10 +344,10 @@ export default function ServiceDetail() {
               price: seo.price, 
               priceCurrency: 'INR',
               availability: 'https://schema.org/InStock',
-              url: `https://www.chillmechanic.com/services/${serviceType}`
+              url: `https://www.chillmechanic.com/services/${serviceType}/gurgaon`
             },
             serviceType: service.title,
-            url: `https://www.chillmechanic.com/services/${serviceType}`,
+            url: `https://www.chillmechanic.com/services/${serviceType}/gurgaon`,
             // aggregateRating temporarily removed - hardcoded values don't reflect real user reviews
             // Will be re-enabled when integrated with actual review data
           }) }} />
@@ -370,7 +370,7 @@ export default function ServiceDetail() {
                 '@type': 'ListItem',
                 position: 2,
                 name: service.title,
-                item: `https://www.chillmechanic.com/services/${serviceType}`
+                item: `https://www.chillmechanic.com/services/${serviceType}/gurgaon`
               }
             ]
           }) }} />

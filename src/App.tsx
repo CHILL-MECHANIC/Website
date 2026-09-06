@@ -7,8 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
-import ServiceDetail from "./pages/ServiceDetail";
-import ServiceItemDetail from "./pages/ServiceItemDetail";
+import { ServiceCityOrItem, ServiceTypeRedirect } from "./pages/ServiceRoute";
 import Cart from "./pages/Cart";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminBookings from "./pages/admin/AdminBookings";
@@ -45,8 +44,8 @@ const App = () => (
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/services/:serviceType" element={<ServiceDetail />} />
-              <Route path="/services/:serviceType/:serviceId" element={<ServiceItemDetail />} />
+              <Route path="/services/:serviceType" element={<ServiceTypeRedirect />} />
+              <Route path="/services/:serviceType/:serviceId" element={<ServiceCityOrItem />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/payment" element={<Payment />} />
               <Route path="/booking-success" element={<BookingSuccess />} />

@@ -75,42 +75,42 @@ export default function Footer() {
             <h4 className="font-semibold">Services</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/services/ac" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/ac/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   AC Service
                 </Link>
               </li>
               <li>
-                <Link to="/services/refrigerator" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/refrigerator/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   Refrigerator Service
                 </Link>
               </li>
               <li>
-                <Link to="/services/ro" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/ro/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   RO Service
                 </Link>
               </li>
               <li>
-                <Link to="/services/geyser" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/geyser/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   Geyser Service
                 </Link>
               </li>
               <li>
-                <Link to="/services/washing-machine" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/washing-machine/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   Washing Machine Service
                 </Link>
               </li>
               <li>
-                <Link to="/services/microwave" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/microwave/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   Microwave Services
                 </Link>
               </li>
               <li>
-                <Link to="/services/water-dispenser" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/water-dispenser/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   Water Dispenser Service
                 </Link>
               </li>
               <li>
-                <Link to="/services/deep-freezer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/services/deep-freezer/gurgaon" className="text-muted-foreground hover:text-primary transition-colors">
                   Deep Freezer Service
                 </Link>
               </li>
