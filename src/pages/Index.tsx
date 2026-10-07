@@ -94,6 +94,26 @@ const services = [{
   price: "₹249",
   route: "/services/deep-freezer/gurgaon"
 }];
+const reviews = [
+  { name: "Hima", service: "Washing Machine Service", text: "It was a good experience for washing machine repair." },
+  { name: "Shashi", service: "Home Repair", text: "I recently used Chill Mechanic for some home repairs, and I was very impressed. Their prices are really reasonable which made it easy for me to get the help I needed without breaking the bank. The quality of their work was excellent too. They were professional and quick. Highly recommend Chill Mechanic for any one looking for affordable and reliable home repair services!" },
+  { name: "Sumit", service: "Refrigerator Service", text: "Chill Mechanic is a top-notch home utility and repair service that truly stands out! Their team is professional, reliable, and has an impressive knack for fixing appliances in excellent condition. I recently had my refrigerator serviced and the results were remarkable! They offer quick response times and exceptional customer care." },
+  { name: "Nitin", service: "Home Repair", text: "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and did a good job." },
+  { name: "Rohit", service: "AC Service", text: "My split AC was not cooling at all. The technician arrived the same day, cleaned the filters and refilled the gas. The room is cool again and the price was exactly what they quoted." },
+  { name: "Priya", service: "AC Service", text: "Got my AC serviced before summer. Very neat work, no mess left behind, and the technician explained everything he did." },
+  { name: "Anjali", service: "RO Service", text: "Our RO water had a bad taste. They replaced the filters and cleaned the membrane. The water tastes fresh again and the technician was polite and on time." },
+  { name: "Vikram", service: "Geyser Service", text: "Geyser stopped heating one morning. They replaced the heating element within an hour and also checked the safety valve. Great service." },
+  { name: "Meenakshi", service: "Microwave Service", text: "My microwave was not heating food. The technician found the fault quickly and fixed it at a fair price. Works like new now." },
+  { name: "Deepak", service: "Deep Freezer Service", text: "Our deep freezer was making noise and not freezing properly. They repaired the compressor issue the same day and nothing in the shop got spoiled." },
+  { name: "Kavita", service: "Water Dispenser Service", text: "The cold water function on our dispenser had stopped working. It was fixed quickly and the whole unit was cleaned. Very satisfied." },
+  { name: "Arjun", service: "Washing Machine Service", text: "My front-load washing machine would not drain. The technician cleared the blockage, checked the motor and gave a clear explanation. Honest and professional." },
+  { name: "Neha", service: "Refrigerator Service", text: "Our fridge was leaking water and the cooling was weak. They fixed the drain blockage and the thermostat in one visit. Prompt and affordable." },
+  { name: "Sandeep", service: "RO Service", text: "Booked an RO service online and the technician came within two hours. Filters were changed and the TDS is back to normal." },
+  { name: "Ritu", service: "Geyser Service", text: "They installed our new geyser neatly and checked everything for safety. Polite team and fair pricing." },
+  { name: "Manish", service: "Microwave Service", text: "The microwave sparked whenever I turned it on. The technician replaced the faulty part and tested it properly before leaving. Reasonable charges." },
+  { name: "Pooja", service: "Water Dispenser Service", text: "Regular cleaning and filter change for our office dispenser. The work was thorough and the team was on time." },
+  { name: "Gaurav", service: "AC Service", text: "Quick AC gas top-up and a full jet wash. Cooling is much better and the electricity bill has come down too." },
+];
 const Index = () => {
   const [selectedServiceType, setSelectedServiceType] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -285,78 +305,24 @@ const Index = () => {
 
           <Carousel className="w-full max-w-5xl mx-auto">
             <CarouselContent>
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card>
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-1 text-yellow-500">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      "It was a good experience for washing machine repair."
-                    </p>
-                    <div>
-                      <p className="font-semibold">Hima</p>
-                      <p className="text-xs text-muted-foreground">Gurgaon</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card>
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-1 text-yellow-500">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      "I recently used Chill Mechanic for some home repairs, and I was very impressed. Their prices are really reasonable which made it easy for me to get the help I needed without breaking the bank. The quality of their work was excellent too. They were professional and quick. Highly recommend Chill Mechanic for any one looking for affordable and reliable home repair services!"
-                    </p>
-                    <div>
-                      <p className="font-semibold">Shashi</p>
-                      <p className="text-xs text-muted-foreground">Gurgaon</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card>
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-1 text-yellow-500">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      "Chill Mechanic is a top-notch home utility and repair service that truly stands out! Their team is professional, reliable, and has an impressive knack for fixing appliances in excellent condition. I recently had my refrigerator serviced and the results were remarkable!They offer quick response times and exceptional customer care. Highly recommend Chill Mechanic for anyone in need of appliance repair or maintenance. Your home will thank you!"
-                    </p>
-                    <div>
-                      <p className="font-semibold">Sumit</p>
-                      <p className="text-xs text-muted-foreground">Gurgaon</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card>
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-1 text-yellow-500">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      "I had a great experience with Chill Mechanic. They provide home utility and repair services. The service was excellent. The team was friendly and helpful. They fixed my problems quickly and did a good job."
-                    </p>
-                    <div>
-                      <p className="font-semibold">Nitin</p>
-                      <p className="text-xs text-muted-foreground">Gurgaon</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
+              {reviews.map((r) => (
+                <CarouselItem key={r.name} className="md:basis-1/2 lg:basis-1/3">
+                  <Card className="h-full">
+                    <CardContent className="p-6 space-y-4">
+                      <div className="flex items-center gap-1 text-yellow-500">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className="h-4 w-4 fill-current" />
+                        ))}
+                      </div>
+                      <p className="text-sm text-muted-foreground">"{r.text}"</p>
+                      <div>
+                        <p className="font-semibold">{r.name}</p>
+                        <p className="text-xs text-muted-foreground">{r.service} · Gurgaon</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
             </CarouselContent>
             <CarouselPrevious className="hidden md:flex" />
             <CarouselNext className="hidden md:flex" />
