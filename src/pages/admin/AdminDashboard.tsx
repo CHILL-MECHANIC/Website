@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdmin } from "@/hooks/useAdmin";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { EditBookingDialog } from "@/components/admin/EditBookingDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Star, Bell, RefreshCw, Users, Calendar, IndianRupee, CreditCard } from "lucide-react";
+import { Search, Star, Bell, RefreshCw, Users, Calendar, IndianRupee, CreditCard, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 
@@ -28,6 +29,7 @@ export default function AdminDashboard() {
   const [paymentAlert, setPaymentAlert] = useState(false);
   const [techniciansCount, setTechniciansCount] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [editingBookingId, setEditingBookingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -388,6 +390,7 @@ export default function AdminDashboard() {
                     <TableHead>Amount</TableHead>
                     <TableHead>Payment</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead className="w-12"><span className="sr-only">Actions</span></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -430,6 +433,17 @@ export default function AdminDashboard() {
                           {booking.status}
                         </Badge>
                       </TableCell>
+                      <TableCell>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setEditingBookingId(booking.id)}
+                          title="Edit Booking"
+                          aria-label="Edit booking"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -467,6 +481,12 @@ export default function AdminDashboard() {
           </Card>
         </div>
       </main>
+
+      <EditBookingDialog
+        bookingId={editingBookingId}
+        onOpenChange={(open) => { if (!open) setEditingBookingId(null); }}
+        onSaved={() => { fetchBookings(); fetchRevenue(); }}
+      />
     </div>
   );
 }

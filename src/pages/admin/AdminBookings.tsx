@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useToast } from '@/hooks/use-toast';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
+import { EditBookingDialog } from '@/components/admin/EditBookingDialog';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
@@ -27,7 +28,7 @@ import {
 import {
   Loader2, RefreshCw, UserPlus, Bell, Search,
   Calendar, Clock, IndianRupee, Phone,
-  CheckCircle, XCircle, Play, AlertCircle, Plus, CheckSquare, RotateCcw, Shield
+  CheckCircle, XCircle, Play, AlertCircle, Plus, CheckSquare, RotateCcw, Shield, Pencil
 } from 'lucide-react';
 
 interface Booking {
@@ -151,6 +152,9 @@ export default function AdminBookings() {
   const [recomplaintModalOpen, setRecomplaintModalOpen] = useState(false);
   const [recomplaintBooking, setRecomplaintBooking] = useState<BookingWithDetails | null>(null);
   const [recomplaining, setRecomplaining] = useState(false);
+
+  // Edit booking dialog (open when an id is set)
+  const [editingBookingId, setEditingBookingId] = useState<string | null>(null);
 
   // Stats
   const [stats, setStats] = useState({
@@ -1209,6 +1213,16 @@ Happy Appliances, Happier Homes`,
                         <Button
                           size="sm"
                           variant="outline"
+                          onClick={() => setEditingBookingId(booking.id)}
+                          title="Edit Booking"
+                          aria-label="Edit booking"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => {
                             setSelectedBooking(booking);
                             setSelectedTechnician(booking.technician_id || '');
@@ -1704,6 +1718,11 @@ Happy Appliances, Happier Homes`,
           </DialogContent>
         </Dialog>
 
+        <EditBookingDialog
+          bookingId={editingBookingId}
+          onOpenChange={(open) => { if (!open) setEditingBookingId(null); }}
+          onSaved={fetchBookings}
+        />
       </main>
     </div>
   );
