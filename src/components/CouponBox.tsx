@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Check, Tag, X } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
-import { COUPONS } from '@/data/coupons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -51,18 +50,6 @@ export default function CouponBox() {
         <Button type="submit" variant="outline" disabled={!value.trim()}>Apply</Button>
       </form>
       {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-      <div className="flex flex-wrap gap-2">
-        {Object.entries(COUPONS).map(([code, c]) => (
-          <button
-            key={code}
-            type="button"
-            onClick={() => submit(code)}
-            className="rounded-full border border-dashed border-primary/50 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/5"
-          >
-            {code} · {c.percent}% off
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
