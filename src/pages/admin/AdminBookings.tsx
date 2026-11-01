@@ -974,10 +974,10 @@ Happy Appliances, Happier Homes`,
     <div className="flex min-h-screen bg-gray-50">
       <AdminSidebar />
       
-      <main className="flex-1 p-6">
+      <main className="min-w-0 flex-1 p-4 pb-20 sm:p-6 lg:pb-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-6">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <h1 className="text-2xl font-bold text-gray-900">Bookings Management</h1>
             {newBookingAlert && (
               <Badge className="bg-red-500 text-white animate-pulse flex items-center gap-1">
@@ -1105,7 +1105,7 @@ Happy Appliances, Happier Homes`,
             <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="bg-white rounded-lg shadow overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
