@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -26,6 +27,12 @@ const navItems = [
 
 export function AdminSidebar() {
   const { signOut } = useAuth();
+
+  // Admin-only: a slightly darker primary so white text on it reaches 4.5:1. The public brand blue is untouched.
+  useEffect(() => {
+    document.body.classList.add("admin-area");
+    return () => document.body.classList.remove("admin-area");
+  }, []);
 
   const handleLogout = async () => {
     await signOut();

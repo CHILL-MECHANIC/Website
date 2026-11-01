@@ -175,3 +175,9 @@ All colors MUST be HSL.
   50% { opacity: 0.4; }
 }
 @keyframes festive-spin { to { transform: rotate(360deg); } }
+
+/* Admin area only (class set by AdminSidebar): white on this blue is 4.95:1; the brand blue is 4.14:1. */
+.admin-area {
+  --primary: 199 82% 36%;
+  --ring: 199 82% 36%;
+}
