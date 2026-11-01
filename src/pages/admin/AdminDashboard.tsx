@@ -320,9 +320,9 @@ export default function AdminDashboard() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
                 <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl sm:text-3xl font-semibold tabular-nums">{bookings.length}</div>
@@ -331,9 +331,9 @@ export default function AdminDashboard() {
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
                 <CardTitle className="text-sm font-medium">Pending Bookings</CardTitle>
-                <Bell className="h-4 w-4 text-muted-foreground" />
+                <Bell className="h-4 w-4 shrink-0 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl sm:text-3xl font-semibold tabular-nums">
@@ -344,7 +344,7 @@ export default function AdminDashboard() {
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
                 <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
                 <Star className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -371,7 +371,7 @@ export default function AdminDashboard() {
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
                 <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
                 <IndianRupee className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
