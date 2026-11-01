@@ -17,6 +17,17 @@ import {
 } from "@/components/ui/table";
 import { Search, Star, Bell, RefreshCw, Users, Calendar, IndianRupee, CreditCard, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Muted tints; the label carries the meaning, colour only helps scanning.
+const STATUS_STYLE: Record<string, string> = {
+  pending: "bg-amber-50 text-amber-800 border-amber-200",
+  assigned: "bg-blue-50 text-blue-800 border-blue-200",
+  accepted: "bg-blue-50 text-blue-800 border-blue-200",
+  in_progress: "bg-indigo-50 text-indigo-800 border-indigo-200",
+  completed: "bg-green-50 text-green-800 border-green-200",
+  cancelled: "bg-gray-100 text-gray-600 border-gray-200",
+};
 import { toast } from "@/hooks/use-toast";
 
 export default function AdminDashboard() {
@@ -255,7 +266,15 @@ export default function AdminDashboard() {
   });
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen p-8 space-y-6" aria-busy="true" aria-label="Loading dashboard">
+        <Skeleton className="h-9 w-48" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-28" />)}
+        </div>
+        <Skeleton className="h-72" />
+      </div>
+    );
   }
 
   if (!isAdmin) {
@@ -266,13 +285,13 @@ export default function AdminDashboard() {
     <div className="min-h-screen flex bg-background">
       <AdminSidebar />
 
-      <main className="flex-1 overflow-auto">
-        <div className="p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
+      <main className="min-w-0 flex-1 overflow-auto pb-20 lg:pb-0">
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 lg:mb-8">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <div>
-                <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-                <p className="text-muted-foreground">Welcome to the admin dashboard</p>
+                <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl mb-1">Dashboard</h1>
+                <p className="text-sm text-muted-foreground">Bookings, revenue and feedback at a glance</p>
               </div>
               {newBookingAlert && (
                 <Badge className="bg-red-500 text-white animate-pulse flex items-center gap-1">
@@ -288,25 +307,25 @@ export default function AdminDashboard() {
               )}
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={refreshData}>
+              <Button variant="outline" onClick={refreshData} className="flex-1 sm:flex-none">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh
               </Button>
-              <Button onClick={() => navigate("/admin/services")}>
+              <Button onClick={() => navigate("/admin/services")} className="flex-1 sm:flex-none">
                 Add New Service
               </Button>
             </div>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
                 <Calendar className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{bookings.length}</div>
+                <div className="text-2xl sm:text-3xl font-semibold tabular-nums">{bookings.length}</div>
                 <p className="text-xs text-muted-foreground mt-1">All time</p>
               </CardContent>
             </Card>
@@ -317,7 +336,7 @@ export default function AdminDashboard() {
                 <Bell className="h-4 w-4 text-yellow-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-yellow-600">
+                <div className="text-2xl sm:text-3xl font-semibold tabular-nums text-yellow-600">
                   {bookings.filter((b) => b.status === "pending").length}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">Needs attention</p>
@@ -331,7 +350,7 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
-                  <div className="text-3xl font-bold">{average.toFixed(1)}</div>
+                  <div className="text-2xl sm:text-3xl font-semibold tabular-nums">{average.toFixed(1)}</div>
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
@@ -357,7 +376,7 @@ export default function AdminDashboard() {
                 <IndianRupee className="h-4 w-4 text-green-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-green-600">₹{totalRevenue.toLocaleString('en-IN')}</div>
+                <div className="text-2xl sm:text-3xl font-semibold tabular-nums text-green-600">₹{totalRevenue.toLocaleString('en-IN')}</div>
                 <p className="text-xs text-muted-foreground mt-1">From paid bookings</p>
               </CardContent>
             </Card>
@@ -366,9 +385,9 @@ export default function AdminDashboard() {
           {/* Bookings Table */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Recent Bookings</CardTitle>
-                <div className="relative w-72">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <CardTitle className="text-lg">Recent Bookings</CardTitle>
+                <div className="relative w-full sm:w-72">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search bookings..."
@@ -379,7 +398,8 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-2 sm:px-6">
+              <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -404,10 +424,10 @@ export default function AdminDashboard() {
                         {booking.booking_items?.[0]?.service_name || "N/A"}
                       </TableCell>
                       <TableCell>
-                        {new Date(booking.booking_date).toLocaleDateString()}
+                        {new Date(booking.booking_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                       </TableCell>
-                      <TableCell className="font-medium">
-                        ₹{booking.final_amount || 0}
+                      <TableCell className="font-medium tabular-nums whitespace-nowrap">
+                        ₹{(booking.final_amount || 0).toLocaleString("en-IN")}
                       </TableCell>
                       <TableCell>
                         <Badge
@@ -422,15 +442,10 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant={
-                            booking.status === "completed"
-                              ? "default"
-                              : booking.status === "pending"
-                              ? "secondary"
-                              : "outline"
-                          }
+                          variant="outline"
+                          className={`capitalize whitespace-nowrap ${STATUS_STYLE[booking.status] || ""}`}
                         >
-                          {booking.status}
+                          {String(booking.status).replace("_", " ")}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -446,15 +461,23 @@ export default function AdminDashboard() {
                       </TableCell>
                     </TableRow>
                   ))}
+                  {filteredBookings.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
+                        {searchQuery ? "No bookings match your search." : "No bookings yet. New ones show up here as they come in."}
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
+              </div>
             </CardContent>
           </Card>
 
           {/* Ratings Distribution */}
-          <Card className="mt-8">
+          <Card className="mt-6 lg:mt-8">
             <CardHeader>
-              <CardTitle>Feedback & Ratings</CardTitle>
+              <CardTitle className="text-lg">Feedback & Ratings</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
