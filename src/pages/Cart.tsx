@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import FrequentBundles from "@/components/FrequentBundles";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -79,6 +80,8 @@ export default function Cart() {
     updateQuantity, 
     clearCart, 
     getCartTotal, 
+    getCartSubtotal,
+    getBundleSavings,
     getCartItemsCount
   } = useCart();
 
@@ -270,6 +273,8 @@ export default function Cart() {
                   </CardContent>
                 </Card>
               ))}
+
+              <FrequentBundles />
             </div>
 
             {/* Cart Summary */}
@@ -280,6 +285,20 @@ export default function Cart() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Order Summary */}
+                  {getBundleSavings().length > 0 && (
+                    <div className="space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span>Subtotal</span>
+                        <span>₹{getCartSubtotal()}</span>
+                      </div>
+                      {getBundleSavings().map(b => (
+                        <div key={b.bundleId} className="flex justify-between text-green-700">
+                          <span>Bundle saving <span className="text-xs text-muted-foreground">({b.title})</span></span>
+                          <span>-₹{b.amount}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total ({getCartItemsCount()} items)</span>
                     <span className="text-primary">

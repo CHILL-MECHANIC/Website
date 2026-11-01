@@ -336,7 +336,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         const {
-          amount,
+          amount: clientAmount,
           serviceName,
           serviceType,
           bookingId,
@@ -349,6 +349,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           pincode,
           notes
         } = req.body || {};
+
+        // The amount charged comes from the booking row (computed on the server in booking/create,
+        // including any bundle discount), never from the request. A request without bookingId still
+        // uses the client amount: that path is not safe and is listed in the security notes.
+        let amount = clientAmount;
+        if (bookingId) {
+          const { data: ownBooking } = await createSupabaseAdmin()
+            .from('bookings')
+            .select('final_amount, payment_status, status, user_id')
+            .eq('id', bookingId)
+            .maybeSingle();
+          if (!ownBooking || ownBooking.user_id !== userId) {
+            return res.status(404).json({ success: false, message: 'Booking not found' });
+          }
+          if (ownBooking.payment_status === 'paid' || ownBooking.status === 'cancelled') {
+            return res.status(409).json({ success: false, message: 'This booking cannot be paid for' });
+          }
+          amount = Number(ownBooking.final_amount);
+        }
 
         // Only validate amount - that's required for payment
         // Address validation is NOT needed here - it's the booking's responsibility

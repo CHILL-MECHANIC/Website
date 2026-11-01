@@ -120,6 +120,7 @@ All colors MUST be HSL.
 .theme-diwali a.bg-primary {
   box-shadow: inset 0 -3px 0 hsl(var(--fest-gold));
 }
+.theme-diwali .festive-card { border-color: hsl(var(--fest-gold)); }
 .theme-diwali section h2 {
   text-decoration: underline;
   text-decoration-color: hsl(var(--fest-gold));

@@ -23,7 +23,7 @@ interface BookingData {
 export default function Payment() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartItems, getCartTotal, clearCart, getCartItemsCount } = useCart();
+  const { cartItems, getCartTotal, getCartSubtotal, getBundleSavings, clearCart, getCartItemsCount } = useCart();
   const { profile, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -43,8 +43,8 @@ export default function Payment() {
     }
   }, [isAuthenticated, bookingData, cartItems.length, navigate]);
 
-  const subtotal = getCartTotal();
-  const total = subtotal;
+  const subtotal = getCartSubtotal();
+  const total = getCartTotal();
 
   // Create booking via API
   const createBooking = async (isPayLater: boolean = false) => {
@@ -58,6 +58,8 @@ export default function Payment() {
       serviceAddress: bookingData.serviceAddress || '',
       paymentMode: isPayLater ? 'pay_later' : 'pay_now',
       items: Array.from(cartItems).map(item => ({
+        id: item.id,
+        bundleId: item.bundleId,
         name: item.name,
         description: Array.isArray(item.description) ? item.description.join(', ') : item.description,
         price: item.price,
@@ -248,6 +250,12 @@ export default function Payment() {
                       </div>
                     ))}
                     <div className="pt-3 space-y-2">
+                      {getBundleSavings().map(b => (
+                        <div key={b.bundleId} className="flex justify-between text-sm text-green-700">
+                          <span>Bundle saving</span>
+                          <span>-₹{b.amount}</span>
+                        </div>
+                      ))}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t">
                         <span>Total</span>
                         <span className="text-primary">₹{total}</span>

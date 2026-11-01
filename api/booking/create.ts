@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import { BUNDLE_ITEMS, computeBundleSavings } from '../_lib/bundles.js';
 
 // ===== INLINED FROM _lib/supabase.ts =====
 interface AuthUser {
@@ -271,7 +272,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       bookingItems = items.map((item: any) => {
         const qty = item.quantity || 1;
-        const unitPrice = item.price || item.unitPrice || item.unit_price || 0;
+        // Items that appear in a bundle are priced from the server table, not from the request.
+        const serverPrice = BUNDLE_ITEMS[item.serviceId || item.service_id || item.id]?.price;
+        const unitPrice = serverPrice ?? (item.price || item.unitPrice || item.unit_price || 0);
         const itemTotal = unitPrice * qty;
         calculatedTotal += itemTotal;
 
@@ -296,8 +299,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Use provided total or calculated
-    const bookingTotal = finalAmount || totalAmount || calculatedTotal;
+    // Bundle discount: worked out here from the server's own bundle table. The client only says which
+    // bundles it thinks it has; the amount it sends is ignored.
+    const bundleDiscount = computeBundleSavings(
+      items.map((i: any) => ({ id: i.serviceId || i.service_id || i.id, bundleId: i.bundleId }))
+    ).reduce((sum, b) => sum + b.amount, 0);
 
     // Admin-specific: remove GST from admin-created bookings
     let isAdmin = false;
@@ -315,9 +321,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const effectiveServiceTax = isAdmin ? 0 : (serviceTax || 0);
-    const effectiveFinalAmount = isAdmin 
-      ? (bookingTotal - (serviceTax || 0)) 
-      : bookingTotal;
+    // final = items - bundle discount + tax + travel. The client's finalAmount/totalAmount are no longer used.
+    const effectiveFinalAmount = calculatedTotal - bundleDiscount + effectiveServiceTax + (travelCharges || 0);
 
     // ===== CREATE BOOKING =====
     const bookingData = {
@@ -328,6 +333,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       service_tax: effectiveServiceTax,
       travel_charges: travelCharges || 0,
       final_amount: effectiveFinalAmount,
+      // Only sent when there is one, so bookings without a bundle work before the migration is applied.
+      ...(bundleDiscount > 0 ? { bundle_discount: bundleDiscount } : {}),
       service_address: serviceAddress || fullAddress || finalAddress,
       address: finalAddress,
       city: finalCity,
@@ -499,6 +506,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         pincode: booking.pincode,
         totalAmount: booking.total_amount,
         finalAmount: booking.final_amount,
+        bundleDiscount,
         status: booking.status,
         paymentStatus: booking.payment_status,
         itemCount: insertedItems?.length || bookingItems.length

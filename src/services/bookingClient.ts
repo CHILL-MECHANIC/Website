@@ -15,6 +15,8 @@ const getApiBaseUrl = (): string => {
 };
 
 export interface BookingItem {
+  id?: string;
+  bundleId?: string; // a claim only; the server recomputes any bundle discount
   name: string;
   description: string;
   price: number;

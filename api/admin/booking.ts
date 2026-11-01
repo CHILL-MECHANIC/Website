@@ -111,7 +111,9 @@ async function handleUpdate(req: VercelRequest, res: VercelResponse) {
   // because the site has no tax rule to recompute it from (customer bookings are created with 0).
   const total = input.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const tax = before.created_by_admin ? 0 : Number(before.service_tax || 0);
-  const final = total + tax + input.travel_charges;
+  // A bundle discount set when the booking was created stays, but can't exceed the new items total.
+  const bundleDiscount = Math.min(Number(before.bundle_discount || 0), total);
+  const final = total - bundleDiscount + tax + input.travel_charges;
   const totals = { total_amount: total, service_tax: tax, travel_charges: input.travel_charges, final_amount: final };
 
   const amountsChanged =

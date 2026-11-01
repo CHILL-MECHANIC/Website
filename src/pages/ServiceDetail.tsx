@@ -94,7 +94,7 @@ const SERVICE_SEO: Record<string, { title: string; description: string; price: s
   },
 };
 
-const serviceDetails = {
+export const serviceDetails = {
   ac: {
     title: "AC Service & Repair",
     image: acServiceImage,

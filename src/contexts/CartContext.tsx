@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { BUNDLE_ITEMS, bundleSaving, computeBundleSavings, getBundle } from "@/data/bundles";
 
 interface ServiceOption {
   id: string;
@@ -9,7 +10,11 @@ interface ServiceOption {
 
 interface CartItem extends ServiceOption {
   quantity: number;
+  bundleId?: string;       // set when the line was added as part of a bundle
+  bundleDiscount?: number; // that bundle's total saving, kept for reference. The server recomputes it.
 }
+
+export interface BundleSaving { bundleId: string; title: string; amount: number }
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -17,6 +22,9 @@ interface CartContextType {
   removeFromCart: (serviceId: string) => void;
   updateQuantity: (serviceId: string, quantity: number) => void;
   clearCart: () => void;
+  addBundle: (bundleId: string) => void;
+  getBundleSavings: () => BundleSaving[];
+  getCartSubtotal: () => number;
   getCartTotal: () => number;
   getCartItemsCount: () => number;
 }
@@ -82,9 +90,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCartItems([]);
   };
 
-  const getCartTotal = () => {
+  // Adds both items of a bundle. An item already in the cart keeps its quantity and is tagged with the bundle.
+  const addBundle = (bundleId: string) => {
+    const bundle = getBundle(bundleId);
+    if (!bundle) return;
+    const discount = bundleSaving(bundle);
+    setCartItems(prev => {
+      const next = [...prev];
+      bundle.itemIds.forEach(id => {
+        const tag = { bundleId, bundleDiscount: discount };
+        const i = next.findIndex(item => item.id === id);
+        if (i >= 0) next[i] = { ...next[i], ...tag };
+        else {
+          const { name, description, price } = BUNDLE_ITEMS[id];
+          next.push({ id, name, description: [description], price, quantity: 1, ...tag });
+        }
+      });
+      return next;
+    });
+  };
+
+  const getBundleSavings = () => computeBundleSavings(cartItems);
+
+  const getCartSubtotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
+
+  // What the customer pays: items minus bundle savings.
+  const getCartTotal = () => getCartSubtotal() - getBundleSavings().reduce((sum, b) => sum + b.amount, 0);
 
   const getCartItemsCount = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -97,6 +130,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart,
       updateQuantity,
       clearCart,
+      addBundle,
+      getBundleSavings,
+      getCartSubtotal,
       getCartTotal,
       getCartItemsCount,
     }}>
