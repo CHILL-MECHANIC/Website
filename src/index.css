@@ -113,12 +113,33 @@ All colors MUST be HSL.
 }
 .theme-diwali .festive-banner {
   background: hsl(var(--fest-maroon));
-  color: hsl(var(--fest-gold));
+  color: hsl(43 90% 70%);
 }
+.theme-diwali .festive-banner-top {
+  background-image: linear-gradient(90deg, hsl(345 70% 18%), hsl(345 70% 26%) 50%, hsl(345 70% 18%));
+  border-bottom: 2px solid hsl(var(--fest-gold));
+}
+.theme-diwali .festive-banner-cta {
+  background: hsl(var(--fest-gold));
+  color: hsl(var(--fest-maroon));
+}
+.theme-diwali .festive-banner-cta:hover { background: hsl(43 90% 62%); }
+.theme-diwali .festive-hero-glow {
+  background:
+    radial-gradient(circle at 12% 90%, hsl(var(--fest-saffron) / 0.35), transparent 40%),
+    radial-gradient(circle at 90% 95%, hsl(var(--fest-gold) / 0.25), transparent 45%);
+}
+.theme-diwali .festive-footer { border-top: 2px solid hsl(var(--fest-gold)); }
+.theme-diwali .festive-footer .festive-divider { background: hsl(345 70% 18%); }
 /* Gold accent on primary buttons and section headings; no size changes, so no layout shift. */
 .theme-diwali button.bg-primary,
 .theme-diwali a.bg-primary {
   box-shadow: inset 0 -3px 0 hsl(var(--fest-gold));
+  transition: box-shadow 0.2s ease-out;
+}
+.theme-diwali button.bg-primary:hover,
+.theme-diwali a.bg-primary:hover {
+  box-shadow: inset 0 -3px 0 hsl(var(--fest-gold)), 0 0 14px hsl(var(--fest-gold) / 0.55);
 }
 .theme-diwali .festive-card { border-color: hsl(var(--fest-gold)); }
 .theme-diwali section h2 {
@@ -127,9 +148,23 @@ All colors MUST be HSL.
   text-decoration-thickness: 3px;
   text-underline-offset: 8px;
 }
+/* Centered section titles get a small gold ornament instead of an underline. */
+.theme-diwali section .text-center > h2 { text-decoration: none; }
+.theme-diwali section .text-center > h2::after {
+  content: "";
+  display: block;
+  width: 96px;
+  height: 10px;
+  margin: 10px auto 0;
+  background:
+    radial-gradient(circle at center, hsl(var(--fest-saffron)) 0 4px, transparent 5px) center / 10px 10px no-repeat,
+    linear-gradient(90deg, transparent, hsl(var(--fest-gold)) 40%, hsl(var(--fest-gold)) 60%, transparent) center / 100% 2px no-repeat;
+}
 @media (prefers-reduced-motion: no-preference) {
   .theme-diwali .festive-flame { transform-origin: 32px 25px; animation: festive-flicker 1.6s ease-in-out infinite; }
+  .theme-diwali .festive-flame-glow { animation: festive-twinkle 1.6s ease-in-out infinite; }
   .theme-diwali .festive-bulb { animation: festive-twinkle 2.4s ease-in-out infinite; }
+  .theme-diwali .festive-mandala { animation: festive-spin 120s linear infinite; }
 }
 @keyframes festive-flicker {
   0%, 100% { transform: scale(1) rotate(0); }
@@ -137,5 +172,6 @@ All colors MUST be HSL.
 }
 @keyframes festive-twinkle {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  50% { opacity: 0.4; }
 }
+@keyframes festive-spin { to { transform: rotate(360deg); } }
