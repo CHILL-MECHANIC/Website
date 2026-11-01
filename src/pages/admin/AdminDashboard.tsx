@@ -333,10 +333,10 @@ export default function AdminDashboard() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Pending Bookings</CardTitle>
-                <Bell className="h-4 w-4 text-yellow-500" />
+                <Bell className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl sm:text-3xl font-semibold tabular-nums text-yellow-600">
+                <div className="text-2xl sm:text-3xl font-semibold tabular-nums">
                   {bookings.filter((b) => b.status === "pending").length}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">Needs attention</p>
@@ -346,7 +346,7 @@ export default function AdminDashboard() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
-                <Star className="h-4 w-4 text-yellow-400" />
+                <Star className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
@@ -373,10 +373,10 @@ export default function AdminDashboard() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                <IndianRupee className="h-4 w-4 text-green-500" />
+                <IndianRupee className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl sm:text-3xl font-semibold tabular-nums text-green-600">₹{totalRevenue.toLocaleString('en-IN')}</div>
+                <div className="text-2xl sm:text-3xl font-semibold tabular-nums">₹{totalRevenue.toLocaleString('en-IN')}</div>
                 <p className="text-xs text-muted-foreground mt-1">From paid bookings</p>
               </CardContent>
             </Card>
@@ -450,7 +450,7 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         <Button
-                          size="sm"
+                          size="sm" className="h-11 w-11 p-0 sm:h-9 sm:w-9"
                           variant="outline"
                           onClick={() => setEditingBookingId(booking.id)}
                           title="Edit Booking"
