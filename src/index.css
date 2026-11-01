@@ -104,3 +104,37 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Seasonal theme. Applied via body.theme-diwali (see src/config/theme.ts); nothing here affects the site when the class is absent. */
+.theme-diwali {
+  --fest-gold: 43 90% 52%;
+  --fest-saffron: 28 95% 53%;
+  --fest-maroon: 345 70% 22%;
+}
+.theme-diwali .festive-banner {
+  background: hsl(var(--fest-maroon));
+  color: hsl(var(--fest-gold));
+}
+/* Gold accent on primary buttons and section headings; no size changes, so no layout shift. */
+.theme-diwali button.bg-primary,
+.theme-diwali a.bg-primary {
+  box-shadow: inset 0 -3px 0 hsl(var(--fest-gold));
+}
+.theme-diwali section h2 {
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--fest-gold));
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .theme-diwali .festive-flame { transform-origin: 32px 25px; animation: festive-flicker 1.6s ease-in-out infinite; }
+  .theme-diwali .festive-bulb { animation: festive-twinkle 2.4s ease-in-out infinite; }
+}
+@keyframes festive-flicker {
+  0%, 100% { transform: scale(1) rotate(0); }
+  50% { transform: scale(1.06, 0.94) rotate(2deg); }
+}
+@keyframes festive-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}

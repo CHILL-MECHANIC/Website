@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from "@/assets/Logo.webp";
 import { SiInstagram, SiFacebook, SiWhatsapp, SiLinkedin, SiX } from "react-icons/si";
+import { FestiveFooterStrip } from "@/components/Festive";
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
 
 export default function Footer() {
@@ -222,6 +223,7 @@ export default function Footer() {
         </div>
       </div>
       </footer>
+      <FestiveFooterStrip />
     </>
   );
 }

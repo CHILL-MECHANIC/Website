@@ -30,6 +30,7 @@ import BlogArticle from "./pages/BlogArticle";
 import GalleryPage from "./pages/GalleryPage";
 import PaymentHistory from "./pages/PaymentHistory";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { FestiveTheme } from "./components/Festive";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <ScrollToTop />
+            <FestiveTheme />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/services/:serviceType" element={<ServiceTypeRedirect />} />
