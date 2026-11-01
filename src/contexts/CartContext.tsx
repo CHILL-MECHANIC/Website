@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { couponDiscount, getCoupon } from "@/data/coupons";
 import { BUNDLE_ITEMS, bundleSaving, computeBundleSavings, getBundle } from "@/data/bundles";
 
 interface ServiceOption {
@@ -24,6 +25,10 @@ interface CartContextType {
   clearCart: () => void;
   addBundle: (bundleId: string) => void;
   getBundleSavings: () => BundleSaving[];
+  couponCode: string;
+  applyCoupon: (code: string) => boolean;
+  removeCoupon: () => void;
+  getCouponDiscount: () => number;
   getCartSubtotal: () => number;
   getCartTotal: () => number;
   getCartItemsCount: () => number;
@@ -31,6 +36,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = 'chill_mechanic_cart';
+const COUPON_STORAGE_KEY = 'chill_mechanic_coupon';
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
@@ -41,6 +47,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [];
     }
   });
+
+  const [couponCode, setCouponCode] = useState<string>(() => {
+    try { return getCoupon(localStorage.getItem(COUPON_STORAGE_KEY))?.code ?? ''; } catch { return ''; }
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem(COUPON_STORAGE_KEY, couponCode); } catch { /* ignore */ }
+  }, [couponCode]);
 
   useEffect(() => {
     try {
@@ -88,6 +102,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = () => {
     setCartItems([]);
+    setCouponCode('');
   };
 
   // Adds both items of a bundle. An item already in the cart keeps its quantity and is tagged with the bundle.
@@ -116,8 +131,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // What the customer pays: items minus bundle savings.
-  const getCartTotal = () => getCartSubtotal() - getBundleSavings().reduce((sum, b) => sum + b.amount, 0);
+  const afterBundles = () => getCartSubtotal() - getBundleSavings().reduce((sum, b) => sum + b.amount, 0);
+
+  // Returns false for an unknown code. The server checks the code again when the booking is created.
+  const applyCoupon = (code: string) => {
+    const c = getCoupon(code);
+    if (c) setCouponCode(c.code);
+    return !!c;
+  };
+  const removeCoupon = () => setCouponCode('');
+  const getCouponDiscount = () => couponDiscount(couponCode, afterBundles());
+
+  // What the customer pays: items minus bundle savings minus coupon.
+  const getCartTotal = () => afterBundles() - getCouponDiscount();
 
   const getCartItemsCount = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -131,6 +157,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       updateQuantity,
       clearCart,
       addBundle,
+      couponCode,
+      applyCoupon,
+      removeCoupon,
+      getCouponDiscount,
       getBundleSavings,
       getCartSubtotal,
       getCartTotal,

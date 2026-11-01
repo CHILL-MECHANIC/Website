@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { BUNDLE_ITEMS, computeBundleSavings } from '../_lib/bundles.js';
+import { couponDiscount, getCoupon } from '../_lib/coupons.js';
 
 // ===== INLINED FROM _lib/supabase.ts =====
 interface AuthUser {
@@ -305,6 +306,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       items.map((i: any) => ({ id: i.serviceId || i.service_id || i.id, bundleId: i.bundleId }))
     ).reduce((sum, b) => sum + b.amount, 0);
 
+    // Coupon: the code comes from the client, the amount is worked out here on what is left after bundles.
+    const coupon = getCoupon(body.couponCode);
+    if (body.couponCode && !coupon) {
+      return res.status(400).json({ success: false, message: 'That coupon code is not valid.' });
+    }
+    const couponSaving = couponDiscount(body.couponCode, calculatedTotal - bundleDiscount);
+
     // Admin-specific: remove GST from admin-created bookings
     let isAdmin = false;
     try {
@@ -321,8 +329,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const effectiveServiceTax = isAdmin ? 0 : (serviceTax || 0);
-    // final = items - bundle discount + tax + travel. The client's finalAmount/totalAmount are no longer used.
-    const effectiveFinalAmount = calculatedTotal - bundleDiscount + effectiveServiceTax + (travelCharges || 0);
+    // final = items - bundle discount - coupon + tax + travel. The client's finalAmount/totalAmount are no longer used.
+    const effectiveFinalAmount = calculatedTotal - bundleDiscount - couponSaving + effectiveServiceTax + (travelCharges || 0);
 
     // ===== CREATE BOOKING =====
     const bookingData = {
@@ -335,6 +343,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       final_amount: effectiveFinalAmount,
       // Only sent when there is one, so bookings without a bundle work before the migration is applied.
       ...(bundleDiscount > 0 ? { bundle_discount: bundleDiscount } : {}),
+      ...(couponSaving > 0 ? { coupon_code: coupon.code, coupon_discount: couponSaving } : {}),
       service_address: serviceAddress || fullAddress || finalAddress,
       address: finalAddress,
       city: finalCity,
@@ -507,6 +516,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         totalAmount: booking.total_amount,
         finalAmount: booking.final_amount,
         bundleDiscount,
+        couponDiscount: couponSaving,
         status: booking.status,
         paymentStatus: booking.payment_status,
         itemCount: insertedItems?.length || bookingItems.length

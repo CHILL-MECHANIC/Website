@@ -82,7 +82,7 @@ export function EditBookingDialog({ bookingId, onOpenChange, onSaved }: EditBook
   const [technicians, setTechnicians] = useState<Option[]>([]);
   const [services, setServices] = useState<Option[]>([]);
   const [customer, setCustomer] = useState({ name: '', phone: '' });
-  const [meta, setMeta] = useState({ tax: 0, bundle: 0, paid: false, adminCreated: false, cancelled: false });
+  const [meta, setMeta] = useState({ tax: 0, bundle: 0, coupon: 0, paid: false, adminCreated: false, cancelled: false });
   const [initial, setInitial] = useState<FormValues | null>(null);
   const [serverNote, setServerNote] = useState('');
 
@@ -136,7 +136,7 @@ export function EditBookingDialog({ bookingId, onOpenChange, onSaved }: EditBook
       reset(values);
       setInitial(values);
       setCustomer({ name: profile?.full_name || '', phone: profile?.phone || '' });
-      setMeta({ tax: Number(b.service_tax || 0), bundle: Number(b.bundle_discount || 0), paid: b.payment_status === 'paid', adminCreated: !!b.created_by_admin, cancelled: b.status === 'cancelled' });
+      setMeta({ tax: Number(b.service_tax || 0), bundle: Number(b.bundle_discount || 0), coupon: Number(b.coupon_discount || 0), paid: b.payment_status === 'paid', adminCreated: !!b.created_by_admin, cancelled: b.status === 'cancelled' });
       setTechnicians((techRes.data || []) as Option[]);
       setServices(Array.from(new Map((servicesRes.data || []).map((s: any) => [s.id, s])).values()) as Option[]);
       setLoaded(true);
@@ -150,7 +150,8 @@ export function EditBookingDialog({ bookingId, onOpenChange, onSaved }: EditBook
   // Mirrors the server rule: admin-created bookings carry no GST, others keep the stored tax.
   const tax = meta.adminCreated ? 0 : meta.tax;
   const bundle = Math.min(meta.bundle, itemsTotal);
-  const finalAmount = itemsTotal - bundle + tax + (Number(v.travel_charges) || 0);
+  const coupon = Math.min(meta.coupon, itemsTotal - bundle);
+  const finalAmount = itemsTotal - bundle - coupon + tax + (Number(v.travel_charges) || 0);
 
   const moneyKey = (x: FormValues | null) => x && JSON.stringify([x.payment_status, x.travel_charges, x.items.map(i => [i.id, i.price, i.quantity])]);
   const moneyChanged = !!initial && moneyKey(v as FormValues) !== moneyKey(initial);
@@ -325,6 +326,12 @@ export function EditBookingDialog({ bookingId, onOpenChange, onSaved }: EditBook
                   <Label className="mb-2 block">Service Tax {meta.adminCreated && '(none, admin booking)'}</Label>
                   <div className="flex h-10 items-center rounded-md border border-dashed border-gray-300 px-3 tabular-nums">{money(tax)}</div>
                 </div>
+                {coupon > 0 && (
+                  <div>
+                    <Label className="mb-2 block">Coupon Saving</Label>
+                    <div className="flex h-10 items-center rounded-md border border-dashed border-gray-300 px-3 text-green-700 tabular-nums">-{money(coupon)}</div>
+                  </div>
+                )}
                 {bundle > 0 && (
                   <div>
                     <Label className="mb-2 block">Bundle Saving</Label>

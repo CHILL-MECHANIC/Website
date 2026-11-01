@@ -32,6 +32,7 @@ export interface CreateBookingParams {
   specialInstructions?: string;
   serviceAddress?: string;
   paymentMode: 'pay_now' | 'pay_later';
+  couponCode?: string; // a claim only; the server works out the discount
   items: BookingItem[];
 }
 

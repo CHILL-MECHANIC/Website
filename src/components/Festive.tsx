@@ -27,10 +27,10 @@ export function FestiveTheme() {
 
   if (!active || dismissed) return null;
   return (
-    <div className="festive-banner festive-banner-top relative flex items-center justify-center gap-3 px-4 py-2 text-sm">
+    <div className="festive-banner festive-banner-top relative flex items-center justify-center gap-2 px-3 py-2 text-xs sm:gap-3 sm:px-4 sm:text-sm">
       <MiniDiya className="hidden h-6 w-6 shrink-0 sm:block" />
       <p className="text-center font-medium">{FESTIVE_BANNER_TEXT}</p>
-      <Link to="/services/ac/gurgaon" className="festive-banner-cta hidden shrink-0 rounded-full px-3 py-1 text-xs font-semibold sm:inline-block">
+      <Link to="/services/ac/gurgaon" className="festive-banner-cta shrink-0 rounded-full px-3 py-1 text-xs font-semibold">
         Book a service
       </Link>
       <button

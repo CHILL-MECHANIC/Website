@@ -23,7 +23,7 @@ interface BookingData {
 export default function Payment() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartItems, getCartTotal, getCartSubtotal, getBundleSavings, clearCart, getCartItemsCount } = useCart();
+  const { cartItems, getCartTotal, getCartSubtotal, getBundleSavings, couponCode, getCouponDiscount, clearCart, getCartItemsCount } = useCart();
   const { profile, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -56,6 +56,7 @@ export default function Payment() {
       finalAmount: total,
       specialInstructions: bookingData.instructions || '',
       serviceAddress: bookingData.serviceAddress || '',
+      couponCode: couponCode || undefined,
       paymentMode: isPayLater ? 'pay_later' : 'pay_now',
       items: Array.from(cartItems).map(item => ({
         id: item.id,
@@ -256,6 +257,12 @@ export default function Payment() {
                           <span>-₹{b.amount}</span>
                         </div>
                       ))}
+                      {getCouponDiscount() > 0 && (
+                        <div className="flex justify-between text-sm text-green-700">
+                          <span>Coupon {couponCode}</span>
+                          <span>-₹{getCouponDiscount()}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between font-bold text-lg pt-2 border-t">
                         <span>Total</span>
                         <span className="text-primary">₹{total}</span>

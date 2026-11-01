@@ -113,7 +113,8 @@ async function handleUpdate(req: VercelRequest, res: VercelResponse) {
   const tax = before.created_by_admin ? 0 : Number(before.service_tax || 0);
   // A bundle discount set when the booking was created stays, but can't exceed the new items total.
   const bundleDiscount = Math.min(Number(before.bundle_discount || 0), total);
-  const final = total - bundleDiscount + tax + input.travel_charges;
+  const couponSaving = Math.min(Number(before.coupon_discount || 0), total - bundleDiscount);
+  const final = total - bundleDiscount - couponSaving + tax + input.travel_charges;
   const totals = { total_amount: total, service_tax: tax, travel_charges: input.travel_charges, final_amount: final };
 
   const amountsChanged =

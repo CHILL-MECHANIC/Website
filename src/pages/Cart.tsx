@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import FrequentBundles from "@/components/FrequentBundles";
+import CouponBox from "@/components/CouponBox";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -82,6 +83,8 @@ export default function Cart() {
     getCartTotal, 
     getCartSubtotal,
     getBundleSavings,
+    getCouponDiscount,
+    couponCode,
     getCartItemsCount
   } = useCart();
 
@@ -218,8 +221,8 @@ export default function Cart() {
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item) => (
                 <Card key={item.id}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
                         <div className="text-sm text-muted-foreground space-y-1">
@@ -279,18 +282,26 @@ export default function Cart() {
 
             {/* Cart Summary */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-8">
+              <Card className="lg:sticky lg:top-8">
                 <CardHeader>
                   <CardTitle>Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Order Summary */}
-                  {getBundleSavings().length > 0 && (
+                  <CouponBox />
+
+                  {(getBundleSavings().length > 0 || getCouponDiscount() > 0) && (
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
                         <span>₹{getCartSubtotal()}</span>
                       </div>
+                      {getCouponDiscount() > 0 && (
+                        <div className="flex justify-between text-green-700">
+                          <span>Coupon {couponCode}</span>
+                          <span>-₹{getCouponDiscount()}</span>
+                        </div>
+                      )}
                       {getBundleSavings().map(b => (
                         <div key={b.bundleId} className="flex justify-between text-green-700">
                           <span>Bundle saving <span className="text-xs text-muted-foreground">({b.title})</span></span>
