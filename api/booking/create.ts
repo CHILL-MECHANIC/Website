@@ -5,6 +5,8 @@ import axios from 'axios';
 import { BUNDLE_ITEMS, computeBundleSavings } from '../_lib/bundles.js';
 import { couponDiscount, getCoupon } from '../_lib/coupons.js';
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // ===== INLINED FROM _lib/supabase.ts =====
 interface AuthUser {
   id: string;
@@ -280,7 +282,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         calculatedTotal += itemTotal;
 
         return {
-          service_id: item.serviceId || item.service_id || item.id || null,
+          // booking_items.service_id is a uuid column; catalogue ids like "ac-full" are not uuids.
+          service_id: UUID_RE.test(item.serviceId || item.service_id || item.id || '') ? (item.serviceId || item.service_id || item.id) : null,
           service_name: item.name || item.serviceName || item.service_name,
           service_type: item.type || item.serviceType || item.service_type || null,
           service_category: item.category || item.serviceCategory || item.service_category || null,
