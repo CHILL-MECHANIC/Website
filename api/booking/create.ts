@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { BUNDLE_ITEMS, computeBundleSavings } from '../_lib/bundles.js';
-import { couponDiscount, getCoupon } from '../_lib/coupons.js';
+import { FIRST100, couponDiscount, first100Discount, getCoupon, normalizeCoupon } from '../_lib/coupons.js';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -310,11 +310,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ).reduce((sum, b) => sum + b.amount, 0);
 
     // Coupon: the code comes from the client, the amount is worked out here on what is left after bundles.
-    const coupon = getCoupon(body.couponCode);
+    // FIRST100 is flat, needs a ₹249 service, prepaid (Pay now) only, and one use per customer.
+    const isFirst100 = normalizeCoupon(body.couponCode) === FIRST100.code;
+    const coupon = isFirst100 ? { code: FIRST100.code } : getCoupon(body.couponCode);
     if (body.couponCode && !coupon) {
       return res.status(400).json({ success: false, message: 'That coupon code is not valid.' });
     }
-    const couponSaving = couponDiscount(body.couponCode, calculatedTotal - bundleDiscount);
+    const afterBundles = calculatedTotal - bundleDiscount;
+    const couponSaving = isFirst100
+      ? first100Discount(bookingItems.map((i: any) => i.unit_price), afterBundles)
+      : couponDiscount(body.couponCode, afterBundles);
+    if (isFirst100) {
+      if (paymentMode === 'pay_later') {
+        return res.status(400).json({ success: false, message: 'FIRST100 is valid on prepaid orders only.' });
+      }
+      if (couponSaving <= 0) {
+        return res.status(400).json({ success: false, message: 'FIRST100 only applies to ₹249 services.' });
+      }
+      // A cancelled booking gives the coupon back; any other order created with it uses it up.
+      const { data: used } = await supabase
+        .from('bookings')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('coupon_code', FIRST100.code)
+        .neq('status', 'cancelled')
+        .limit(1);
+      if (used && used.length > 0) {
+        return res.status(400).json({ success: false, message: 'FIRST100 has already been used on your account.' });
+      }
+    }
 
     // Admin-specific: remove GST from admin-created bookings
     let isAdmin = false;
@@ -376,6 +400,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (bookingError) {
       console.error('[Booking] Create error:', bookingError.message);
+      // Two requests at once both passed the check above; the unique index stopped the second.
+      if (isFirst100 && bookingError.code === '23505') {
+        return res.status(400).json({ success: false, message: 'FIRST100 has already been used on your account.' });
+      }
       return res.status(500).json({ 
         success: false, 
         message: 'Failed to create booking',
