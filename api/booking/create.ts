@@ -444,6 +444,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     console.log('[Booking] Created successfully:', booking.id, 'with', insertedItems?.length, 'items');
 
+    // The admin dashboard reads the customer name from profiles.full_name. Apps that send the name
+    // with the booking (but never saved it to the profile) left it blank there, so fill it in.
+    const sentName = [body.customerName, body.customer_name, body.fullName, body.full_name, body.name]
+      .find((n) => typeof n === 'string' && n.trim());
+    if (sentName) {
+      await supabase.from('profiles')
+        .update({ full_name: sentName.trim(), is_profile_complete: true })
+        .eq('user_id', userId)
+        .or('full_name.is.null,full_name.eq.');
+    }
+
     // ===== SEND BOOKING CONFIRMATION SMS =====
     // Send SMS notification to customer about booking confirmation
     try {
