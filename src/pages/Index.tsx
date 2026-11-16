@@ -35,7 +35,6 @@ import waterDispenserServiceImage from "@/assets/water-dispenser-service.jpg";
 import deepFreezerServiceImage from "@/assets/deep-freezer-service.jpg";
 import heroBackground from "@/assets/hero-background.jpg";
 import { Card, CardContent } from "@/components/ui/card";
-import { DiyaAccent, SparkleDivider } from "@/components/Festive";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 
 const services = [{
@@ -175,7 +174,6 @@ const Index = () => {
       backgroundImage: `url(${heroBackground})`
     }}>
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px]"></div>
-        <DiyaAccent />
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl mb-4 text-white text-center font-bold md:text-7xl animate-fade-in drop-shadow-2xl [text-shadow:_2px_2px_8px_rgba(0,0,0,0.8)]">
             <span className="block">HAPPY APPLIANCES,</span>
@@ -235,7 +233,6 @@ const Index = () => {
       {/* Trust Badges */}
       <TrustBadgeBar />
 
-      <SparkleDivider />
 
       {/* Services Section */}
       <section className="py-16" data-services-section>
@@ -257,7 +254,6 @@ const Index = () => {
       {/* How It Works */}
       <HowItWorks />
 
-      <SparkleDivider />
 
       {/* Why Choose Us */}
       <WhyChooseUs />
@@ -268,7 +264,6 @@ const Index = () => {
       {/* Service Areas */}
       <ServiceAreas headingLevel={6} />
 
-      <SparkleDivider />
 
       {/* Blog Preview */}
       <BlogPreview />

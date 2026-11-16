@@ -24,7 +24,7 @@ export default function FrequentBundles() {
       <h2 id="bundles-heading" className="mb-3 text-xl font-semibold">Frequently added</h2>
       <div className="grid gap-3 sm:grid-cols-3">
         {offers.map(o => (
-          <Card key={o.id} className="festive-card h-full">
+          <Card key={o.id} className="h-full">
             <CardContent className="flex h-full flex-col gap-3 p-4">
               <h3 className="font-semibold leading-snug">{o.name}</h3>
               <div className="mt-auto">
