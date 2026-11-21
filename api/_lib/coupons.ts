@@ -1,12 +1,18 @@
 // Coupon codes, shared by the cart (via src/data/coupons.ts) and api/booking/create.ts.
 // Pure data and functions, no imports. The server decides the discount; the client only sends the code.
 
-export const COUPONS: Record<string, { percent: number }> = {
+export const COUPONS: Record<string, { percent?: number; flat?: number }> = {
   APP5: { percent: 5 },
   APP10: { percent: 10 },
   APP15: { percent: 15 },
   APP20: { percent: 20 },
   APP25: { percent: 25 },
+  // Flat rupee codes, same values as the mobile app (src/coupons.ts).
+  CM50: { flat: 50 },
+  CM100: { flat: 100 },
+  CM150: { flat: 150 },
+  CM200: { flat: 200 },
+  CM250: { flat: 250 },
 };
 
 /** "app 10", " APP-10 " and "APP10" are the same code. */
@@ -28,5 +34,7 @@ export const first100Discount = (unitPrices: number[], base: number): number =>
 /** Rupees off for a code on an amount (items after any bundle saving). Whole rupees; 0 for unknown codes. */
 export const couponDiscount = (raw: unknown, base: number): number => {
   const c = getCoupon(raw);
-  return c ? Math.max(0, Math.min(base, Math.round((base * c.percent) / 100))) : 0;
+  if (!c) return 0;
+  const off = c.flat ?? Math.round((base * (c.percent ?? 0)) / 100);
+  return Math.max(0, Math.min(base, off));
 };
